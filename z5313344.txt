@@ -1,0 +1,13 @@
+Week 1
+We decided on the name MOG for our group
+I volunteer as the scrum master for our group
+Members were decided to do frontend, backend, and database
+I decided to do backend!
+
+Week 2
+As a team, we decided to use
+python for backend,
+react for frontend,
+and postgreSQL for database
+All of us came up with functionalities in regards of different systems to integrate it with the wait management system
+I created sprints within jira, 3 2-week sprints so that we can start creating user stories 
