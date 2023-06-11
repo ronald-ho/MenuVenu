@@ -1,0 +1,11 @@
+Week 1
+Read through the 10 project ideas and chose a few ideas and brainstormed some possible novel functionalities for them.
+Joined the Jira site.
+Appointed Ronald as our scrum master.
+Discussed with the team and decided to go with the Wait Management System for our project.
+
+Week 2
+Discuss with the team with possible languages and libraries we could use and decided to use Python for the backend, React for the frontend and PostgreSQL for our databases.
+Brainstormed and finalised novel functionalities and regular functionalities.
+Finalise user stories and split user stories for each member to do. I'm doing generic user stories for waitstaff, kitchen and managers.
+Discussed and prepare for sprint 1.
