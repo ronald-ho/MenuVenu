@@ -1,0 +1,7 @@
+Week 1
+
+We went over the project ideas and came up with some features for each project to help us decide what to pick later on. At the end of the week we decided to do the Wait Management System. We decided that Ronald would be our scrum master.
+
+Week 2
+
+We finalised our project idea and did some group brainstorming about the novel features we needed to add to our project. We also decided that we would use React for frontend development, Python for backend development, SQLalchemy and PostgreSQL for our database. I planned some routes and return formats for communication between backend and frontend, as it was decided that I would work on frontend.  
