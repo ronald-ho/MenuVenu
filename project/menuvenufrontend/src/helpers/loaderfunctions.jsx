@@ -42,3 +42,15 @@ export function redirect_if_logged_in () {
     }
     return null;
 }
+
+export async function change_details (request) {
+    const data = Object.fromEntries(await request.formData());
+    const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (!data.email || !data.name || !validEmailRegex.test(data.email)) {
+    return false;
+    }
+    /* replace with fetch and post data */
+    console.log(data.email);
+    console.log(data.name);
+    return true;
+}
