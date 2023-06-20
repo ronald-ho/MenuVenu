@@ -1,5 +1,5 @@
-from flask import request
-from models import User
+from flask import request, jsonify, login_required
+from models import Customers
 from .. import app, db
 
 @app.route('auth/register', methods=['POST'])
@@ -7,52 +7,118 @@ def register():
     data = request.get_json()
 
     # Check if user already exists
-    if User.query.filter_by(email=data['email']).first():
-        return {'message': 'User already exists'}
-    
-    # Check if password is valid
-    # If not, return prompt saying what is missing display on login page
-    if not check_password(data['password']):
-        return check_password(data['password'])
+    if Customers.query.filter_by(email=data['email']).first():
+        return jsonify({'message': 'User already exists'})
 
     # Create new user
-    new_user = User(
-        email=data['email'],
-        firstName=data['firstName'],
-        lastName=data['lastName'],
-        password=data['password'],
-        isCustomer=data['isCustomer'],
-        isStaff=data['isStaff'],
-        isManager=data['isManager']
+    new_user = Customers(
+        email           = data['email'],
+        fullName        = data['fullName'],
+        password        = data['password'],
+        phone_number    = data['phone_number']
     )
     db.session.add(new_user)
     db.session.commit()
 
     # Returns the main menu page
-    return {'message': 'New user created'}
+    return jsonify({'message': 'New user created'})
 
+@app.route('auth/login', methods=['POST'])
+def login():
+    data = request.get_json()
 
-def check_password(password):
+    # Check if email does NOT exist in database
+    if not Customers.query.filter_by(email=data['email']).first():
+        return jsonify({'message': 'User does not exist'})
+    
+    # Check if password is correct
+    user = Customers.query.filter_by(email=data['email']).first()
+    if user.password != data['password']:
+        return jsonify({'message': 'Incorrect password'})
+    
+    # Returns the main menu page
+    return jsonify({'message': 'Login successful'})
 
-    contains_uppercase = False
-    contains_lowercase = False
-    contains_number = False
+@app.route('auth/logout', methods=['POST'])
+def logout():
+    # might have to introduce tokens
+    return jsonify({'message': 'Logout successful'})
 
-    for char in password:
-        if char.isupper():
-            contains_uppercase = True
-        if char.islower():
-            contains_lowercase = True
-        if char.isdigit():
-            contains_number = True
-        
-    missing = []
+@app.route('auth/delete', methods=['POST'])
+def delete():
+    data = request.get_json()
 
-    if not contains_uppercase:
-        missing.append('uppercase letter')
-    if not contains_lowercase:
-        missing.append('lowercase letter')
-    if not contains_number:
-        missing.append('number')
+    # Check if password is correct
+    user = Customers.query.filter_by(email=data['email']).first()
+    if user.password != data['password']:
+        return jsonify({'message': 'Incorrect password'})
+    
+    # return confirmation page
+    return jsonify({'message': 'Are you sure you want to delete your account?'})
+    
 
-    return {'message': f'Password must contain a {", ".join(missing)}'}
+@app.route('auth/delete/confirm', methods=['POST'])
+def delete_confirm():
+    data = request.get_json()
+
+    user = Customers.query.filter_by(email=data['email']).first()
+    
+    # if auth/delete/confirm is true, delete user
+    if data['confirm']:
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'User deleted'})
+    
+    # Returns the main menu page
+    return jsonify({'message': 'User not deleted'})
+
+@app.route('auth/update', methods=['POST'])
+def update():
+    data = request.get_json()
+
+    # Check if password is correct
+    user = Customers.query.filter_by(email=data['email']).first()
+    if user.password != data['password']:
+        return jsonify({'message': 'Incorrect password'})
+    
+    # save the new data
+    user.email = data['email']
+    user.fullName = data['fullName']
+    user.password = data['password']
+    user.phone_number = data['phone_number']
+    db.session.commit()
+
+    # Returns the main menu page
+    return jsonify({'message': 'User updated'})
+
+@app.route('auth/reset/password', methods=['POST'])
+def generate_OTP():
+    data = request.get_json()
+
+    # Check if user exists
+    if not Customers.query.filter_by(email=data['email']).first():
+        return jsonify({'message': 'User does not exist'})
+    
+    # TODO: Generate reset OTP and send email
+
+    # Returns the main menu page
+    return jsonify({'message': 'OTP sent to email'})
+
+@app.route('/auth/reset/password', methods=['POST'])
+def reset_password():
+    data = request.get_json()
+
+    email = data['email']
+    reset_code = data['reset_code']
+    new_password = data['new_password']
+
+    # Check if user exists and if the OTP is valid
+    if not Customers.query.filter_by(email=email, reset_code=reset_code).first():
+        return jsonify({'message': 'Invalid reset code'})
+
+    # Reset password
+    Customers.password = new_password
+    Customers.reset_code = None
+    db.session.commit()
+
+    return jsonify({'message': 'Password reset successful'})
