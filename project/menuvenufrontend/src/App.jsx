@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import { tabsel_load, redirect_if_logged_in, get_profile } from './helpers/loaderfunctions';
 import UpdateAccount from './pages/UpdateAccount';
 import LoggedSelect from './pages/LoggedSelect';
+import UpdateDetails from './pages/UpdateDetails';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -52,6 +53,21 @@ function App() {
       }, {
         path: "/loggedselect",
         element: <LoggedSelect />
+      }, {
+        path: "/changedetails",
+        element: <UpdateDetails />,
+        loader: get_profile,
+        action: async ({ request }) => {
+          const data = Object.fromEntries(await request.formData());
+          const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+          if (!data.email || !data.name || !validEmailRegex.test(data.email)) {
+            return false;
+          }
+          /* replace with fetch and post data */
+          console.log(data.email);
+          console.log(data.name);
+          return true;
+        }
       }
     ]
   }]);
