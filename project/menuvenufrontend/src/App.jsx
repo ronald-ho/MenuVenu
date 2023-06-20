@@ -8,7 +8,9 @@ import LogRegGuest from './pages/LogRegGuest';
 import Register from './pages/Register';
 import SelectTable from './pages/SelectTable';
 import Login from './pages/Login';
-import { tabsel_load, redirect_if_logged_in } from './helpers/loaderfunctions';
+import { tabsel_load, redirect_if_logged_in, get_profile } from './helpers/loaderfunctions';
+import UpdateAccount from './pages/UpdateAccount';
+import LoggedSelect from './pages/LoggedSelect';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -43,6 +45,13 @@ function App() {
       }, {
         path: "/login",
         element: <Login />
+      }, {
+        path: "/updateaccount",
+        element: <UpdateAccount />,
+        loader: get_profile
+      }, {
+        path: "/loggedselect",
+        element: <LoggedSelect />
       }
     ]
   }]);

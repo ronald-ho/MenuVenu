@@ -23,6 +23,17 @@ export const tabsel_load = async () => {
     return [table1, table2];
 }
 
+export const get_profile = async () => {
+    /* do api call to get customer details */
+    const petergriffin = {
+        name: "Peter Griffin",
+        email: "petergriffin@pawtucketbrewery.com",
+        points: 1000,
+        mfp: "Unconnected"
+    }
+    return petergriffin;
+}
+
 export function redirect_if_logged_in () {
     console.log('it ran');
     if (localStorage.getItem('mvtoken')) {

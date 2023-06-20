@@ -27,6 +27,7 @@ function Register () {
         }
 
         /*Register api call*/
+        navigate("/customerselect");
     }
 
     return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { Alert, Typography, TextField, Button } from "@mui/material";
 import ResetPopup from "../components/ResetPopup";
 
@@ -25,6 +25,7 @@ function Login () {
         }
 
         /*add APICALL once done*/
+        navigate("/loggedselect");
     }
 
     return (
