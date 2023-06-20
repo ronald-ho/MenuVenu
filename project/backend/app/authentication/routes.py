@@ -1,43 +1,36 @@
-from flask import request, jsonify, login_required
+from flask import request, jsonify
 from models import Customers
 from .. import app, db
+from services import User_service
 
 @app.route('auth/register', methods=['POST'])
 def register():
     data = request.get_json()
 
-    # Check if user already exists
-    if Customers.query.filter_by(email=data['email']).first():
-        return jsonify({'message': 'User already exists'})
-
     # Create new user
-    new_user = Customers(
-        email           = data['email'],
-        fullName        = data['fullName'],
-        password        = data['password'],
-        phone_number    = data['phone_number']
-    )
-    db.session.add(new_user)
-    db.session.commit()
-
-    # Returns the main menu page
-    return jsonify({'message': 'New user created'})
+    if User_service.create_new_user(data['email'], data['fullName'], data['password'], data['phone_number']):
+        return jsonify({'message': 'New user created'})
+    else:
+        return jsonify({'message': 'User already exists'})
+    
 
 @app.route('auth/login', methods=['POST'])
 def login():
     data = request.get_json()
 
+    user = Customers.query.filter_by(email=data['email']).first()
+
     # Check if email does NOT exist in database
-    if not Customers.query.filter_by(email=data['email']).first():
+    if not user:
         return jsonify({'message': 'User does not exist'})
     
     # Check if password is correct
-    user = Customers.query.filter_by(email=data['email']).first()
     if user.password != data['password']:
         return jsonify({'message': 'Incorrect password'})
     
     # Returns the main menu page
     return jsonify({'message': 'Login successful'})
+
 
 @app.route('auth/logout', methods=['POST'])
 def logout():
@@ -104,7 +97,7 @@ def generate_OTP():
     # Returns the main menu page
     return jsonify({'message': 'OTP sent to email'})
 
-@app.route('/auth/reset/password', methods=['POST'])
+@app.route('/auth/reset/password/confirm', methods=['POST'])
 def reset_password():
     data = request.get_json()
 
