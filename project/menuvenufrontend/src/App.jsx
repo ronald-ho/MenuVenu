@@ -12,6 +12,7 @@ import { tabsel_load, redirect_if_logged_in, get_profile, change_details } from 
 import UpdateAccount from './pages/UpdateAccount';
 import LoggedSelect from './pages/LoggedSelect';
 import UpdateDetails from './pages/UpdateDetails';
+import StaffSelect from './pages/StaffSelect';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -60,7 +61,10 @@ function App() {
         action: async ({ request }) => {
           return await change_details(request);
         }
-      }
+      }, {
+        path: "/staffselect",
+        element: <StaffSelect />
+      }, 
     ]
   }]);
 
