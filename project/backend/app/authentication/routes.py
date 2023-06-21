@@ -12,7 +12,6 @@ def register():
         return jsonify({'message': 'New user created'})
     else:
         return jsonify({'message': 'User already exists'})
-    
 
 @app.route('auth/login', methods=['POST'])
 def login():
@@ -31,7 +30,6 @@ def login():
     # Returns the main menu page
     return jsonify({'message': 'Login successful'})
 
-
 @app.route('auth/logout', methods=['POST'])
 def logout():
     # might have to introduce tokens
@@ -48,7 +46,6 @@ def delete():
     
     # return confirmation page
     return jsonify({'message': 'Are you sure you want to delete your account?'})
-    
 
 @app.route('auth/delete/confirm', methods=['POST'])
 def delete_confirm():
