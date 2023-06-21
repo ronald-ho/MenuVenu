@@ -9,3 +9,8 @@ Discuss with the team with possible languages and libraries we could use and dec
 Brainstormed and finalised novel functionalities and regular functionalities.
 Finalise user stories and split user stories for each member to do. I'm doing generic user stories for waitstaff, kitchen and managers.
 Discussed and prepare for sprint 1.
+
+Week 3
+Did some updates to functionalities due to do a misunderstanding. We had more than 6 regualar functionalities and had to cut some down.
+Worked and finished on the proposal. I worked on writing and shwoing user stories, helped in designing some story boards and wrote the architecture for frontend, databases and API's.
+Starting on code for backend, working on Menu.
