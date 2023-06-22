@@ -1,6 +1,6 @@
 import React from "react";
 // import { useNavigate } from "react-router-dom";
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 function WaitStaff () {
     // const navigate = useNavigate();
@@ -21,7 +21,18 @@ function WaitStaff () {
                     <TableRow>Insert row</TableRow>
                 </TableBody>
             </Table>
-            <b>ASSISTANCE REQUIRED</b>
+            <Box
+                sx={{
+                    border: 1,
+                    position: 'absolute',
+                    right: 0,
+                    width: 200,
+                    height: '100vh',
+                }}
+            >
+                <b>ASSISTANCE REQUIRED</b>
+            </Box>
+            
         </>
     );
 }
