@@ -20,12 +20,20 @@ function Login () {
             return;
         } else if (!password) {
             setShowAlert('Please enter a valid password');
+            return;
         } else {
             setShowAlert(null);
         }
 
-        /*add APICALL once done*/
-        navigate("/loggedselect");
+        const body = {
+            email: email,
+            password: password };
+        const data = await apiCall("auth/login", "POST", body);
+        if (data.message === "Login successful") {
+            navigate("/loggedselect");
+        } else {
+            setShowAlert(data.message);
+        }
     }
 
     return (

@@ -19,15 +19,27 @@ function Register () {
         } else if (!email || !validEmailRegex.test(email)) {
             setShowErrorAlert('Please enter a valid email');
             return;
-        } else if (!password || !password.match(/^[^a-zA-Z0-9]+$/)) {
+        } else if (!password) {
             setShowErrorAlert('Please enter a valid password');
+            return;
+        } else if (!/[0-9]/.test(password) || !/\w/.test(password) || !/\W/.test(password) ) {
+            setShowErrorAlert('Password requires at least one letter, number and special character');
             return;
         } else {
             setShowErrorAlert(null);
         }
 
-        /*Register api call*/
-        navigate("/customerselect");
+        const body = {
+            email: email,
+            password: password,
+            name: name 
+        };
+        const data = await apiCall("auth/register", "POST", body);
+        if (data.message === "Login successful") {
+            navigate("/customerselect");
+        } else {
+            setShowAlert(data.message);
+        }        
     }
 
     return (
