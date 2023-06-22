@@ -13,6 +13,8 @@ import UpdateAccount from './pages/UpdateAccount';
 import LoggedSelect from './pages/LoggedSelect';
 import UpdateDetails from './pages/UpdateDetails';
 import StaffSelect from './pages/StaffSelect';
+import WaitStaffLogin from './pages/WaitStaffLogin';
+import WaitStaff from './pages/WaitStaff';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -64,6 +66,12 @@ function App() {
       }, {
         path: "/staffselect",
         element: <StaffSelect />
+      }, {
+        path: "/waitstafflogin",
+        element: <WaitStaffLogin />
+      }, {
+        path: "/waitstaff",
+        element: <WaitStaff />
       }, 
     ]
   }]);

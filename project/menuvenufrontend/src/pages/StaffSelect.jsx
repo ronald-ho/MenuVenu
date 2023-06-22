@@ -8,13 +8,13 @@ function StaffSelect () {
     return (
         <>
             <div style={{textAlign: 'center', marginTop: '60px'}}>
-                <Box component={Link} to={'/waitstaff'} sx={boxcss}>
+                <Box component={Link} to={'/waitstafflogin'} sx={boxcss}>
                     <Typography>Wait Staff</Typography>
                 </Box>
-                <Box component={Link} to={'/kitchenstaff'} sx={boxcss}>
+                <Box component={Link} to={'/kitchenstafflogin'} sx={boxcss}>
                     <Typography>Kitchen Staff</Typography>    
                 </Box>
-                <Box component={Link} to={'/manager'} sx={boxcss}>
+                <Box component={Link} to={'/managerlogin'} sx={boxcss}>
                     <Typography>Manager</Typography>    
                 </Box>
             </div>
