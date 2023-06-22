@@ -21,6 +21,7 @@ function WaitStaff () {
                     <TableRow>Insert row</TableRow>
                 </TableBody>
             </Table>
+            
             <Box
                 sx={{
                     border: 1,
