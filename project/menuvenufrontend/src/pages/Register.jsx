@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Alert, Button, Typography, TextField } from '@mui/material';
 
 function Register () {
@@ -32,6 +32,7 @@ function Register () {
 
     return (
         <>
+            <Button component={Link} to={"/customerselect"}>Back</Button>
             <form onSubmit={(e) => handleSubmit(e)} style={{textAlign: 'center'}}>
                 <Typography>Register</Typography>
                 <TextField sx={{margin: '10px'}} id='login-name' value={name} type="text" label='Name' placeholder="Enter name" onChange={(e) => setName(e.target.value)} />

@@ -20,7 +20,7 @@ function UpdateAccount () {
             <Box component={Link} sx={{ display: 'inline-block', width: '20%', padding: '10px', margin: '10px' }}>
                 <Typography>Connect MyFitnessPal</Typography>
             </Box>
-            <Box component={Link} sx={{ display: 'inline-block', width: '20%', padding: '10px', margin: '10px' }}>
+            <Box component={Link} to={"/deleteaccount"} sx={{ display: 'inline-block', width: '20%', padding: '10px', margin: '10px' }}>
                 <Typography>Delete Account</Typography>
             </Box>
         </div>
