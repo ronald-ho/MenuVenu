@@ -19,7 +19,7 @@ function Register () {
         } else if (!email || !validEmailRegex.test(email)) {
             setShowErrorAlert('Please enter a valid email');
             return;
-        } else if (!password) {
+        } else if (!password || !password.match(/^[^a-zA-Z0-9]+$/)) {
             setShowErrorAlert('Please enter a valid password');
             return;
         } else {

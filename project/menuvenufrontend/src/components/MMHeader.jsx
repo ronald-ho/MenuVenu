@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import styled from '@emotion/styled';
+import LogOutButton from './LogOutButton';
 
 const StyledHeader = styled.header({
   display: 'flex',
@@ -19,6 +20,7 @@ function MMHeader ({ mode }) {
         }
         { mode === 'customer' &&
           <>
+            <LogOutButton />
           </>
         }
         { mode === 'admin' && 
