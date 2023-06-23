@@ -3,6 +3,7 @@ from flask import request, jsonify
 from .models import Customers
 from app import app, db
 from .services import MailService, UserService
+import logging
 
 # ====================================================================================================
 # Register new user
@@ -10,6 +11,8 @@ from .services import MailService, UserService
 @app.route('/auth/register', methods=['POST'])
 def register():
     data = request.get_json()
+
+    logging.info(data)
 
     # Create new user
     if UserService.create_new_user(data['email'], data['full_name'], data['password']):
@@ -23,6 +26,8 @@ def register():
 @app.route('/auth/login', methods=['POST'])
 def login():
     data = request.get_json()
+
+    logging.info(data)
 
     user = Customers.query.filter_by(email=data['email']).first()
 
@@ -48,9 +53,11 @@ def logout():
 # ====================================================================================================
 # Delete user
 
-@app.route('/auth/delete', methods=['POST'])
+@app.route('/auth/delete', methods=['DELETE'])
 def delete():
     data = request.get_json()
+
+    logging.info(data)
 
     # Check if password is correct
     user = Customers.query.filter_by(email=data['email']).first()
@@ -68,6 +75,8 @@ def delete():
 @app.route('/auth/update', methods=['PUT'])
 def update():
     data = request.get_json()
+
+    logging.info(data)
 
     # Check if password is correct
     user = Customers.query.filter_by(email=data['email']).first()
@@ -89,6 +98,8 @@ def update():
 def generate_OTP():
     data = request.get_json()
 
+    logging.info(data)
+
     user = Customers.query.filter_by(email=data['email']).first()
 
     # Check if user exists
@@ -108,11 +119,12 @@ def generate_OTP():
 def verify_OTP():
     data = request.get_json()
 
-    email = data['email']
+    logging.info(data)
+
     reset_code = data['reset_code']
 
     # Check if user exists and if the OTP is valid
-    if not Customers.query.filter_by(email=email, reset_code=reset_code).first():
+    if not Customers.query.filter_by(reset_code=reset_code).first():
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
     
     # Returns the reset password page
@@ -122,10 +134,12 @@ def verify_OTP():
 def reset_password():
     data = request.get_json()
 
-    email = data['email']
+    logging.info(data)
+
+    reset_code = data['reset_code']
     new_password = data['new_password']
 
-    user = Customers.query.filter_by(email=email).first()
+    user = Customers.query.filter_by(reset_code=reset_code).first()
 
     # Reset password
     user.password = new_password
