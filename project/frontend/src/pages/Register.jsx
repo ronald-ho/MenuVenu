@@ -36,7 +36,7 @@ function Register () {
             name: name 
         };
         const data = await apiCall("auth/register", "POST", body);
-        if (data.message === "Login successful") {
+        if (data.status !== 400) {
             navigate("/customerselect");
         } else {
             setShowErrorAlert(data.message);
