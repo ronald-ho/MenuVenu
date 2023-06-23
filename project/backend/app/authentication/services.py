@@ -1,17 +1,17 @@
-from .. import db
+from .. import db, mail
 from .models import Customers
+from flask_mail import Message
 
-class User_service:
+class UserService:
     @staticmethod
-    def create_new_user(email, fullName, password, phone_number):
+    def create_new_user(email, full_name, password):
         if Customers.query.filter_by(email=email).first():
             return False
         
         new_user = Customers(
             email           = email, 
-            fullName        = fullName, 
+            full_name       = full_name, 
             password        = password,
-            phone_number    = phone_number, 
             points          = 0, 
             calories_burnt  = 0, 
             calories_gained = 0
@@ -21,3 +21,14 @@ class User_service:
         db.session.commit()
 
         return True
+    
+class MailService:
+    @staticmethod
+    def send_email(recipient, reset_code):
+        msg = Message(
+            'This is your OTP for MenuVenu',
+            sender = '3900w16amog@gmail.com',
+            recipients = [recipient]
+        )
+        msg.body = 'Your OTP is: ' + str(reset_code)
+        mail.send(msg)
