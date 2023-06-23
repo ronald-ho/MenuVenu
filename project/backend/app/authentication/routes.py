@@ -65,7 +65,7 @@ def delete():
 # ====================================================================================================
 # Update user details
 
-@app.route('/auth/update', methods=['POST'])
+@app.route('/auth/update', methods=['PUT'])
 def update():
     data = request.get_json()
 
