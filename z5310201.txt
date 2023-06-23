@@ -15,4 +15,8 @@ Come up with a rough Database schema
 Discussed schema with members of group, some intracacies such as add-ons caused a little issue
 
 Week 3:
-Culled several features to fit a better scope hghgf
+Culled several features to fit a better scope 
+Learnt about the relevant softwares needed to create and manage a database
+Tested modifying a demo database
+Helped with user stories, such as proposing UI decisions
+Added criteria for the new chatbot feature
