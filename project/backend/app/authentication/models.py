@@ -14,6 +14,7 @@ class Customers(db.Model):
     def generate_reset_code(self):
         self.reset_code = random.randint(100000, 999999)
         db.session.commit()
+        return self.reset_code
 
 if __name__ == '__main__':
     db.create_all()

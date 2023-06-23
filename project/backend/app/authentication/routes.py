@@ -2,7 +2,7 @@ from http import HTTPStatus
 from flask import request, jsonify
 from .models import Customers
 from app import app, db
-from .services import User_service
+from .services import MailService, UserService
 
 # ====================================================================================================
 # Register new user
@@ -12,7 +12,7 @@ def register():
     data = request.get_json()
 
     # Create new user
-    if User_service.create_new_user(data['email'], data['full_name'], data['password']):
+    if UserService.create_new_user(data['email'], data['full_name'], data['password']):
         return jsonify({'status': HTTPStatus.CREATED, 'message': 'New user created'})
     else:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User already exists'})
@@ -89,11 +89,17 @@ def update():
 def generate_OTP():
     data = request.get_json()
 
+    user = Customers.query.filter_by(email=data['email']).first()
+
     # Check if user exists
-    if not Customers.query.filter_by(email=data['email']).first():
+    if not user:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
     
-    # TODO: Generate reset OTP and send email
+    # Generate OTP 
+    reset_code = Customers.generate_reset_code(user)
+
+    # Send the OTP to the user's email
+    MailService.send_email(data['email'], reset_code)
 
     # Returns the main menu page
     return jsonify({'status': HTTPStatus.OK, 'message': 'OTP sent to email'})
