@@ -17,6 +17,7 @@ class Orders(db.model):
     table_id = db.Column(db.Integer, db.ForeignKey(DiningTables.table_id), primary_key = True)
     order_date = db.Column(db.DateTime(timezone = True), server_default = func.now(), nullable = False)
     total_amount = db.Column(db.Float, nullable = False)
+    paid = db.Column(db.Boolean, default = False)
 
 @dataclass
 class OrderedItems(db):
