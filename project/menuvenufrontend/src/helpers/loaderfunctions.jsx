@@ -47,10 +47,13 @@ export async function change_details (request) {
     const data = Object.fromEntries(await request.formData());
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (!data.email || !data.name || !validEmailRegex.test(data.email)) {
-    return false;
+        return false;
     }
     /* replace with fetch and post data */
-    console.log(data.email);
-    console.log(data.name);
+    const body = {
+        email: data.email,
+        full_name: data.name
+    }
+    const response = await apiCall("auth/update", "PUT", body);
     return true;
 }

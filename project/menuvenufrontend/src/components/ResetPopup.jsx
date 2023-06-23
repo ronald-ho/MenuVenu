@@ -1,5 +1,6 @@
 import React from "react";
 import { Alert, Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle, DialogContentText } from "@mui/material";
+import { apiCall } from "../helpers/helpers";
 
 function ResetPopup({ open, setOpen }) {
     const [alert, setAlert] = React.useState(null);
@@ -9,27 +10,49 @@ function ResetPopup({ open, setOpen }) {
     const [password, setPassword] = React.useState('');
     const [passwordconf, setPasswordconf] = React.useState('');
 
-    function handleSubmitEmail() {
+    async function handleSubmitEmail() {
         const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
         if (!email || !validEmailRegex.test(email)) {
             setAlert('Invalid email');
+        }
+        const body = {
+            email: email
+        }
+        const data = await apiCall("auth/reset/password/request", "POST", body);
+        if (data.status === 400) {
+            setAlert(data.message);
         } else {
             setAlert(null);
             setStage(2);
         }
     }
 
-    function handleSubmitCode() {
+    async function handleSubmitCode() {
         /*Should check if code is right */
-        setAlert(null);
-        setStage(3);
+        const body = {
+            reset_code: code
+        }
+        const data = await apiCall("auth/reset/password/code", "POST", body);
+        if (data.status === 400) {
+            setAlert(data.message);
+        } else {
+            setAlert(null);
+            setStage(3);
+        }
     }
 
-    function handleSubmitPassword() {
+    async function handleSubmitPassword() {
         /*call api to update password */
         if (password !== passwordconf) {
             setAlert('Passwords do not match');
+        }
+        const body = {
+            new_password: password
+        }
+        const data = await apiCall("auth/reset/password/confirm", "POST", body);
+        if (data.status === 400) {
+            setAlert(data.message);
         } else {
             setAlert(null);
             setOpen(false);

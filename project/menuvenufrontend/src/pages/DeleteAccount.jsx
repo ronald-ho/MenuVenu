@@ -1,14 +1,21 @@
 import React from "react";
 import { Typography, Button, TextField } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
+import { apiCall } from "../helpers/helpers";
 
 function DeleteAccount() {
     const [password, setPassword] = React.useState('');
     const navigate = useNavigate();
 
-    function acceptdelete() {
+    async function acceptdelete () {
         /* deletion stuff here */
-        navigate("/login");
+        const body = {
+            password: password
+        };
+        const data = await apiCall("auth/delete", "DELETE", body);
+        if (data.message === 'User deleted') {
+            navigate("/login");
+        }
     }
 
     return (
