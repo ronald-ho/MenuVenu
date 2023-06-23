@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from flask import request, jsonify
 from .models import Customers
 from app import app, db
@@ -12,9 +13,9 @@ def register():
 
     # Create new user
     if User_service.create_new_user(data['email'], data['full_name'], data['password']):
-        return jsonify({'message': 'New user created'})
+        return jsonify({'status': HTTPStatus.CREATED, 'message': 'New user created'})
     else:
-        return jsonify({'message': 'User already exists'})
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User already exists'})
 
 # ====================================================================================================
 # Login user
@@ -27,14 +28,14 @@ def login():
 
     # Check if email does NOT exist in database
     if not user:
-        return jsonify({'message': 'User does not exist'})
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
     
     # Check if password is correct
     if user.password != data['password']:
-        return jsonify({'message': 'Incorrect password'})
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
     
     # Returns the main menu page
-    return jsonify({'message': 'Login successful'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful'})
 
 # ====================================================================================================
 # Logout user
@@ -42,7 +43,7 @@ def login():
 @app.route('/auth/logout', methods=['POST'])
 def logout():
     # might have to introduce tokens
-    return jsonify({'message': 'Logout successful'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Logout successful'})
 
 # ====================================================================================================
 # Delete user
@@ -54,12 +55,12 @@ def delete():
     # Check if password is correct
     user = Customers.query.filter_by(email=data['email']).first()
     if user.password != data['password']:
-        return jsonify({'message': 'Incorrect password'})
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
     
     # Delete user
     db.session.delete(user)
     db.session.commit()
-    return jsonify({'message': 'User deleted'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'User deleted'})
 
 # ====================================================================================================
 # Update user details
@@ -80,7 +81,7 @@ def update():
     db.session.commit()
 
     # Returns the main menu page
-    return jsonify({'message': 'User updated'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'User updated'})
 
 # ====================================================================================================
 # Reset password
@@ -90,12 +91,12 @@ def generate_OTP():
 
     # Check if user exists
     if not Customers.query.filter_by(email=data['email']).first():
-        return jsonify({'message': 'User does not exist'})
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
     
     # TODO: Generate reset OTP and send email
 
     # Returns the main menu page
-    return jsonify({'message': 'OTP sent to email'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'OTP sent to email'})
 
 @app.route('/auth/reset/password/code', methods=['POST'])
 def verify_OTP():
@@ -106,10 +107,10 @@ def verify_OTP():
 
     # Check if user exists and if the OTP is valid
     if not Customers.query.filter_by(email=email, reset_code=reset_code).first():
-        return jsonify({'message': 'Invalid reset code'})
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
     
     # Returns the reset password page
-    return jsonify({'message': 'OTP verified'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'OTP verified'})
 
 @app.route('/auth/reset/password/confirm', methods=['POST'])
 def reset_password():
@@ -125,4 +126,4 @@ def reset_password():
     user.reset_code = None
     db.session.commit()
 
-    return jsonify({'message': 'Password reset successful'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Password reset successful'})
