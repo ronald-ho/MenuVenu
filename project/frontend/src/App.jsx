@@ -15,6 +15,7 @@ import UpdateDetails from './pages/UpdateDetails';
 import StaffSelect from './pages/StaffSelect';
 import WaitStaffLogin from './pages/WaitStaffLogin';
 import WaitStaff from './pages/WaitStaff';
+import DeleteAccount from './pages/DeleteAccount';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -72,7 +73,10 @@ function App() {
       }, {
         path: "/waitstaff",
         element: <WaitStaff />
-      }, 
+      }, {
+        path: "/deleteaccount",
+        element: <DeleteAccount />,
+      }
     ]
   }]);
 

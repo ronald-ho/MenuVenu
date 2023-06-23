@@ -1,6 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Alert, Button, Typography, TextField } from '@mui/material';
+import { apiCall } from "../helpers/helpers";
 
 function Register () {
     const navigate = useNavigate();
@@ -22,16 +23,29 @@ function Register () {
         } else if (!password) {
             setShowErrorAlert('Please enter a valid password');
             return;
+        } else if (!/[0-9]/.test(password) || !/\w/.test(password) || !/\W/.test(password) ) {
+            setShowErrorAlert('Password requires at least one letter, number and special character');
+            return;
         } else {
             setShowErrorAlert(null);
         }
 
-        /*Register api call*/
-        navigate("/customerselect");
+        const body = {
+            email: email,
+            password: password,
+            name: name 
+        };
+        const data = await apiCall("auth/register", "POST", body);
+        if (data.status !== 400) {
+            navigate("/customerselect");
+        } else {
+            setShowErrorAlert(data.message);
+        }        
     }
 
     return (
         <>
+            <Button component={Link} to={"/customerselect"}>Back</Button>
             <form onSubmit={(e) => handleSubmit(e)} style={{textAlign: 'center'}}>
                 <Typography>Register</Typography>
                 <TextField sx={{margin: '10px'}} id='login-name' value={name} type="text" label='Name' placeholder="Enter name" onChange={(e) => setName(e.target.value)} />

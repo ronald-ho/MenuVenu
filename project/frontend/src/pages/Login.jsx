@@ -1,6 +1,7 @@
 import React from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { redirect, useNavigate, Link } from "react-router-dom";
 import { Alert, Typography, TextField, Button } from "@mui/material";
+import { apiCall } from "../helpers/helpers";
 import ResetPopup from "../components/ResetPopup";
 
 function Login () {
@@ -20,16 +21,25 @@ function Login () {
             return;
         } else if (!password) {
             setShowAlert('Please enter a valid password');
+            return;
         } else {
             setShowAlert(null);
         }
 
-        /*add APICALL once done*/
-        navigate("/loggedselect");
+        const body = {
+            email: email,
+            password: password };
+        const data = await apiCall("auth/login", "POST", body);
+        if (data.message === "Login successful") {
+            navigate("/loggedselect");
+        } else {
+            setShowAlert(data.message);
+        }
     }
 
     return (
         <>
+            <Button component={Link} to={"/customerselect"}>Back</Button>
             <form onSubmit={(e) => handleSubmit(e)} style={{textAlign: 'center'}}>
                 <Typography>Login</Typography>
                 <TextField sx={{margin: '10px'}} id='login-email' value={email} type="text" label="Email address" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
