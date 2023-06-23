@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Alert, Button, Typography, TextField } from '@mui/material';
+import { apiCall } from "../helpers/helpers";
 
 function Register () {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ function Register () {
         if (data.message === "Login successful") {
             navigate("/customerselect");
         } else {
-            setShowAlert(data.message);
+            setShowErrorAlert(data.message);
         }        
     }
 
