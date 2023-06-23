@@ -1,6 +1,7 @@
 import React from "react";
 // import { useNavigate } from "react-router-dom";
-import { Box, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import AssistReqTableButton from "../components/AssistReqTableButton";
 
 function WaitStaff () {
     // const navigate = useNavigate();
@@ -13,27 +14,35 @@ function WaitStaff () {
             <Table sx={{ margin: 'auto', maxWidth: 600 }}>
                 <TableHead>
                     <TableRow>
-                        <TableCell sx={{ borderLeft: 1, borderRight: 1}}>ORDER ITEM READY</TableCell>
-                        <TableCell sx={{ borderRight: 1}}>TABLE NO.</TableCell>
+                        <TableCell sx={{ borderLeft: 1, borderRight: 1}}><b>ORDER ITEM READY</b></TableCell>
+                        <TableCell sx={{ borderRight: 1}}><b>TABLE NO.</b></TableCell>
                     </TableRow>
                 </TableHead> 
                 <TableBody>
                     <TableRow>Insert row</TableRow>
                 </TableBody>
             </Table>
-            
+
             <Box
                 sx={{
                     border: 1,
+                    borderTop: 0,
+                    fontSize: '15px',
                     position: 'absolute',
+                    textAlign: 'center',
+                    top: '81.6px',
                     right: 0,
-                    width: 200,
+                    width: '130px',
                     height: '100vh',
                 }}
             >
-                <b>ASSISTANCE REQUIRED</b>
+                <Typography sx={{
+                    fontWeight: 'bold',
+                    padding: '15px 10px',
+                }}>ASSISTANCE REQUIRED</Typography>
+                <AssistReqTableButton table={1}></AssistReqTableButton>
+                <AssistReqTableButton table={2}></AssistReqTableButton>
             </Box>
-            
         </>
     );
 }
