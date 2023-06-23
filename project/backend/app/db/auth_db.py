@@ -23,7 +23,7 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 customers_table = Table(
-    'customersss',
+    'customers',
     metadata,
     Column('customer_id', Integer, primary_key=True),
     Column('email', String),
