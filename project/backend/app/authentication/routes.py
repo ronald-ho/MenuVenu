@@ -1,9 +1,9 @@
 from flask import request, jsonify
-from models import Customers
-from .. import app, db
-from services import User_service
+from .models import Customers
+from app import app, db
+from .services import User_service
 
-@app.route('auth/register', methods=['POST'])
+@app.route('/auth/register', methods=['POST'])
 def register():
     data = request.get_json()
 
@@ -13,7 +13,7 @@ def register():
     else:
         return jsonify({'message': 'User already exists'})
 
-@app.route('auth/login', methods=['POST'])
+@app.route('/auth/login', methods=['POST'])
 def login():
     data = request.get_json()
 
@@ -30,12 +30,12 @@ def login():
     # Returns the main menu page
     return jsonify({'message': 'Login successful'})
 
-@app.route('auth/logout', methods=['POST'])
+@app.route('/auth/logout', methods=['POST'])
 def logout():
     # might have to introduce tokens
     return jsonify({'message': 'Logout successful'})
 
-@app.route('auth/delete', methods=['POST'])
+@app.route('/auth/delete', methods=['POST'])
 def delete():
     data = request.get_json()
 
@@ -47,7 +47,7 @@ def delete():
     # return confirmation page
     return jsonify({'message': 'Are you sure you want to delete your account?'})
 
-@app.route('auth/delete/confirm', methods=['POST'])
+@app.route('/auth/delete/confirm', methods=['POST'])
 def delete_confirm():
     data = request.get_json()
 
@@ -62,7 +62,7 @@ def delete_confirm():
     # Returns the main menu page
     return jsonify({'message': 'User not deleted'})
 
-@app.route('auth/update', methods=['POST'])
+@app.route('/auth/update', methods=['POST'])
 def update():
     data = request.get_json()
 
@@ -81,7 +81,7 @@ def update():
     # Returns the main menu page
     return jsonify({'message': 'User updated'})
 
-@app.route('auth/reset/password', methods=['POST'])
+@app.route('/auth/reset/password', methods=['POST'])
 def generate_OTP():
     data = request.get_json()
 
@@ -112,3 +112,7 @@ def reset_password():
     db.session.commit()
 
     return jsonify({'message': 'Password reset successful'})
+
+@app.route('/')
+def hello():
+    return "Welcome to MenuVenu"

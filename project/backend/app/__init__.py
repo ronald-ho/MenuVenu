@@ -20,3 +20,5 @@ app.config['MAIL_PASSWORD'] = "" # TODO: Configure our email password
 
 db = SQLAlchemy(app)
 mail = Mail(app)
+
+from .authentication import routes

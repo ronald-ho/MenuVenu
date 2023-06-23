@@ -2,7 +2,7 @@ import psycopg2
 import psycopg2.extras
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
 
-db_url = 'postgresql://postgres:123@localhost:5432/demo'
+db_url = 'postgresql://MenuVenu:MenuVenu@db:5432/MenuVenu'
 engine = create_engine(db_url)
 
 metadata = MetaData()
@@ -10,9 +10,9 @@ metadata = MetaData()
 conn = psycopg2.connect(
     host="localhost",
     port="5432",
-    database="demo",
-    user="postgres",
-    password="123"
+    database="MenuVenu",
+    user="MenuVenu",
+    password="MenuVenu"
 )
 
 cur = conn.cursor()

@@ -1,5 +1,5 @@
 from .. import db
-from models import Customers
+from .models import Customers
 
 class User_service:
     @staticmethod

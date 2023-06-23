@@ -16,12 +16,12 @@ services:
       - ./frontend:/app
       - /app/node_modules
   db:
-    image: postgres:13
+    image: postgres:15
     environment:
       POSTGRES_USER: MenuVenu
       POSTGRES_PASSWORD: MenuVenu
       POSTGRES_DB: MenuVenu
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql@15/data/
 volumes:
   postgres_data:

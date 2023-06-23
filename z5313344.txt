@@ -11,3 +11,9 @@ react for frontend,
 and postgreSQL for database
 All of us came up with functionalities in regards of different systems to integrate it with the wait management system
 I created sprints within jira, 3 2-week sprints so that we can start creating user stories 
+
+Week 3
+After we created all the user stories, I decided to start working on the backend authentication routes
+I created the base file structure of the project and pushed it into github first so that my teammates can work on different parts of the code
+User authentication routes were finished before the lab 
+I started working on using Docker to containerize the backend
