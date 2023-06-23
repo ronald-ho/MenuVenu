@@ -8,7 +8,7 @@ def register():
     data = request.get_json()
 
     # Create new user
-    if User_service.create_new_user(data['email'], data['fullName'], data['password'], data['phone_number']):
+    if User_service.create_new_user(data['email'], data['full_name'], data['password']):
         return jsonify({'message': 'New user created'})
     else:
         return jsonify({'message': 'User already exists'})
@@ -68,12 +68,12 @@ def update():
 
     # Check if password is correct
     user = Customers.query.filter_by(email=data['email']).first()
-    if user.password != data['password']:
-        return jsonify({'message': 'Incorrect password'})
+    # if user.password != data['password']:
+    #     return jsonify({'message': 'Incorrect password'})
     
     # save the new data
     user.email = data['email']
-    user.fullName = data['fullName']
+    user.full_name = data['full_name']
     user.password = data['password']
     user.phone_number = data['phone_number']
     db.session.commit()

@@ -3,15 +3,14 @@ from .models import Customers
 
 class User_service:
     @staticmethod
-    def create_new_user(email, fullName, password, phone_number):
+    def create_new_user(email, full_name, password):
         if Customers.query.filter_by(email=email).first():
             return False
         
         new_user = Customers(
             email           = email, 
-            fullName        = fullName, 
+            full_name       = full_name, 
             password        = password,
-            phone_number    = phone_number, 
             points          = 0, 
             calories_burnt  = 0, 
             calories_gained = 0
