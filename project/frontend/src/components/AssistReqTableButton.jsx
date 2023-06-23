@@ -3,7 +3,7 @@ import React from "react";
 
 function AssistReqTableButton ({ handleClick, table }) {
     // change colour later 
-    const circle_css = { 
+    const button_css = { 
         border: 1,
         borderRadius: '50%', 
         fontSize: '18px',
@@ -16,9 +16,7 @@ function AssistReqTableButton ({ handleClick, table }) {
     // change to Table {table.table_id} later
 
     return (
-        <>
-            <Box onClick={handleClick} component={Button} sx={circle_css}>Table<br></br>{table}</Box>
-        </>
+        <Button onClick={handleClick} sx={button_css}>Table<br></br>{table}</Button>
     )
 }
 

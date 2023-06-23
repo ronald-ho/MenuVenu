@@ -1,14 +1,15 @@
 import React from "react";
-// import { useNavigate } from "react-router-dom";
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import AssistReqTableButton from "../components/AssistReqTableButton";
+import ConfirmAssistPopUp from "../components/ConfirmAssistPopUp";
 
 function WaitStaff () {
-    // const navigate = useNavigate();
+    const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
 
-    // polling for order items ready and assistance required
-    // monitor db for new fields in relevant tables etc.
-    // https://mui.com/material-ui/react-table/
+    // ORDER ITEM READY 
+    // 1. Poll for new items to be served and show in table
+    // 2. If waitstaff clicks table in Table no. column, pop up appears confirming whether food served or not
+    // 3. If no, do nothing. If yes, send API call to show item was served. Remove item from list
 
     // ASSISTANCE REQUIRED
     // 1. Poll for tables needing assistance -> in db will have "assistance" field etc.
@@ -16,9 +17,8 @@ function WaitStaff () {
     // 3. If waitstaff clicks table in column, pop up appears confirming whether assisted or not
     // 4. If no, do nothing. If yes, send API call to show table has been assisted. Remove table from the column
 
-    function handleClick () {
-        
-    }
+    // loop through tables req assistance and display buttons in column
+    // poll to reload and reflect changes
 
     return (
         <>
@@ -50,19 +50,16 @@ function WaitStaff () {
                 <Typography sx={{
                     fontWeight: 'bold',
                     padding: '15px 10px',
-                }}>ASSISTANCE REQUIRED</Typography>
+                }}>ASSISTANCE REQUIRED AT</Typography>
                 <Box sx={{ 
                     height: '74vh',
                     overflow: 'auto' 
                 }}>
-                    <Table> 
-                        <TableBody>
-                            <TableRow><AssistReqTableButton onClick={handleClick} table={1}></AssistReqTableButton></TableRow>
-                            <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
-                        </TableBody>
-                    </Table>
+                    <AssistReqTableButton handleClick={() => setShowConfirmAssist(true)} table={1}></AssistReqTableButton>
+                    <AssistReqTableButton handleClick={() => setShowConfirmAssist(true)} table={2}></AssistReqTableButton>
                 </Box>
             </Box>
+            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} table={1}/>}
         </>
     );
 }
