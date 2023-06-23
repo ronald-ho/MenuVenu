@@ -9,6 +9,7 @@ function WaitStaff () {
     // polling for order items ready and assistance required
     // monitor db for new fields in relevant tables etc.
     // https://mui.com/material-ui/react-table/
+
     return (
         <>
             <Table sx={{ margin: 'auto', maxWidth: 600 }}>
@@ -33,15 +34,25 @@ function WaitStaff () {
                     top: '81.6px',
                     right: 0,
                     width: '130px',
-                    height: '100vh',
+                    height: 'calc(100vh - 81.6px)',
                 }}
             >
                 <Typography sx={{
                     fontWeight: 'bold',
                     padding: '15px 10px',
                 }}>ASSISTANCE REQUIRED</Typography>
-                <AssistReqTableButton table={1}></AssistReqTableButton>
-                <AssistReqTableButton table={2}></AssistReqTableButton>
+                <Table sx={{ overflow: 'auto' }}> 
+                    <TableBody>
+                        <TableRow><AssistReqTableButton table={1}></AssistReqTableButton></TableRow>
+                        <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
+                        <TableRow><AssistReqTableButton table={1}></AssistReqTableButton></TableRow>
+                        <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
+                        <TableRow><AssistReqTableButton table={1}></AssistReqTableButton></TableRow>
+                        <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
+                        <TableRow><AssistReqTableButton table={1}></AssistReqTableButton></TableRow>
+                        <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
+                    </TableBody>
+                </Table>
             </Box>
         </>
     );

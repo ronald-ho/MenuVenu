@@ -9,6 +9,7 @@ function AssistReqTableButton ({ table }) {
         fontSize: '18px',
         height: '85px',
         lineHeight: '25px',
+        marginBottom: '20px',
         width: '85px'
     };
 
