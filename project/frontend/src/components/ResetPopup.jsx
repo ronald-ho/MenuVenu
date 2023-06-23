@@ -48,7 +48,8 @@ function ResetPopup({ open, setOpen }) {
             setAlert('Passwords do not match');
         }
         const body = {
-            new_password: password
+            new_password: password,
+            reset_code: code
         }
         const data = await apiCall("auth/reset/password/confirm", "POST", body);
         if (data.status === 400) {

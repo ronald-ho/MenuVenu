@@ -5,6 +5,7 @@ export async function apiCall (path, method, body) {
       method,
       headers: {
         'Content-type': 'application/json',
+        'Accept': 'application/json'
       },
     };
   
