@@ -1,8 +1,13 @@
+import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
+app.logger.setLevel(logging.INFO)
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://MenuVenu:MenuVenu@db:5432/MenuVenu'
