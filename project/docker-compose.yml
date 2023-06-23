@@ -17,11 +17,13 @@ services:
       - /app/node_modules
   db:
     image: postgres:15
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: MenuVenu
       POSTGRES_PASSWORD: MenuVenu
       POSTGRES_DB: MenuVenu
     volumes:
-      - postgres_data:/var/lib/postgresql@15/data/
+      - postgres_data:/var/lib/postgresql/data/
 volumes:
   postgres_data:

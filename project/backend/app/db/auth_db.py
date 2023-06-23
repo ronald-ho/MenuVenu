@@ -2,7 +2,7 @@ import psycopg2
 import psycopg2.extras
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
 
-db_url = 'postgresql://MenuVenu:MenuVenu@db:5432/MenuVenu'
+db_url = 'postgresql://MenuVenu:MenuVenu@localhost:5432/MenuVenu'
 engine = create_engine(db_url)
 
 metadata = MetaData()
