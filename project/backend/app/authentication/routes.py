@@ -3,6 +3,9 @@ from .models import Customers
 from app import app, db
 from .services import User_service
 
+# ====================================================================================================
+# Register new user
+
 @app.route('/auth/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -12,6 +15,9 @@ def register():
         return jsonify({'message': 'New user created'})
     else:
         return jsonify({'message': 'User already exists'})
+
+# ====================================================================================================
+# Login user
 
 @app.route('/auth/login', methods=['POST'])
 def login():
@@ -30,10 +36,16 @@ def login():
     # Returns the main menu page
     return jsonify({'message': 'Login successful'})
 
+# ====================================================================================================
+# Logout user
+
 @app.route('/auth/logout', methods=['POST'])
 def logout():
     # might have to introduce tokens
     return jsonify({'message': 'Logout successful'})
+
+# ====================================================================================================
+# Delete user
 
 @app.route('/auth/delete', methods=['POST'])
 def delete():
@@ -44,23 +56,13 @@ def delete():
     if user.password != data['password']:
         return jsonify({'message': 'Incorrect password'})
     
-    # return confirmation page
-    return jsonify({'message': 'Are you sure you want to delete your account?'})
+    # Delete user
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'User deleted'})
 
-@app.route('/auth/delete/confirm', methods=['POST'])
-def delete_confirm():
-    data = request.get_json()
-
-    user = Customers.query.filter_by(email=data['email']).first()
-    
-    # if auth/delete/confirm is true, delete user
-    if data['confirm']:
-        db.session.delete(user)
-        db.session.commit()
-        return jsonify({'message': 'User deleted'})
-    
-    # Returns the main menu page
-    return jsonify({'message': 'User not deleted'})
+# ====================================================================================================
+# Update user details
 
 @app.route('/auth/update', methods=['POST'])
 def update():
@@ -74,14 +76,15 @@ def update():
     # save the new data
     user.email = data['email']
     user.full_name = data['full_name']
-    user.password = data['password']
-    user.phone_number = data['phone_number']
+
     db.session.commit()
 
     # Returns the main menu page
     return jsonify({'message': 'User updated'})
 
-@app.route('/auth/reset/password', methods=['POST'])
+# ====================================================================================================
+# Reset password
+@app.route('/auth/reset/password/request', methods=['POST'])
 def generate_OTP():
     data = request.get_json()
 
@@ -94,25 +97,32 @@ def generate_OTP():
     # Returns the main menu page
     return jsonify({'message': 'OTP sent to email'})
 
+@app.route('/auth/reset/password/code', methods=['POST'])
+def verify_OTP():
+    data = request.get_json()
+
+    email = data['email']
+    reset_code = data['reset_code']
+
+    # Check if user exists and if the OTP is valid
+    if not Customers.query.filter_by(email=email, reset_code=reset_code).first():
+        return jsonify({'message': 'Invalid reset code'})
+    
+    # Returns the reset password page
+    return jsonify({'message': 'OTP verified'})
+
 @app.route('/auth/reset/password/confirm', methods=['POST'])
 def reset_password():
     data = request.get_json()
 
     email = data['email']
-    reset_code = data['reset_code']
     new_password = data['new_password']
 
-    # Check if user exists and if the OTP is valid
-    if not Customers.query.filter_by(email=email, reset_code=reset_code).first():
-        return jsonify({'message': 'Invalid reset code'})
+    user = Customers.query.filter_by(email=email).first()
 
     # Reset password
-    Customers.password = new_password
-    Customers.reset_code = None
+    user.password = new_password
+    user.reset_code = None
     db.session.commit()
 
     return jsonify({'message': 'Password reset successful'})
-
-@app.route('/')
-def hello():
-    return "Welcome to MenuVenu"
