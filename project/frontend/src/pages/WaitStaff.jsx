@@ -10,6 +10,16 @@ function WaitStaff () {
     // monitor db for new fields in relevant tables etc.
     // https://mui.com/material-ui/react-table/
 
+    // ASSISTANCE REQUIRED
+    // 1. Poll for tables needing assistance -> in db will have "assistance" field etc.
+    // 2. If needs assistance, show in the column
+    // 3. If waitstaff clicks table in column, pop up appears confirming whether assisted or not
+    // 4. If no, do nothing. If yes, send API call to show table has been assisted. Remove table from the column
+
+    function handleClick () {
+        
+    }
+
     return (
         <>
             <Table sx={{ margin: 'auto', maxWidth: 600 }}>
@@ -33,26 +43,25 @@ function WaitStaff () {
                     textAlign: 'center',
                     top: '81.6px',
                     right: 0,
-                    width: '130px',
-                    height: 'calc(100vh - 81.6px)',
+                    width: '140px',
+                    height: '85vh',
                 }}
             >
                 <Typography sx={{
                     fontWeight: 'bold',
                     padding: '15px 10px',
                 }}>ASSISTANCE REQUIRED</Typography>
-                <Table sx={{ overflow: 'auto' }}> 
-                    <TableBody>
-                        <TableRow><AssistReqTableButton table={1}></AssistReqTableButton></TableRow>
-                        <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
-                        <TableRow><AssistReqTableButton table={1}></AssistReqTableButton></TableRow>
-                        <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
-                        <TableRow><AssistReqTableButton table={1}></AssistReqTableButton></TableRow>
-                        <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
-                        <TableRow><AssistReqTableButton table={1}></AssistReqTableButton></TableRow>
-                        <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
-                    </TableBody>
-                </Table>
+                <Box sx={{ 
+                    height: '74vh',
+                    overflow: 'auto' 
+                }}>
+                    <Table> 
+                        <TableBody>
+                            <TableRow><AssistReqTableButton onClick={handleClick} table={1}></AssistReqTableButton></TableRow>
+                            <TableRow><AssistReqTableButton table={2}></AssistReqTableButton></TableRow>
+                        </TableBody>
+                    </Table>
+                </Box>
             </Box>
         </>
     );

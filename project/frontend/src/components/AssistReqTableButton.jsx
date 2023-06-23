@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import React from "react";
 
-function AssistReqTableButton ({ table }) {
+function AssistReqTableButton ({ handleClick, table }) {
     // change colour later 
     const circle_css = { 
         border: 1,
@@ -17,7 +17,7 @@ function AssistReqTableButton ({ table }) {
 
     return (
         <>
-            <Box component={Button} sx={circle_css}>Table<br></br>{table}</Box>
+            <Box onClick={handleClick} component={Button} sx={circle_css}>Table<br></br>{table}</Box>
         </>
     )
 }
