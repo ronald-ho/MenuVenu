@@ -19,6 +19,6 @@ class Orders(db.model):
 @dataclass
 class OrderedItems(db):
     order_item_id = db.Column(db.Integer, primary_key = True)
-    order_id = db.Column(db.Integer, db.ForeignKey(Oders.order_id), primary_key = True)
+    order_id = db.Column(db.Integer, db.ForeignKey(Orders.order_id), primary_key = True)
     #customer_id = db.Column(db.Integer, db.ForeignKey(Customers.customer_id), primary_key = True)
     #item_id = db.Column(db.Integer, db.ForeignKey(MenuItems.item_id), primary_key = True)
