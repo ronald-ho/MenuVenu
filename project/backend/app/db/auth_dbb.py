@@ -1,4 +1,5 @@
-
+import psycopg2
+import psycopg2.extras
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
 
 
@@ -10,8 +11,19 @@ engine = create_engine(db_url)
 metadata = MetaData()
 
 
+conn = psycopg2.connect(
+    host="localhost",
+    port="5432",
+    database="demo",
+    user="postgres",
+    password="123"
+)
+
+
+cur = conn.cursor()
+
 customers_table = Table(
-    'customers',
+    'customersss',
     metadata,
     Column('customer_id', Integer, primary_key=True),
     Column('email', String),
@@ -24,3 +36,6 @@ customers_table = Table(
 )
 
 metadata.create_all(bind = engine)
+
+# Switch to the new database
+conn.close()
