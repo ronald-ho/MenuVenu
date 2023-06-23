@@ -1,6 +1,5 @@
 from flask import request, jsonify
 from .. import app, db
-from services import User_service
 from http import HTTPStatus
 from models import DiningTables
 from models import Orders
