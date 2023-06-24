@@ -8,9 +8,7 @@ from app.menu.models import MenuItems
 class DiningTables(db.model):
     table_id =          db.Column(db.Integer, primary_key = True)
     table_number =      db.Column(db.Integer, unique = True, nullable = False)
-    is_ocuppied =       db.Column(db.Boolean, default = False)
-    needs_assistance =  db.Column(db.Boolean, default = False)
-
+    
 @dataclass
 class Orders(db.model):
     order_id = db.Column(db.Integer, primary_key = True)
