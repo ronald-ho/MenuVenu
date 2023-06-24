@@ -19,35 +19,15 @@ function WaitStaff () {
 
     return (
         <>
-            <Table sx={{ margin: 'auto', maxWidth: 600 }}>
-                <TableHead>
+            <Table sx={{ margin: 'auto', maxWidth: 700 }}>
+                <TableHead sx={{ border: 1, borderTop: 0 }}>
                     <TableRow>
-                        <TableCell sx={{ borderLeft: 1, borderRight: 1}}><b>ORDER ITEM READY</b></TableCell>
-                        <TableCell sx={{ borderRight: 1}}><b>TABLE NO.</b></TableCell>
+                        <TableCell sx={{ borderRight: 1, borderBottom: 1 }}><b>ORDER ITEM READY</b></TableCell>
+                        <TableCell sx={{ borderBottom: 1 }}><b>TABLE NO.</b></TableCell>
                     </TableRow>
                 </TableHead> 
-                <TableBody>
-                    <TableRow>Insert row</TableRow>
-                </TableBody>
             </Table>
-
-            <Box
-                sx={{
-                    border: 1,
-                    borderTop: 0,
-                    fontSize: '15px',
-                    position: 'absolute',
-                    textAlign: 'center',
-                    top: '81.6px',
-                    right: 0,
-                    width: '140px',
-                    height: '85vh',
-                }}
-            >
-                <Typography sx={{ fontWeight: 'bold', padding: '15px 10px' }}>
-                    ASSISTANCE REQUIRED AT
-                </Typography>
-            </Box>
+            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
         </>
     );
 }
@@ -55,6 +35,7 @@ function WaitStaff () {
 export const TablesReqAssistPolling = () => {
     const [tableData, setTableData] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
+    const [confirmTable, setConfirmTable] = React.useState();
 
     React.useEffect(() => {
         const fetchTableData = async () => {
@@ -68,11 +49,10 @@ export const TablesReqAssistPolling = () => {
             }
         };
 
-        // Set up polling with a 5-second interval
-        const pollingInterval = setInterval(fetchTableData, 5000);
+        // Check updates every 5 seconds -> can adjust if suitable
+        const interval1 = setInterval(fetchTableData, 5000);
 
-        // Clean up the interval when the component unmounts
-        return () => clearInterval(pollingInterval);
+        return () => clearInterval(interval1);
     }, []);
 
     return (
@@ -94,17 +74,21 @@ export const TablesReqAssistPolling = () => {
                     ASSISTANCE REQUIRED AT
                 </Typography>
                 <Box sx={{ height: '74vh', overflow: 'auto' }}>
-                    {tableData.map((table) => (
-                        <AssistReqTableButton 
-                            key={table.table_id} 
-                            handleClick={() => setShowConfirmAssist(true)} 
-                            table={table}
-                        >
-                        </AssistReqTableButton>
-                    ))}
+                    {tableData.length !== 0 && tableData.map((table) => (
+                            <AssistReqTableButton 
+                                key={table.table_id} 
+                                handleClick={() => {
+                                    setShowConfirmAssist(true);
+                                    setConfirmTable(table.table_number);
+                                }}
+                                tableNo={table.table_number}
+                            >
+                            </AssistReqTableButton>
+                        ))
+                    }
                 </Box>
             </Box>
-            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} table={1}/>}
+            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTableNo={setConfirmTable}/>}
         </>
     );
 };

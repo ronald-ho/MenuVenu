@@ -1,7 +1,7 @@
-import { Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import React from "react";
 
-function AssistReqTableButton ({ handleClick, table }) {
+function AssistReqTableButton ({ handleClick, tableNo }) {
     // change colour later 
     const button_css = { 
         border: 1,
@@ -13,10 +13,8 @@ function AssistReqTableButton ({ handleClick, table }) {
         width: '85px'
     };
 
-    // change to Table {table.table_id} later
-
     return (
-        <Button onClick={handleClick} sx={button_css}>Table<br></br>{table}</Button>
+        <Button onClick={handleClick} sx={button_css}>Table<br></br>{tableNo}</Button>
     )
 }
 
