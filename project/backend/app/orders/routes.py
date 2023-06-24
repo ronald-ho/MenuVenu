@@ -67,7 +67,10 @@ def select_table:
         return jsonify({'status': HTTPStatus.OK, 'message': 'Table selected'})
 
 
-@app.route('orders/get_occupied_tables', methods['GET'])
-def get_occupied_tables:
+@app.route('orders/get_tables', methods['GET'])
+def get_tables:
 
-    return jsonify({'status': HTTPStatus.OK, 'table_list': table_list})
+    table_list = DiningTables.query.select()
+    occupied_list = occupied_flags
+
+    return jsonify({'status': HTTPStatus.OK, 'table_list': table_list, 'occupied_list': occupied_list})
