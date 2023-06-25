@@ -31,6 +31,7 @@ function Login () {
             password: password };
         const data = await apiCall("auth/login", "POST", body);
         if (data.message === "Login successful") {
+            localStorage.setItem("mvuser", data.customer_id);
             navigate("/loggedselect");
         } else {
             setShowAlert(data.message);
