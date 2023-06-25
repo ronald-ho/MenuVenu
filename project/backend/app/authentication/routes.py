@@ -47,7 +47,7 @@ def login():
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
     
     # Returns the main menu page
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful', 'customer_id': user.customer_id})
 
 # ====================================================================================================
 # Logout user
@@ -67,7 +67,7 @@ def delete():
     logger.info(f"Received delete request: {data}")
 
     # Check if password is correct
-    user = Customers.query.filter_by(email=data['email']).first()
+    user = Customers.query.filter_by(customer_id = data['customer_id']).first()
     if user.password != data['password']:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
     
@@ -86,15 +86,11 @@ def update():
     logger.info(f"Received update request: {data}")
 
     # Check if password is correct
-    user = Customers.query.filter_by(email=data['email']).first()
-    # if user.password != data['password']:
-    #     return jsonify({'message': 'Incorrect password'})
+    user = Customers.query.filter_by(customer_id = data['customer_id']).first()
     
     # save the new data
-
-    logger.info(f"User: {user}")
-    user.email = data['email']
-    user.full_name = data['full_name']
+    user.email = data['new_email']
+    user.full_name = data['new_full_name']
 
     db.session.commit()
 
@@ -108,7 +104,7 @@ def generate_OTP():
     data = request.get_json()
     logger.info(f"Received reset password request: {data}")
 
-    user = Customers.query.filter_by(email=data['email']).first()
+    user = Customers.query.filter_by(email = data['email']).first()
 
     # Check if user exists
     if not user:
@@ -133,10 +129,11 @@ def verify_OTP():
 
     logger.info(f"Received OTP verification request: {data}")
 
+    email = data['email']
     reset_code = data['reset_code']
 
     # Check if user exists and if the OTP is valid
-    if data['email'] != reset_dict[reset_code]:
+    if email != reset_dict[reset_code]:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
     
     # Returns the reset password page
@@ -149,10 +146,11 @@ def reset_password():
 
     logger.info(f"Received password reset request: {data}")
 
-    email = reset_dict['reset_code']
+    reset_code = data['reset_code']
     new_password = data['new_password']
+    email = reset_dict[reset_code]
 
-    user = Customers.query.filter_by(email=email).first()
+    user = Customers.query.filter_by(email = email).first()
 
     # Reset password
     user.password = new_password
@@ -160,3 +158,17 @@ def reset_password():
     db.session.commit()
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Password reset successful'})
+
+# ====================================================================================================
+# Find user
+
+@app.route('/auth/customer/<customer_id>', methods=['GET'])
+def find_user(customer_id):
+    logger.info(f"Received find user request: {customer_id}")
+
+    customer = Customers.query.get(customer_id)
+
+    if not customer:
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
+        
+    return jsonify({'status': HTTPStatus.OK, 'message': 'User found', 'customer_info': customer.to_dict()})
