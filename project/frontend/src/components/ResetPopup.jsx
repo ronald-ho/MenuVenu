@@ -31,7 +31,8 @@ function ResetPopup({ open, setOpen }) {
     async function handleSubmitCode() {
         /*Should check if code is right */
         const body = {
-            reset_code: code
+            reset_code: code,
+            email: email
         }
         const data = await apiCall("auth/reset/password/code", "POST", body);
         if (data.status === 400) {
