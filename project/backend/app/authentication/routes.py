@@ -115,6 +115,7 @@ def generate_OTP():
 
     # Add reset code to dictionary
     reset_dict[reset_code] = data['email']
+    logger.info(f"reset_dict: {reset_dict}")
 
     # Send the OTP to the user's email
     MailService.send_email(data['email'], reset_code)
@@ -133,7 +134,7 @@ def verify_OTP():
     reset_code = data['reset_code']
 
     # Check if user exists and if the OTP is valid
-    if email != reset_dict[reset_code]:
+    if reset_dict[reset_code] != email:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
     
     # Returns the reset password page
