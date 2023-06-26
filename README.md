@@ -9,3 +9,4 @@ docker compose up
 ```
 
 Frontend Client: http://localhost:3000
+Backend Client: http://localhost:5000
