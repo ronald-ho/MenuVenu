@@ -7,6 +7,12 @@ from app.authentication.models import Customers
 class DiningTables(db.Model):
     table_id =          db.Column(db.Integer, primary_key = True)
     table_number =      db.Column(db.Integer, unique = True, nullable = False)
+
+    def to_dict(self):
+        return {
+            'table_id': self.table_id,
+            'table_number': self.table_number
+        }
     
 @dataclass
 class Orders(db.Model):

@@ -131,7 +131,7 @@ def verify_OTP():
     logger.info(f"Received OTP verification request: {data}")
 
     email = data['email']
-    reset_code = data['reset_code']
+    reset_code = int(data['reset_code'])
 
     # Check if user exists and if the OTP is valid
     if reset_dict[reset_code] != email:
@@ -147,7 +147,7 @@ def reset_password():
 
     logger.info(f"Received password reset request: {data}")
 
-    reset_code = data['reset_code']
+    reset_code = int(data['reset_code'])
     new_password = data['new_password']
     email = reset_dict[reset_code]
 
