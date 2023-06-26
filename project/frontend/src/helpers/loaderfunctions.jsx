@@ -7,19 +7,12 @@ async function createGuest () {
 
 export const tabsel_load = async () => {
     console.log('it ran');
-    if (!localStorage.getItem('mvtoken')) {
+    if (!localStorage.getItem('mvuser')) {
         await createGuest();
     }
 
     /*do api call to get list of tables and return them*/
-    const table1 = {
-        table_id: 1,
-        occupied: false
-    };
-    const table2 = {
-        table_id: 2,
-        occupied: true
-    };
+    const data = await apiCall("orders/get_tables", "GET", {});
     return [table1, table2];
 }
 
@@ -31,7 +24,12 @@ export const get_profile = async () => {
         points: 1000,
         mfp: "Unconnected"
     }
-    return petergriffin;
+    const response = await apiCall("auth/customer/"+localStorage.getItem("mvuser"), "GET", {});
+    if (response.status === 200) {
+        return response.customer_info;
+    } else {
+        return petergriffin;
+    }
 }
 
 export function redirect_if_logged_in () {
@@ -51,6 +49,7 @@ export async function change_details (request) {
     }
     /* replace with fetch and post data */
     const body = {
+        customer_id: localStorage.getItem("mvuser"),
         email: data.email,
         full_name: data.name
     }

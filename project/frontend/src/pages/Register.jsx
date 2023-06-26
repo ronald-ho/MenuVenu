@@ -31,9 +31,9 @@ function Register () {
         }
 
         const body = {
-            email: email,
-            password: password,
-            name: name 
+            "email": email,
+            "password": password,
+            "full_name": name 
         };
         const data = await apiCall("auth/register", "POST", body);
         if (data.status !== 400) {
