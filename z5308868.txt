@@ -1,6 +1,6 @@
 Week 1
 * Formed our group and named it "MOG".
-* Anthony and I attended the tutorial and read throguh the project ideas. We brainstormed some novel functionalities for a couple of the projects which we were interested in.
+* Anthony and I attended the tutorial and read through the project ideas. We brainstormed some novel functionalities for a couple of the projects which we were interested in.
 * Ronald was selected to be the scrum master.
 * I created the Jira site and invited fellow team members and our mentor.
 * Finalised the project idea: Wait Management System. 
@@ -8,3 +8,8 @@ Week 1
 Week 2
 * As a team we decided on our techstack: frontend - React.js, backend - Python, PostgreSQL.
 * We brainstormed our novel and non-novel functionalities, and sought advice from our tutor.
+
+Week 3
+* We worked on the proposal for this week. I was in charge of designing a majority of the storyboards using Adobe xD.
+* We ran into some complications with having too many features. This was before we realised that some of our 6 non-novel functionalities could come from the Wait Staff Management specification.
+* Ronald submitted the proposal for the group before the deadline.  

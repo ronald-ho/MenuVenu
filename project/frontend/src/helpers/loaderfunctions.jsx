@@ -13,7 +13,7 @@ export const tabsel_load = async () => {
 
     /*do api call to get list of tables and return them*/
     const data = await apiCall("orders/get_tables", "GET", {});
-    return [table1, table2];
+    return data.table_list;
 }
 
 export const get_profile = async () => {
@@ -50,8 +50,8 @@ export async function change_details (request) {
     /* replace with fetch and post data */
     const body = {
         customer_id: localStorage.getItem("mvuser"),
-        email: data.email,
-        full_name: data.name
+        new_email: data.email,
+        new_full_name: data.name
     }
     const response = await apiCall("auth/update", "PUT", body);
     return true;

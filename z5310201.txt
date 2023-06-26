@@ -1,0 +1,22 @@
+Week 1:
+Was overseas, however did contact members in my group to join their COMP3900 Project
+Brainstormed ideas relating to the given stimulus as well as some unique projects
+Outlined key pros and cons of the brainstormed projects
+Collectively Agreed upon restaurant wait management system with group
+
+
+Week 2:
+Ironed out details regarding the aim and scope of our project
+Collectively discussed the behaviour of certain actions and our main criteria
+Collectively agreed upon using Python as the code langugage
+Brainstorm 6 Features and 2 Novel Features as a group. 7 Features and 3 Novel were come up with
+I chose to do backend
+Come up with a rough Database schema
+Discussed schema with members of group, some intracacies such as add-ons caused a little issue
+
+Week 3:
+Culled several features to fit a better scope 
+Learnt about the relevant softwares needed to create and manage a database
+Tested modifying a demo database
+Helped with user stories, such as proposing UI decisions
+Added criteria for the new chatbot feature
