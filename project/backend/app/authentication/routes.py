@@ -1,9 +1,10 @@
 import logging
 from http import HTTPStatus
 
-from app import app, db
 from flask import jsonify, request
 
+# Local imports
+from app import app, db
 from .models import Customers
 from .services import MailService, UserService
 
@@ -17,9 +18,7 @@ reset_dict = {}
 
 @app.route('/auth/register', methods=['POST'])
 def register():
-    data = request.get_json()
-
-    logger.info(f"Received registration request: {data}")
+    data = data_logger(request)
 
     # Create new user
     if UserService.create_new_user(data['email'], data['full_name'], data['password']):
@@ -32,9 +31,7 @@ def register():
 
 @app.route('/auth/login', methods=['POST'])
 def login():
-    data = request.get_json()
-
-    logger.info(f"Received login request: {data}")
+    data = data_logger(request)
 
     user = Customers.query.filter_by(email=data['email']).first()
 
@@ -43,9 +40,11 @@ def login():
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
     
     # Check if password is correct
-    if user.password != data['password']:
+    if not user.check_password(data['password']):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
     
+
+
     # Returns the main menu page
     return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful', 'customer_id': user.customer_id})
 
@@ -62,9 +61,7 @@ def logout():
 
 @app.route('/auth/delete', methods=['DELETE'])
 def delete():
-    data = request.get_json()
-
-    logger.info(f"Received delete request: {data}")
+    data = data_logger(request)
 
     # Check if password is correct
     user = Customers.query.filter_by(customer_id = data['customer_id']).first()
@@ -81,9 +78,7 @@ def delete():
 
 @app.route('/auth/update', methods=['PUT'])
 def update():
-    data = request.get_json()
-
-    logger.info(f"Received update request: {data}")
+    data = data_logger(request)
 
     # Check if password is correct
     user = Customers.query.filter_by(customer_id = data['customer_id']).first()
@@ -101,8 +96,7 @@ def update():
 # Reset password
 @app.route('/auth/reset/password/request', methods=['POST'])
 def generate_OTP():
-    data = request.get_json()
-    logger.info(f"Received reset password request: {data}")
+    data = data_logger(request)
 
     user = Customers.query.filter_by(email = data['email']).first()
 
@@ -126,9 +120,7 @@ def generate_OTP():
 
 @app.route('/auth/reset/password/code', methods=['POST'])
 def verify_OTP():
-    data = request.get_json()
-
-    logger.info(f"Received OTP verification request: {data}")
+    data = data_logger(request)
 
     email = data['email']
     reset_code = int(data['reset_code'])
@@ -143,9 +135,7 @@ def verify_OTP():
 
 @app.route('/auth/reset/password/confirm', methods=['POST'])
 def reset_password():
-    data = request.get_json()
-
-    logger.info(f"Received password reset request: {data}")
+    data = data_logger(request)
 
     reset_code = int(data['reset_code'])
     new_password = data['new_password']
@@ -173,3 +163,8 @@ def find_user(customer_id):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
         
     return jsonify({'status': HTTPStatus.OK, 'message': 'User found', 'customer_info': customer.to_dict()})
+
+def data_logger(request):
+    data = request.get_json()
+    logger.info(f"Received request from frontend: {data}")
+    return data

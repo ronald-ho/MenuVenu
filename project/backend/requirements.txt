@@ -5,3 +5,4 @@ flask-mail
 SQLAlchemy
 psycopg2
 flask_cors
+flask_login
