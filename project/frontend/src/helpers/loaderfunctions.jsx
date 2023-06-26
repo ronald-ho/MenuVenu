@@ -58,3 +58,45 @@ export async function change_details (request) {
     const response = await apiCall("auth/update", "PUT", body);
     return "Success!";
 }
+
+export const get_categories = async () => {
+    /*api call */
+    const body = [
+        {
+            name: "Drinks",
+            category_id: 1
+        }, {
+            name: "Snacks",
+            category_id: 2
+        }
+    ]
+    return body;
+}
+
+export async function get_items(params) {
+    console.log(params.categoryid);
+    /*do fetch */
+    const body=[
+        {   
+            item_id: 1,
+            name: "HSP"
+        }, {
+            item_id: 2,
+            name: "Chicken roll"
+        }
+    ]
+    const body2=[
+        {
+            item_id: 3,
+            name: "Seafood bucket"
+        }, {
+            item_id: 4,
+            name: "Fish n chips"
+        }
+    ]
+    if (params.categoryid == 1) {
+        return body;
+    } else {
+        return body2;
+    }
+}
