@@ -12,6 +12,9 @@ import { tabsel_load, redirect_if_logged_in, get_profile, change_details, get_ca
 import UpdateAccount from './pages/UpdateAccount';
 import LoggedSelect from './pages/LoggedSelect';
 import UpdateDetails from './pages/UpdateDetails';
+import StaffSelect from './pages/StaffSelect';
+import WaitStaffLogin from './pages/WaitStaffLogin';
+import WaitStaff from './pages/WaitStaff';
 import DeleteAccount from './pages/DeleteAccount';
 import ViewItems from './components/ViewItems';
 import Menu from './pages/Menu';
@@ -63,6 +66,15 @@ function App() {
         action: async ({ request }) => {
           return await change_details(request);
         }
+      }, {
+        path: "/staffselect",
+        element: <StaffSelect />
+      }, {
+        path: "/waitstafflogin",
+        element: <WaitStaffLogin />
+      }, {
+        path: "/waitstaff",
+        element: <WaitStaff />
       }, {
         path: "/deleteaccount",
         element: <DeleteAccount />,

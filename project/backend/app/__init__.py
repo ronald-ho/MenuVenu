@@ -1,8 +1,14 @@
+import logging
+
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+CORS(app)
+
+app.logger.setLevel(logging.INFO)
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://MenuVenu:MenuVenu@db:5432/MenuVenu'
@@ -13,12 +19,10 @@ app.config['SQLALCHEMY_POOL_RECYCLE'] = 299
 
 # Mail configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = "" # TODO: Enter our email address
-app.config['MAIL_PASSWORD'] = "" # TODO: Configure our email password
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = '3900w16amog@gmail.com'
+app.config['MAIL_PASSWORD'] = 'epoekmdhdlqiletx'
 
 db = SQLAlchemy(app)
 mail = Mail(app)
-
-from .authentication import routes
