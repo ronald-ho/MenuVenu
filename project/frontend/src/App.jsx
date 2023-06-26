@@ -51,7 +51,7 @@ function App() {
         element: <Register />
       }, {
         path: "/login",
-        element: <Login />
+        element: <Login setmode={setMode}/>
       }, {
         path: "/updateaccount",
         element: <UpdateAccount />,

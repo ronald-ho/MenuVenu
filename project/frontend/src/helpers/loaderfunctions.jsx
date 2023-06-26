@@ -45,7 +45,9 @@ export async function change_details (request) {
     const data = Object.fromEntries(await request.formData());
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (!data.email || !data.name || !validEmailRegex.test(data.email)) {
-        return false;
+        return "Invalid email";
+    } else if (!data.password || !/[0-9]/.test(data.password) || !/\w/.test(data.password) || !/\W/.test(data.password) ) {
+        return "New password needs at least one letter, number and special character";
     }
     /* replace with fetch and post data */
     const body = {
@@ -54,7 +56,7 @@ export async function change_details (request) {
         new_full_name: data.name
     }
     const response = await apiCall("auth/update", "PUT", body);
-    return true;
+    return "Success!";
 }
 
 export const get_categories = async () => {
