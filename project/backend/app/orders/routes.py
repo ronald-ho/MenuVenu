@@ -1,9 +1,9 @@
-from flask import request, jsonify
-from .. import app, db
 from http import HTTPStatus
-from models import DiningTables
-from models import Orders
-from models import OrderedItems
+
+from flask import jsonify, request
+
+from .. import app, db
+from .models import DiningTables, OrderedItems, Orders
 
 #list for tables that need assistance
 assistance_flags = []
@@ -11,7 +11,7 @@ assistance_flags = []
 #list for tables that are occupied
 occupied_flags = []
 
-@app.route('orders/req_assist', methods=['POST'])
+@app.route('/orders/req_assist', methods=['POST'])
 def req_assist():
 
     data = request.get_json()
@@ -25,7 +25,7 @@ def req_assist():
         assistance_flags.append(table.table_number)
         return jsonify({'status': HTTPStatus.OK, 'message': 'Assistance requested'})
 
-@app.route('orders/finish_assist', methods=['POST'])
+@app.route('/orders/finish_assist', methods=['POST'])
 def finish_assist():
     data = request.get_json()
 
@@ -36,12 +36,12 @@ def finish_assist():
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Assistance completed'})
 
-@app.route('orders/get_assist', methods=['GET'])
+@app.route('/orders/get_assist', methods=['GET'])
 def get_assist():
 
     return jsonify({'status': HTTPStatus.OK, 'assistance_list': assistance_flags})
 
-@app.route('orders/bill', methods=['POST'])
+@app.route('/orders/bill', methods=['POST'])
 def bill():
 
     data = request.get_json()
@@ -55,8 +55,10 @@ def bill():
 
     return jsonify({'status': HTTPStatus.OK, 'bill': order.total_amount})
 
-@app.route('orders/select_table', methods['POST'])
-def select_table:
+@app.route('/orders/select_table', methods=['POST'])
+def select_table():
+
+    data = request.get_json()
     #get table that was selected
     table = DiningTables.query.filter_by(table_number=data['table_number']).first()
 
@@ -67,8 +69,8 @@ def select_table:
         return jsonify({'status': HTTPStatus.OK, 'message': 'Table selected'})
 
 
-@app.route('orders/get_tables', methods['GET'])
-def get_tables:
+@app.route('/orders/get_tables', methods=['GET'])
+def get_tables():
 
     table_list = DiningTables.query.select()
     occupied_list = occupied_flags

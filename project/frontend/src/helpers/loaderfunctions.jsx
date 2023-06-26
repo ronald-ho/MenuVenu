@@ -13,7 +13,7 @@ export const tabsel_load = async () => {
 
     /*do api call to get list of tables and return them*/
     const data = await apiCall("orders/get_tables", "GET", {});
-    return [table1, table2];
+    return data.table_list;
 }
 
 export const get_profile = async () => {
