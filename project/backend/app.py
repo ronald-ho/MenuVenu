@@ -1,8 +1,13 @@
+# Flask and database setup
 from app import app, db
+
+# Authentication routes and models
 from app.authentication import routes
 from app.authentication.models import Customers
+
+# Orders routes and models
 from app.orders import routes
-from app.orders.models import DiningTables, Orders, OrderedItems
+from app.orders.models import DiningTables, OrderedItems, Orders
 
 if __name__ == '__main__':
     with app.app_context():

@@ -7,7 +7,7 @@ function TableButton ({ table }) {
     const greenboxcss = { display: 'inline-block', width: '20%', padding: '10px', border: '1px black solid', margin: '10px', height: '50px', verticalAlign: 'top', backgroundColor: "green" };
     
     const redboxcss = { display: 'inline-block', width: '20%', padding: '10px', border: '1px black solid', margin: '10px', height: '50px', verticalAlign: 'top', backgroundColor: "red" };
-    const is_occupied = table.occupied;
+    const is_occupied = table.is_occupied;
     const nav = useNavigate();
 
     async function handleClick() {

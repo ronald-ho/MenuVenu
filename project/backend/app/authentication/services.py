@@ -1,6 +1,9 @@
-from .. import db, mail
-from .models import Customers
 from flask_mail import Message
+
+# Local imports
+from app import db, mail
+from .models import Customers
+
 
 class UserService:
     @staticmethod
@@ -11,11 +14,12 @@ class UserService:
         new_user = Customers(
             email           = email, 
             full_name       = full_name, 
-            password        = password,
             points          = 0, 
             calories_burnt  = 0, 
             calories_gained = 0
         )
+
+        new_user.set_password(password)
         
         db.session.add(new_user)
         db.session.commit()
@@ -27,7 +31,7 @@ class MailService:
     def send_email(recipient, reset_code):
         msg = Message(
             'This is your OTP for MenuVenu',
-            sender = '3900w16amog@gmail.com',
+            sender = ('MenuVenu', '3900w16amog@gmail.com'),
             recipients = [recipient]
         )
         msg.body = 'Your OTP is: ' + str(reset_code)
