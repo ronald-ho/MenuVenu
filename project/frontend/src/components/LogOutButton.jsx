@@ -2,12 +2,13 @@ import React from "react";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-function LogOutButton () {
+function LogOutButton ({setmode}) {
     /* Replace with function that removes token and redirects to start page in future */
     const nav = useNavigate();
 
     function logout() {
         localStorage.removeItem("mvuser");
+        setmode('');
         nav("/login");
     }
 
