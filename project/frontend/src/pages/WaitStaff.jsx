@@ -41,8 +41,10 @@ export const TablesReqAssistPolling = () => {
         const fetchTableData = async () => {
             // Make API call to fetch tables requiring assistance
             const data = await apiCall("orders/get_assist", "GET", {});
-            if (data.table_number_list) {
-                setTableData(data.table_number_list);
+            console.log(data);
+            if (data.assistance_list) {
+                setTableData(data.assistance_list);
+                console.log(tableData.length)
             }
             else {
                 console.log("Failed to fetch tables req assistance");
