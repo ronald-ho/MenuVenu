@@ -5,7 +5,7 @@ import { Form, useLoaderData, Link, useActionData } from "react-router-dom";
 function UpdateDetails() {
     const details = useLoaderData();
     const response = useActionData();
-    const [name, setName] = React.useState(details.name);
+    const [name, setName] = React.useState(details.full_name);
     const [email, setEmail] = React.useState(details.email);
     const [password, setPassword] = React.useState("");
 

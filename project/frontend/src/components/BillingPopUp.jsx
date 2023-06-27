@@ -9,6 +9,9 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
     const [customerId, setCustomerId] = React.useState('');
 
     async function handleConfirm() {
+        // Once finish dining and paid, "log out"
+        localStorage.removeItem("mvuser");
+        localStorage.removeItem("mvtable");
         navigate("/customerselect");
     }
 
@@ -18,7 +21,7 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
 
     React.useEffect(() => {
         async function getBill() {
-            const data = await apiCall("orders/bill", "POST", {table_number: tableNo});
+            const data = await apiCall("orders/bill", "POST", { 'table_number': tableNo });
             if (data.bill) {
                 console.log("Bill amount received");
                 setBill(data.bill);
@@ -29,13 +32,14 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
         }
 
         setCustomerId(localStorage.getItem("mvuser"));
-        getBill();
+        setBill(10);
+        // getBill();
       }, []); 
 
     return (
         <>
             <Dialog
-                open={true}
+                open={open}
                 onClose={handleClose}
             >
                 <DialogTitle>{"Request Bill"}</DialogTitle>

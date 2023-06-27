@@ -25,7 +25,7 @@ function App() {
   function Layout() {
     return (
       <>
-        <MMHeader mode={mode} />
+        <MMHeader mode={mode} setmode={setMode}/>
         <Outlet />
         <MVFooter />
       </>

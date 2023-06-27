@@ -7,7 +7,7 @@ function TableButton ({ table }) {
     
     // const redboxcss = { display: 'inline-block', width: '20%', padding: '10px', border: '1px black solid', margin: '10px', height: '50px', verticalAlign: 'top', backgroundColor: "red" };
     // const is_occupied = table.occupied;
-    // const nav = useNavigate();
+    const nav = useNavigate();
 
     // function gotoMenu() {
     //     nav('/menu');
@@ -17,9 +17,13 @@ function TableButton ({ table }) {
     //     <>
     //     {is_occupied ? <Box component={Button} disabled sx={redboxcss}>Table {table.table_id}</Box> : <Box component={Button} onClick={gotoMenu} sx={greenboxcss}>Table {table.table_id}</Box>}
     //     </>
+    function handleClick() {
+        localStorage.setItem("mvtable", table.table_id);
+        nav('/menu/1');
+    }
 
     return (
-        <Box component={Button} sx={greenboxcss}>Table {table.table_id}</Box>
+        <Box component={Button} onClick={handleClick} sx={greenboxcss}>Table {table.table_id}</Box>
     )
 }
 

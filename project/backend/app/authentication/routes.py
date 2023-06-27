@@ -42,8 +42,6 @@ def login():
     # Check if password is correct
     if not user.check_password(data['password']):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
-    
-
 
     # Returns the main menu page
     return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful', 'customer_id': user.customer_id})
@@ -80,12 +78,18 @@ def delete():
 def update():
     data = data_logger(request)
 
-    # Check if password is correct
-    user = Customers.query.filter_by(customer_id = data['customer_id']).first()
+    user = Customers.query.filter_by(customer_id=data['customer_id']).first()
+
+    # Check if email already exists
+    if user.email != data['new_email'] and Customers.query.filter_by(email=data['new_email']).first():
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Email already exists'})
     
     # save the new data
     user.email = data['new_email']
     user.full_name = data['new_full_name']
+
+    if data['new_password']:
+        user.set_password(data['new_password'])
 
     db.session.commit()
 
@@ -123,7 +127,11 @@ def verify_OTP():
     data = data_logger(request)
 
     email = data['email']
-    reset_code = int(data['reset_code'])
+
+    try:
+        reset_code = int(data['reset_code'])
+    except KeyError:
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
 
     # Check if user exists and if the OTP is valid
     if reset_dict[reset_code] != email:
@@ -144,9 +152,10 @@ def reset_password():
     user = Customers.query.filter_by(email = email).first()
 
     # Reset password
-    user.password = new_password
-    user.reset_code = None
+    user.set_password(new_password)
     db.session.commit()
+
+    reset_dict.pop(reset_code)
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Password reset successful'})
 
@@ -163,6 +172,7 @@ def find_user(customer_id):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
         
     return jsonify({'status': HTTPStatus.OK, 'message': 'User found', 'customer_info': customer.to_dict()})
+
 
 def data_logger(request):
     data = request.get_json()

@@ -26,6 +26,7 @@ export const get_profile = async () => {
     }
     const response = await apiCall("auth/customer/"+localStorage.getItem("mvuser"), "GET", {});
     if (response.status === 200) {
+        console.log(response.customer_info);
         return response.customer_info;
     } else {
         return petergriffin;
@@ -53,7 +54,8 @@ export async function change_details (request) {
     const body = {
         customer_id: localStorage.getItem("mvuser"),
         new_email: data.email,
-        new_full_name: data.name
+        new_full_name: data.name,
+        new_password: data.password
     }
     const response = await apiCall("auth/update", "PUT", body);
     return "Success!";
