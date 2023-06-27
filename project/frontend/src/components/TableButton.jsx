@@ -9,8 +9,9 @@ function TableButton ({ table }) {
     const is_occupied = table.occupied;
     const nav = useNavigate();
 
-    function handleClick() {
+    async function handleClick() {
         localStorage.setItem("mvtable", table.table_number);
+        await apiCall("orders/select_table", "POST", { 'table_number' : table.table_number });
         nav('/menu/1');
     }
 
