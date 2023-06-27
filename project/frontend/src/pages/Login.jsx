@@ -4,7 +4,7 @@ import { Alert, Typography, TextField, Button } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import ResetPopup from "../components/ResetPopup";
 
-function Login () {
+function Login ({setmode}) {
     const navigate = useNavigate();
 
     const [email, setEmail] = React.useState('');
@@ -31,6 +31,8 @@ function Login () {
             password: password };
         const data = await apiCall("auth/login", "POST", body);
         if (data.message === "Login successful") {
+            localStorage.setItem("mvuser", data.customer_id);
+            setmode("customer");
             navigate("/loggedselect");
         } else {
             setShowAlert(data.message);

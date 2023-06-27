@@ -1,20 +1,24 @@
 import React from "react";
-import { Typography, Button, TextField } from "@mui/material";
+import { Alert, Typography, Button, TextField } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { apiCall } from "../helpers/helpers";
 
 function DeleteAccount() {
     const [password, setPassword] = React.useState('');
+    const [error, setError] = React.useState(null);
     const navigate = useNavigate();
 
     async function acceptdelete () {
         /* deletion stuff here */
         const body = {
+            customer_id: localStorage.getItem("mvuser"),
             password: password
         };
         const data = await apiCall("auth/delete", "DELETE", body);
         if (data.message === 'User deleted') {
             navigate("/login");
+        } else {
+            setError(data.message);
         }
     }
 
@@ -30,6 +34,7 @@ function DeleteAccount() {
             <br />
             <Button variant="contained" component={Link} to={"/updateaccount"}>No, keep my profile</Button>
             <Button variant="contained" onClick={acceptdelete}>Yes, delete my account</Button>
+            {error && <Alert severity="error" aria-label='errorAlert' sx={{ margin: 'auto', width: '300px' }}>{error}</Alert>}
         </div>
         </>
     )

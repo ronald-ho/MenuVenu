@@ -8,11 +8,16 @@ import LogRegGuest from './pages/LogRegGuest';
 import Register from './pages/Register';
 import SelectTable from './pages/SelectTable';
 import Login from './pages/Login';
-import { tabsel_load, redirect_if_logged_in, get_profile, change_details } from './helpers/loaderfunctions';
+import { tabsel_load, redirect_if_logged_in, get_profile, change_details, get_categories, get_items } from './helpers/loaderfunctions';
 import UpdateAccount from './pages/UpdateAccount';
 import LoggedSelect from './pages/LoggedSelect';
 import UpdateDetails from './pages/UpdateDetails';
+import StaffSelect from './pages/StaffSelect';
+import WaitStaffLogin from './pages/WaitStaffLogin';
+import WaitStaff from './pages/WaitStaff';
 import DeleteAccount from './pages/DeleteAccount';
+import ViewItems from './components/ViewItems';
+import Menu from './pages/Menu';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -46,7 +51,7 @@ function App() {
         element: <Register />
       }, {
         path: "/login",
-        element: <Login />
+        element: <Login setmode={setMode}/>
       }, {
         path: "/updateaccount",
         element: <UpdateAccount />,
@@ -62,8 +67,30 @@ function App() {
           return await change_details(request);
         }
       }, {
+        path: "/staffselect",
+        element: <StaffSelect />
+      }, {
+        path: "/waitstafflogin",
+        element: <WaitStaffLogin />
+      }, {
+        path: "/waitstaff",
+        element: <WaitStaff />
+      }, {
         path: "/deleteaccount",
         element: <DeleteAccount />,
+      }, {
+        path: "/menu",
+        element: <Menu />,
+        loader: get_categories,
+        children: [
+          {
+            path: ":categoryid",
+            element: <ViewItems />,
+            loader: async ({params}) => {
+              return get_items(params);
+            }
+          }
+        ]
       }
     ]
   }]);

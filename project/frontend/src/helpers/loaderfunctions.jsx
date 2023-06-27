@@ -7,20 +7,13 @@ async function createGuest () {
 
 export const tabsel_load = async () => {
     console.log('it ran');
-    if (!localStorage.getItem('mvtoken')) {
+    if (!localStorage.getItem('mvuser')) {
         await createGuest();
     }
 
     /*do api call to get list of tables and return them*/
-    const table1 = {
-        table_id: 1,
-        occupied: false
-    };
-    const table2 = {
-        table_id: 2,
-        occupied: true
-    };
-    return [table1, table2];
+    const data = await apiCall("orders/get_tables", "GET", {});
+    return data.table_list;
 }
 
 export const get_profile = async () => {
@@ -31,7 +24,12 @@ export const get_profile = async () => {
         points: 1000,
         mfp: "Unconnected"
     }
-    return petergriffin;
+    const response = await apiCall("auth/customer/"+localStorage.getItem("mvuser"), "GET", {});
+    if (response.status === 200) {
+        return response.customer_info;
+    } else {
+        return petergriffin;
+    }
 }
 
 export function redirect_if_logged_in () {
@@ -47,13 +45,58 @@ export async function change_details (request) {
     const data = Object.fromEntries(await request.formData());
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (!data.email || !data.name || !validEmailRegex.test(data.email)) {
-        return false;
+        return "Invalid email";
+    } else if (!data.password || !/[0-9]/.test(data.password) || !/\w/.test(data.password) || !/\W/.test(data.password) ) {
+        return "New password needs at least one letter, number and special character";
     }
     /* replace with fetch and post data */
     const body = {
-        email: data.email,
-        full_name: data.name
+        customer_id: localStorage.getItem("mvuser"),
+        new_email: data.email,
+        new_full_name: data.name
     }
     const response = await apiCall("auth/update", "PUT", body);
-    return true;
+    return "Success!";
+}
+
+export const get_categories = async () => {
+    /*api call */
+    const body = [
+        {
+            name: "Drinks",
+            category_id: 1
+        }, {
+            name: "Snacks",
+            category_id: 2
+        }
+    ]
+    return body;
+}
+
+export async function get_items(params) {
+    console.log(params.categoryid);
+    /*do fetch */
+    const body=[
+        {   
+            item_id: 1,
+            name: "HSP"
+        }, {
+            item_id: 2,
+            name: "Chicken roll"
+        }
+    ]
+    const body2=[
+        {
+            item_id: 3,
+            name: "Seafood bucket"
+        }, {
+            item_id: 4,
+            name: "Fish n chips"
+        }
+    ]
+    if (params.categoryid == 1) {
+        return body;
+    } else {
+        return body2;
+    }
 }

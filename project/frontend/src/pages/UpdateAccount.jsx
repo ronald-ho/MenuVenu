@@ -12,7 +12,7 @@ function UpdateAccount () {
             <Typography variant="h2">{details.name}</Typography>
             <Typography>Email address: {details.email}</Typography>
             <Typography>MV Points: {details.points}</Typography>
-            <Typography>MyFitnessPal: {details.mfp}</Typography>
+            <Typography>MyFitnessPal: Unconnected</Typography>
             <Box component={Link} to={"/changedetails"} sx={{ display: 'inline-block', width: '20%', padding: '10px', margin: '10px' }}>
                 <Typography>Update Account</Typography>
             </Box>

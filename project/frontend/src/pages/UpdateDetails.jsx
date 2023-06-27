@@ -7,6 +7,7 @@ function UpdateDetails() {
     const response = useActionData();
     const [name, setName] = React.useState(details.name);
     const [email, setEmail] = React.useState(details.email);
+    const [password, setPassword] = React.useState("");
 
     return (
         <>
@@ -18,9 +19,11 @@ function UpdateDetails() {
                 <br />
                 <TextField sx={{margin: '10px'}} type="text" value={email} name="email" label="Change email" onChange={(e) => setEmail(e.target.value)} />
                 <br />
+                <TextField sx={{margin: '10px'}} type="text" value={password} name="password" label="Change password" onChange={(e) => setPassword(e.target.value)} />
+                <br />
                 <Button variant="contained" type="submit">Submit</Button>
             </Form>
-            {response !== undefined && <Alert severity={response ? "success" : "error"} sx={{ margin: 'auto', width: '300px' }}>{response ? "Update Successful" : "Update failed"}</Alert>}
+            {response !== undefined && <Alert severity={response === "Success!" ? "success" : "error"} sx={{ margin: 'auto', width: '300px' }}>{response}</Alert>}
         </div>
         </>
     )

@@ -4,4 +4,7 @@ We went over the project ideas and came up with some features for each project t
 
 Week 2
 
-We finalised our project idea and did some group brainstorming about the novel features we needed to add to our project. We also decided that we would use React for frontend development, Python for backend development, SQLalchemy and PostgreSQL for our database. I planned some routes and return formats for communication between backend and frontend, as it was decided that I would work on frontend.  
+We finalised our project idea and did some group brainstorming about the novel features we needed to add to our project. We also decided that we would use React for frontend development, Python for backend development, SQLalchemy and PostgreSQL for our database. I planned some routes and return formats for communication between backend and frontend, as it was decided that I would work on frontend.
+
+Week 3
+I started working on the front end side of the project. I made a react project and started designing the components and pages of our web app. I set up pages for logging in, the initial screens of the website, registering, updating details and joining as a guest. I made routes for them as well so that the user can move between screens on a single page app without reloading. Since the backend hasnt been developed I used fake loader functions which gave simulated input to test that my frontend was working,

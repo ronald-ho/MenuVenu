@@ -31,6 +31,7 @@ function ResetPopup({ open, setOpen }) {
     async function handleSubmitCode() {
         /*Should check if code is right */
         const body = {
+            email: email,
             reset_code: code
         }
         const data = await apiCall("auth/reset/password/code", "POST", body);
@@ -46,6 +47,11 @@ function ResetPopup({ open, setOpen }) {
         /*call api to update password */
         if (password !== passwordconf) {
             setAlert('Passwords do not match');
+            return;
+        }
+        if (!/[0-9]/.test(password) || !/\w/.test(password) || !/\W/.test(password) ) {
+            setAlert('Password requires at least one letter, number and special character');
+            return;
         }
         const body = {
             new_password: password,
