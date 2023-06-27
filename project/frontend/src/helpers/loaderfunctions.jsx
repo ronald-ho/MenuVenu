@@ -20,7 +20,8 @@ export const tabsel_load = async () => {
             table_number: data.table_list[table].table_number,
             is_occupied: false
         }
-        if (data.table_list[table].number in data.occupied_list) {
+
+        if (data.occupied_list.includes(data.table_list[table].table_number)) {
             body['is_occupied'] = true
         }
         response.push(body)
