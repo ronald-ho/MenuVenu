@@ -9,7 +9,7 @@ function UpdateAccount () {
         <>
         <Button component={Link} to={"/loggedselect"}>Back</Button>
         <div style={{textAlign: "center"}}>
-            <Typography variant="h2">{details.name}</Typography>
+            <Typography variant="h2">{details.full_name}</Typography>
             <Typography>Email address: {details.email}</Typography>
             <Typography>MV Points: {details.points}</Typography>
             <Typography>MyFitnessPal: Unconnected</Typography>

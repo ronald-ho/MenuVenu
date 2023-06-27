@@ -1,13 +1,25 @@
 import logging
 
+# Flask configuration
 from flask import Flask
 from flask_cors import CORS
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 app = Flask(__name__)
 CORS(app)
 
+# Login Manager configuration
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(customer_id):
+    from .authentication.models import Customers
+    return Customers.query.get(int(customer_id))
+
+# Logger configuration
 app.logger.setLevel(logging.INFO)
 
 # Database configuration

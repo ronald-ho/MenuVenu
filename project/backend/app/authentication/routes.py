@@ -1,9 +1,10 @@
 import logging
 from http import HTTPStatus
 
-from app import app, db
 from flask import jsonify, request
 
+# Local imports
+from app import app, db
 from .models import Customers
 from .services import MailService, UserService
 
@@ -17,9 +18,7 @@ reset_dict = {}
 
 @app.route('/auth/register', methods=['POST'])
 def register():
-    data = request.get_json()
-
-    logger.info(f"Received registration request: {data}")
+    data = data_logger(request)
 
     # Create new user
     if UserService.create_new_user(data['email'], data['full_name'], data['password']):
@@ -32,9 +31,7 @@ def register():
 
 @app.route('/auth/login', methods=['POST'])
 def login():
-    data = request.get_json()
-
-    logger.info(f"Received login request: {data}")
+    data = data_logger(request)
 
     user = Customers.query.filter_by(email=data['email']).first()
 
@@ -43,9 +40,9 @@ def login():
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
     
     # Check if password is correct
-    if user.password != data['password']:
+    if not user.check_password(data['password']):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
-    
+
     # Returns the main menu page
     return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful', 'customer_id': user.customer_id})
 
@@ -62,13 +59,11 @@ def logout():
 
 @app.route('/auth/delete', methods=['DELETE'])
 def delete():
-    data = request.get_json()
-
-    logger.info(f"Received delete request: {data}")
+    data = data_logger(request)
 
     # Check if password is correct
     user = Customers.query.filter_by(customer_id = data['customer_id']).first()
-    if user.password != data['password']:
+    if not user.check_password(data['password']):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
     
     # Delete user
@@ -81,16 +76,20 @@ def delete():
 
 @app.route('/auth/update', methods=['PUT'])
 def update():
-    data = request.get_json()
+    data = data_logger(request)
 
-    logger.info(f"Received update request: {data}")
+    user = Customers.query.filter_by(customer_id=data['customer_id']).first()
 
-    # Check if password is correct
-    user = Customers.query.filter_by(customer_id = data['customer_id']).first()
+    # Check if email already exists
+    if user.email != data['new_email'] and Customers.query.filter_by(email=data['new_email']).first():
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Email already exists'})
     
     # save the new data
     user.email = data['new_email']
     user.full_name = data['new_full_name']
+
+    if data['new_password']:
+        user.set_password(data['new_password'])
 
     db.session.commit()
 
@@ -101,8 +100,7 @@ def update():
 # Reset password
 @app.route('/auth/reset/password/request', methods=['POST'])
 def generate_OTP():
-    data = request.get_json()
-    logger.info(f"Received reset password request: {data}")
+    data = data_logger(request)
 
     user = Customers.query.filter_by(email = data['email']).first()
 
@@ -126,12 +124,14 @@ def generate_OTP():
 
 @app.route('/auth/reset/password/code', methods=['POST'])
 def verify_OTP():
-    data = request.get_json()
-
-    logger.info(f"Received OTP verification request: {data}")
+    data = data_logger(request)
 
     email = data['email']
+
     reset_code = int(data['reset_code'])
+
+    if reset_code not in reset_dict:
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
 
     # Check if user exists and if the OTP is valid
     if reset_dict[reset_code] != email:
@@ -143,9 +143,7 @@ def verify_OTP():
 
 @app.route('/auth/reset/password/confirm', methods=['POST'])
 def reset_password():
-    data = request.get_json()
-
-    logger.info(f"Received password reset request: {data}")
+    data = data_logger(request)
 
     reset_code = int(data['reset_code'])
     new_password = data['new_password']
@@ -154,9 +152,10 @@ def reset_password():
     user = Customers.query.filter_by(email = email).first()
 
     # Reset password
-    user.password = new_password
-    user.reset_code = None
+    user.set_password(new_password)
     db.session.commit()
+
+    reset_dict.pop(reset_code)
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Password reset successful'})
 
@@ -173,3 +172,9 @@ def find_user(customer_id):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
         
     return jsonify({'status': HTTPStatus.OK, 'message': 'User found', 'customer_info': customer.to_dict()})
+
+
+def data_logger(request):
+    data = request.get_json()
+    logger.info(f"Received request from frontend: {data}")
+    return data
