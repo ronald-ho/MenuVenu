@@ -47,6 +47,9 @@ export async function change_details (request) {
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (!data.email || !data.name || !validEmailRegex.test(data.email)) {
         return "Invalid email";
+    }
+    if (!data.password) {
+
     } else if (!/[0-9]/.test(data.password) || !/\w/.test(data.password) || !/\W/.test(data.password) ) {
         return "New password needs at least one letter, number and special character";
     }
@@ -56,9 +59,6 @@ export async function change_details (request) {
         new_email: data.email,
         new_full_name: data.name,
         new_password: data.password
-    }
-    if (body.new_password === '') {
-        body.new_password = null
     }
     const response = await apiCall("auth/update", "PUT", body);
     if (response.status == 400) {
