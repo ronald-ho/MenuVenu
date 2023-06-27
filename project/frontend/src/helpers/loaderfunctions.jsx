@@ -14,13 +14,13 @@ export const tabsel_load = async () => {
     /*do api call to get list of tables and return them*/
     const data = await apiCall("orders/get_tables", "GET", {});
     const response = [];
-    for (table in data.table_list) {
+    for (const table in data.table_list) {
         const body = {
-            table_id: table.table_id,
-            table_number: table.table_number,
+            table_id: data.table_list[table].table_id,
+            table_number: data.table_list[table].table_number,
             is_occupied: false
         }
-        if (table.number in data.occupied_list) {
+        if (data.table_list[table].number in data.occupied_list) {
             body['is_occupied'] = true
         }
         response.push(body)

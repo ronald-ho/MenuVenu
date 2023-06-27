@@ -1,6 +1,7 @@
 import { Box, Button } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { apiCall } from "../helpers/helpers";
 
 function TableButton ({ table }) {
     const greenboxcss = { display: 'inline-block', width: '20%', padding: '10px', border: '1px black solid', margin: '10px', height: '50px', verticalAlign: 'top', backgroundColor: "green" };
@@ -9,8 +10,9 @@ function TableButton ({ table }) {
     const is_occupied = table.occupied;
     const nav = useNavigate();
 
-    function handleClick() {
+    async function handleClick() {
         localStorage.setItem("mvtable", table.table_number);
+        await apiCall("orders/select_table", "POST", { 'table_number' : table.table_number });
         nav('/menu/1');
     }
 
