@@ -13,3 +13,8 @@ Week 3
 * We worked on the proposal for this week. I was in charge of designing a majority of the storyboards using Adobe xD.
 * We ran into some complications with having too many features. This was before we realised that some of our 6 non-novel functionalities could come from the Wait Staff Management specification.
 * Ronald submitted the proposal for the group before the deadline.  
+
+Week 4
+* This week I worked on the frontend for calling staff assistance and the billing pop up.
+* I also went ahead and started the wait staff interface as I had mistakenly thought that the wait staff side of assistance required was part of the user story we had allocated for this sprint.
+* I learned how to test our project using Docker and helped with fixing bugs related to my assigned parts.
