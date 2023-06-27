@@ -45,7 +45,9 @@ export async function change_details (request) {
     const data = Object.fromEntries(await request.formData());
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (!data.email || !data.name || !validEmailRegex.test(data.email)) {
-        return false;
+        return "Invalid email";
+    } else if (!data.password || !/[0-9]/.test(data.password) || !/\w/.test(data.password) || !/\W/.test(data.password) ) {
+        return "New password needs at least one letter, number and special character";
     }
     /* replace with fetch and post data */
     const body = {
@@ -54,5 +56,47 @@ export async function change_details (request) {
         new_full_name: data.name
     }
     const response = await apiCall("auth/update", "PUT", body);
-    return true;
+    return "Success!";
+}
+
+export const get_categories = async () => {
+    /*api call */
+    const body = [
+        {
+            name: "Drinks",
+            category_id: 1
+        }, {
+            name: "Snacks",
+            category_id: 2
+        }
+    ]
+    return body;
+}
+
+export async function get_items(params) {
+    console.log(params.categoryid);
+    /*do fetch */
+    const body=[
+        {   
+            item_id: 1,
+            name: "HSP"
+        }, {
+            item_id: 2,
+            name: "Chicken roll"
+        }
+    ]
+    const body2=[
+        {
+            item_id: 3,
+            name: "Seafood bucket"
+        }, {
+            item_id: 4,
+            name: "Fish n chips"
+        }
+    ]
+    if (params.categoryid == 1) {
+        return body;
+    } else {
+        return body2;
+    }
 }
