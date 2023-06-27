@@ -91,6 +91,7 @@ def update():
     # save the new data
     user.email = data['new_email']
     user.full_name = data['new_full_name']
+    user.password = data['new_password']
 
     db.session.commit()
 

@@ -53,7 +53,8 @@ export async function change_details (request) {
     const body = {
         customer_id: localStorage.getItem("mvuser"),
         new_email: data.email,
-        new_full_name: data.name
+        new_full_name: data.name,
+        new_password: data.password
     }
     const response = await apiCall("auth/update", "PUT", body);
     return "Success!";
