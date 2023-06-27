@@ -65,7 +65,7 @@ def delete():
 
     # Check if password is correct
     user = Customers.query.filter_by(customer_id = data['customer_id']).first()
-    if user.password != data['password']:
+    if not user.check_password(data['password']):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
     
     # Delete user
