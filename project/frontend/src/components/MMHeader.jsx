@@ -19,9 +19,7 @@ function MMHeader ({ mode }) {
           </>
         }
         { mode === 'customer' &&
-          <>
-            <LogOutButton />
-          </>
+          <LogOutButton />
         }
         { mode === 'admin' && 
           <>
