@@ -128,9 +128,9 @@ def verify_OTP():
 
     email = data['email']
 
-    try:
-        reset_code = int(data['reset_code'])
-    except KeyError:
+    reset_code = int(data['reset_code'])
+
+    if reset_code not in reset_dict:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
 
     # Check if user exists and if the OTP is valid

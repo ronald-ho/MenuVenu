@@ -31,7 +31,7 @@ class MailService:
     def send_email(recipient, reset_code):
         msg = Message(
             'This is your OTP for MenuVenu',
-            sender = '3900w16amog@gmail.com',
+            sender = ('MenuVenu', '3900w16amog@gmail.com'),
             recipients = [recipient]
         )
         msg.body = 'Your OTP is: ' + str(reset_code)
