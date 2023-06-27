@@ -9,22 +9,12 @@ const StyledHeader = styled.header({
   border: '1px black solid'
 });
 
-function MMHeader ({ mode }) {
+function MMHeader () {
   return (
     <StyledHeader>
       <Typography sx={{ fontSize: '40px', padding: '10px 20px' }}>MOGGER MEALS</Typography>
       <div>
-        { mode === 'guest' && 
-          <>
-          </>
-        }
-        { mode === 'customer' &&
-          <LogOutButton />
-        }
-        { mode === 'admin' && 
-          <>
-          </>
-        }
+        {localStorage.getItem("mvuser") && <LogOutButton />}
       </div>
     </StyledHeader>
   )
