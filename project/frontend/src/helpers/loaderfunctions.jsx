@@ -26,6 +26,7 @@ export const get_profile = async () => {
     }
     const response = await apiCall("auth/customer/"+localStorage.getItem("mvuser"), "GET", {});
     if (response.status === 200) {
+        console.log(response.customer_info);
         return response.customer_info;
     } else {
         return petergriffin;
