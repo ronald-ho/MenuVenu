@@ -8,3 +8,6 @@ We finalised our project idea and did some group brainstorming about the novel f
 
 Week 3
 I started working on the front end side of the project. I made a react project and started designing the components and pages of our web app. I set up pages for logging in, the initial screens of the website, registering, updating details and joining as a guest. I made routes for them as well so that the user can move between screens on a single page app without reloading. Since the backend hasnt been developed I used fake loader functions which gave simulated input to test that my frontend was working,
+
+Week 4
+I started linking the frontend to the backend once the backend API functions were done. There was a lot of debugging to do with regards to that. Also I made some other screens for a menu prototype, and reworked the table select and update account screens to match the backend functionality which was different to what I expected. 
