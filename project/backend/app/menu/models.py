@@ -28,3 +28,25 @@ class Items(db.Model):
             'calories': self.calories,
             'points': self.points
         }
+
+@dataclass
+class Categories(db.Model):
+    category_id     = db.Column(db.Integer, primary_key = True)
+    name           = db.Column(db.String(120), unique = True, nullable = False)
+    position     = db.Column(db.Integer, unique = True, nullable = False)
+
+
+@dataclass
+class Ingredients(db.Model):
+    ingredient_id     = db.Column(db.Integer, primary_key = True)
+    name           = db.Column(db.String(120), unique = True, nullable = False)
+
+
+@dataclass
+class Contains(db.Model):
+    item_id           = db.Column(db.Integer, primary_key = True)
+    ingredient_id     = db.Column(db.Integer, primary_key = True)
+    
+
+    
+
