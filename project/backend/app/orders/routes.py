@@ -61,11 +61,14 @@ def pay_bill():
     table = DiningTables.query.filter_by(table_number=data['table_number']).first()
     order = Orders.query.filter_by(paid = False).filter_by(table_id = table.table_id).first()
 
+    if not order:
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
+
     order.paid = True
     db.session.commit()
     occupied_flags.remove(table.table_number)
 
-    return jsonify({'status': HTTPStatus.OK})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Order paid'})
 
 @app.route('/orders/get_bill', methods=['POST'])
 def get_bill():
@@ -76,10 +79,12 @@ def get_bill():
     #find order associated with table
     table = DiningTables.query.filter_by(table_number=data['table_number']).first()
     order = Orders.query.filter_by(paid = False).filter_by(table_id = table.table_id).first()
-
+    
+    if not order:
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
+    
     return jsonify({'status': HTTPStatus.OK, 'bill': order.total_amount})
     
-
 @app.route('/orders/select_table', methods=['POST'])
 def select_table():
 
@@ -105,7 +110,6 @@ def select_table():
         db.session.commit()
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Table selected'})
-
 
 @app.route('/orders/get_tables', methods=['GET'])
 def get_tables():
