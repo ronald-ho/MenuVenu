@@ -14,3 +14,8 @@ Week 3
 Did some updates to functionalities due to do a misunderstanding. We had more than 6 regualar functionalities and had to cut some down.
 Worked and finished on the proposal. I worked on writing and shwoing user stories, helped in designing some story boards and wrote the architecture for frontend, databases and API's.
 Starting on code for backend, working on Order.
+
+Week 4
+Finished my parts with sprint 1 which included request assistance, request bill and select table
+Did some group debugging on various parts of our code before our demonstration
+Unfortunately I was not able to attend the demo due to COVID
