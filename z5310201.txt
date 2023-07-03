@@ -20,3 +20,10 @@ Learnt about the relevant softwares needed to create and manage a database
 Tested modifying a demo database
 Helped with user stories, such as proposing UI decisions
 Added criteria for the new chatbot feature
+
+Week 4:
+Some more stuff
+
+Week 5:
+Finialised iteration 1, worked on backend for smth forgot
+more database for iteration 2, started menuj manager
