@@ -84,10 +84,10 @@ export const get_categories = async () => {
     /*api call */
     const body = [
         {
-            name: "Drinks",
+            name: "Kebab",
             category_id: 1
         }, {
-            name: "Snacks",
+            name: "Seafood",
             category_id: 2
         }
     ]
@@ -100,19 +100,32 @@ export async function get_items(params) {
     const body=[
         {   
             item_id: 1,
-            name: "HSP"
+            name: "HSP",
+            image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Hspchips_%28cropped%29.jpg",
+            price: 16.50,
+            calories: 485,
+            points: 100
         }, {
             item_id: 2,
-            name: "Chicken roll"
+            name: "Chicken roll",
+            image: "https://www.recipetineats.com/wp-content/uploads/2017/11/Chicken-Doner-Kebab-2.jpg",
+            price: 13.50,
+            calories: 500,
+            points: 70
         }
     ]
     const body2=[
         {
             item_id: 3,
-            name: "Seafood bucket"
+            name: "Seafood basket",
+            image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Hspchips_%28cropped%29.jpg",
+            price: 15.00,
+            points: 80
         }, {
             item_id: 4,
-            name: "Fish n chips"
+            name: "Fish n chips",
+            image: "https://www.daringgourmet.com/wp-content/uploads/2019/08/Fish-and-Chips-1-square-500x375.jpg",
+            price: 14.00
         }
     ]
     if (params.categoryid == 1) {
