@@ -57,6 +57,9 @@ def bill():
     table = DiningTables.query.filter_by(table_number=data['table_number']).first()
     order = Orders.query.filter_by(paid = False).filter_by(table_id = table.table_id).first()
 
+    if not order:
+        return jsonify({'status': HTTPStatus.OK, 'bill': order.total_amount})
+
     order.paid = True
     db.session.commit()
     occupied_flags.remove(table.table_number)
