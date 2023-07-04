@@ -51,48 +51,58 @@ def add_items():
     """
         # Get the item details from the request JSON data
     data = request.get_json()
-    name = data.get('name')
-    description = data.get('description')
-    image = data.get('image')
-    price = data.get('price')
-    category_id = data.get('category_id')
-    calories = data.get('calories')
-    position = data.get('position')
-    points = data.get('points')
+    app.logger.info(f"data from front end: {data}")
+    name = data['name']
+    description = data['description']
+    image = data['image']
+    price = data['price']
+    category_id = data['category_id']
+    calories = data['calories']
+    points = data['points']
 
-    # Create a new Items instance
-    item = Items(
-        name=name,
-        description=description,
-        image=image,
-        price=price,
-        category_id=category_id,
-        calories=calories,
-        position=position,
-        points=points
-    )
+    max_position = db.session.query(db.func.max(Items.position)).scalar()
+    next_position = max_position + 1 if max_position is not None else 1
 
-    # Add the item to the database
-    db.session.add(item)
-    db.session.commit()
+    item = Items.query.filter_by(name = data['name']).first()
 
-    # Return a JSON response indicating success and the added item's details
-    response = {
-        'status': 'success',
-        'message': 'Item added successfully',
-        'item': {
-            'item_id': item.item_id,
-            'name': item.name,
-            'description': item.description,
-            'image': item.image,
-            'price': float(item.price),
-            'category_id': item.category_id,
-            'calories': item.calories,
-            'position': item.position,
-            'points': item.points
+    if item:
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
+    
+    else:
+
+        # Create a new Items instance
+        item = Items(
+            name=name,
+            description=description,
+            image=image,
+            price=price,
+            category_id=category_id,
+            calories=calories,
+            position=next_position,
+            points=points
+        )
+
+        # Add the item to the database
+        db.session.add(item)
+        db.session.commit()
+
+        # Return a JSON response indicating success and the added item's details
+        response = {
+            'status': 'success',
+            'message': 'Item added successfully',
+            'item': {
+                'item_id': item.item_id,
+                'name': item.name,
+                'description': item.description,
+                'image': item.image,
+                'price': float(item.price),
+                'category_id': item.category_id,
+                'calories': item.calories,
+                'position': item.position,
+                'points': item.points
+            }
         }
-    }
-    return jsonify(response)
+        return jsonify(response)
 
     
 
