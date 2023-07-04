@@ -18,3 +18,8 @@ Week 4
 * This week I worked on the frontend for calling staff assistance and the billing pop up.
 * I also went ahead and started the wait staff interface as I had mistakenly thought that the wait staff side of assistance required was part of the user story we had allocated for this sprint.
 * I learned how to test our project using Docker and helped with fixing bugs related to my assigned parts.
+
+Week 5
+* During our lab this week we had presented our Sprint 1 progress in Demo A. The tutor provided us with positive feedback and suggested that we work on improving the UI for the next sprint and to let him know during the next class about what we want to do for Sprint 2/3, as we were still deciding for a couple of user stories. 
+* We had our Retrospective A meeting to reflect on how our first sprint went and to discuss what we could do for Sprint 2. In this meeting we also delegated user stories for each person to work on.
+* Ronald submitted the finalised Retrospective A report for the team before the deadline. 
