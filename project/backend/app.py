@@ -8,6 +8,8 @@ from app.authentication.models import Customers
 # Orders routes and models
 from app.orders import routes
 from app.orders.models import DiningTables, OrderedItems, Orders
+from app.menu import routes
+from app.menu.models import Categories, Ingredients, Items, Contains
 
 if __name__ == '__main__':
     with app.app_context():

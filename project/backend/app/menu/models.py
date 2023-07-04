@@ -1,5 +1,6 @@
 import random
 from dataclasses import dataclass
+from sqlalchemy import Column, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from app import db
