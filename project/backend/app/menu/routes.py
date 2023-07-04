@@ -111,14 +111,15 @@ def delete_items():
     """
     Delete items from menu
     """
-    item = Items.query.get(item_id)
+    data = request.get_json()
+    item = Items.query.filter_by(item_id = data["item_id"]).first()
     if not item:
         return jsonify({'status': 404, 'message': 'Item not found'})
 
     db.session.delete(item)
     db.session.commit()
 
-    return jsonify({'status': 'success', 'message': 'Item deleted successfully'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Item deleted successfully'})
     
 
 @app.route('/menu/categories', methods=['DELETE'])
@@ -126,14 +127,16 @@ def delete_categories():
     """
     Delete categories from menu
     """
-    category = Categories.query.get(category_id)
+    data = request.get_json()
+    app.logger.info(f"data from front end: {data}")
+    category = Categories.query.filter_by(category_id = data["category_id"]).first()
     if not category:
         return jsonify({'status': 404, 'message': 'Category not found'})
 
     db.session.delete(category)
     db.session.commit()
 
-    return jsonify({'status': 'success', 'message': 'Category deleted successfully'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Category deleted successfully'})
 
 @app.route('/menu/items/<category_id>', methods=['GET'])
 def get_items(category_id):
