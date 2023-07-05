@@ -2,6 +2,7 @@ from .. import db
 from dataclasses import dataclass
 from sqlalchemy.sql import func
 from app.authentication.models import Customers
+from app.menu.models import Items
 
 @dataclass
 class DiningTables(db.Model):
@@ -27,4 +28,4 @@ class OrderedItems(db.Model):
     order_item_id = db.Column(db.Integer, primary_key = True)
     order_id = db.Column(db.Integer, db.ForeignKey(Orders.order_id))
     customer_id = db.Column(db.Integer, db.ForeignKey(Customers.customer_id))
-    # item_id = db.Column(db.Integer, db.ForeignKey(MenuItems.item_id), primary_key = True)
+    item_id = db.Column(db.Integer, db.ForeignKey(Items.item_id), primary_key = True)
