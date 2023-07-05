@@ -136,7 +136,7 @@ def order_item():
     #add cost of item to order total if customer did not redeem points
     if not data['redeem']:
         order.total_amount = order.total_amount + item.price
-        
+
     #reduce points from customer total if customer did redeem points   
     else:
         customer = Customers.query.filter_by(customer_id = data['customer_id'])
@@ -157,6 +157,8 @@ def order_item():
     }
 
     kitchen_flags.append(flag)
+
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Item ordered'})
 
 @app.route('/orders/kitchen/prepared', methods=['POST'])
 def kitchen_prepared():
@@ -198,7 +200,7 @@ def get_ordered_items():
         item = Items.query.filter_by(item_id = ordered_item.item_id).first()
         item_list.append(item.to_dict())
 
-    return item_list
+    return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})
 
 @app.route('/orders/waitstaff/served', methods=['POST'])
 def waitstaff_served():
