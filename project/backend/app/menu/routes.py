@@ -3,7 +3,7 @@ from http import HTTPStatus
 from app import app, db
 from .models import Items, Categories, Ingredients, Contains
 
-@app.route('/menu/add/categories', methods=['POST'])
+@app.route('/menu/categories', methods=['POST'])
 def add_categories():
     """
     Add categories to menu 
@@ -11,7 +11,6 @@ def add_categories():
     data = request.get_json()
 
     app.logger.info(f"data from front end: {data}")
-
    
     category_name = data['name']
 
@@ -19,32 +18,30 @@ def add_categories():
     max_position = db.session.query(db.func.max(Categories.position)).scalar()
     next_position = max_position + 1 if max_position is not None else 1
 
-
     if category:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Category already exists'})
+    
+    # Create a new Category instance
+    category = Categories(name=category_name, position = next_position)
 
-    else: 
-        # Create a new Category instance
-        category = Categories(name=category_name, position = next_position)
+    # Add the category to the database
+    db.session.add(category)
+    db.session.commit()
 
-        # Add the category to the database
-        db.session.add(category)
-        db.session.commit()
-
-        # Return a JSON response indicating success and the added category's details
-        response = {
-            'status': HTTPStatus.CREATED,
-            'message': 'Category added successfully',
-            'category': {
-                'id': category.category_id,
-                'name': category.name,
-                'position': category.position
-            }
+    # Return a JSON response indicating success and the added category's details
+    response = {
+        'status': HTTPStatus.CREATED,
+        'message': 'Category added successfully',
+        'category': {
+            'id': category.category_id,
+            'name': category.name,
+            'position': category.position
         }
-        return jsonify(response)
+    }
+    return jsonify(response)
 
 
-@app.route('/menu/add/items', methods=['POST'])
+@app.route('/menu/items', methods=['POST'])
 def add_items():
     """
     Add items to menu
@@ -63,47 +60,45 @@ def add_items():
     max_position = db.session.query(db.func.max(Items.position)).scalar()
     next_position = max_position + 1 if max_position is not None else 1
 
-    item = Items.query.filter_by(name = data['name']).first()
+    item = Items.query.filter_by(name = name).first()
 
     if item:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
     
-    else:
 
-        # Create a new Items instance
-        item = Items(
-            name=name,
-            description=description,
-            image=image,
-            price=price,
-            category_id=category_id,
-            calories=calories,
-            position=next_position,
-            points=points
-        )
+    # Create a new Items instance
+    item = Items(
+        name=name,
+        description=description,
+        image=image,
+        price=price,
+        category_id=category_id,
+        calories=calories,
+        position=next_position,
+        points=points
+    )
 
-        # Add the item to the database
-        db.session.add(item)
-        db.session.commit()
+    # Add the item to the database
+    db.session.add(item)
+    db.session.commit()
 
-        # Return a JSON response indicating success and the added item's details
-        response = {
-            'status': 'success',
-            'message': 'Item added successfully',
-            'item': {
-                'item_id': item.item_id,
-                'name': item.name,
-                'description': item.description,
-                'image': item.image,
-                'price': float(item.price),
-                'category_id': item.category_id,
-                'calories': item.calories,
-                'position': item.position,
-                'points': item.points
-            }
+    # Return a JSON response indicating success and the added item's details
+    response = {
+        'status': HTTPStatus.CREATED,
+        'message': 'Item added successfully',
+        'item': {
+            'item_id': item.item_id,
+            'name': item.name,
+            'description': item.description,
+            'image': item.image,
+            'price': float(item.price),
+            'category_id': item.category_id,
+            'calories': item.calories,
+            'position': item.position,
+            'points': item.points
         }
-        return jsonify(response)
-
+    }
+    return jsonify(response)
     
 
 @app.route('/menu/items', methods=['DELETE'])
@@ -112,9 +107,11 @@ def delete_items():
     Delete items from menu
     """
     data = request.get_json()
+    app.logger.info(f"data from front end: {data}")
+
     item = Items.query.filter_by(item_id = data["item_id"]).first()
     if not item:
-        return jsonify({'status': 404, 'message': 'Item not found'})
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
     db.session.delete(item)
     db.session.commit()
@@ -129,9 +126,11 @@ def delete_categories():
     """
     data = request.get_json()
     app.logger.info(f"data from front end: {data}")
+
     category = Categories.query.filter_by(category_id = data["category_id"]).first()
+
     if not category:
-        return jsonify({'status': 404, 'message': 'Category not found'})
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
     db.session.delete(category)
     db.session.commit()
