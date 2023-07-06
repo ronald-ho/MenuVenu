@@ -1,21 +1,18 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import { styled } from "@mui/material"
+import { Box, IconButton, Typography } from "@mui/material";
 import { Delete, DragHandle, Edit } from '@mui/icons-material';
 import React from "react";
 import { NavLink } from "react-router-dom";
 
 function CategoryListItem ({ category }) {
-    // ""+category.category_id
+    // Maybe add :hover in external stylesheet for active category
+    // Make DragHandle clickable
+
     return (
         <>
-            <Test
-                onClick={() => {
-                    console.log("lol");
-                }}
+            <Box  
                 sx={{
                     border: 1,
                     borderRadius: 0,
-                    cursor: "pointer",  
                     display: "flex",
                     height: "40px",
                     justifyContent: "space-between",
@@ -33,34 +30,31 @@ function CategoryListItem ({ category }) {
                     }}
                 >
                     <DragHandle color="secondary" />
-                    <Typography>{category}</Typography>
+                    <Typography
+                        component={NavLink}
+                        to={""+category}
+                        style={({ isActive }) => {
+                            return {
+                                color: "black",
+                                fontWeight: isActive ? "bold" : "",
+                                textDecoration: "none",
+                            };
+                        }}
+                    >
+                        {category}
+                    </Typography>
                 </Box>
                 <Box>
-                    <IconButton aria-label="edit"><Edit sx={{ color: "black" }} /></IconButton>
-                    <IconButton aria-label="delete"><Delete color="error"/></IconButton>
+                    <IconButton aria-label="edit"> 
+                        <Edit sx={{ color: "black" }} />
+                    </IconButton>
+                    <IconButton aria-label="delete">
+                        <Delete color="error"/>
+                    </IconButton>
                 </Box>
-            </Test> 
+            </Box> 
         </>
     )
 }
-
-const Test = styled(Box)({
-    border: 1,
-    borderRadius: 0,
-    cursor: "pointer",  
-    display: "flex",
-    height: "40px",
-    justifyContent: "space-between",
-    margin: "0 0 2px 0",
-    padding: "0",
-    width: "20vw",
-    '&:hover': {
-        color: "blue",
-        fontWeight: "bold"
-    },
-    '&:active': {
-        fontWeight: "bold"
-    }
-});
 
 export default CategoryListItem;

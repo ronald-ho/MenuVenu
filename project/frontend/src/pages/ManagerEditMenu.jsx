@@ -25,7 +25,7 @@ function ManagerEditMenu () {
                     <Add /> New Category
                 </Button>
                 <Box>
-                    {/* After each add, deletion, loop through and rerender list of categories? */}
+                    {/* After each add, deletion, loop through and rerender list of categories */}
                     <CategoryListItem category={ "Breakfast" }></CategoryListItem>
                     <CategoryListItem category={ "Lunch" }></CategoryListItem>
                     <CategoryListItem category={ "Dinner" }></CategoryListItem>

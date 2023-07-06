@@ -95,7 +95,13 @@ function App() {
       }, { 
         path: "/managereditmenu",
         element: <ManagerEditMenu />,
-      },
+        children: [
+          {
+            path: ":categoryid",
+            element: <ManagerEditMenu />,
+          }
+        ]
+      }
     ]
   }]);
 
