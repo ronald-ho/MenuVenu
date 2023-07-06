@@ -1,6 +1,8 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import { Add } from '@mui/icons-material';
 import AddCategoryPopUp from "../components/AddCategoryPopUp";
+import CategoryListItem from "../components/CategoryListItem";
 
 function ManagerEditMenu () {
     // on first load, get all categories and render 
@@ -19,10 +21,16 @@ function ManagerEditMenu () {
         }}>
             <Box sx={{ borderRight: 1, width: "20vw" }}>
                 <Box sx={{ borderBottom: 1, padding: "15px 0"}}>CATEGORIES</Box>
+                <Button onClick={() => setOpenAddCategory(true)} sx={{ margin: "10px" }} color="success" variant="outlined">
+                    <Add /> New Category
+                </Button>
                 <Box>
                     {/* After each add, deletion, loop through and rerender list of categories? */}
+                    <CategoryListItem category={ "Breakfast" }></CategoryListItem>
+                    <CategoryListItem category={ "Lunch" }></CategoryListItem>
+                    <CategoryListItem category={ "Dinner" }></CategoryListItem>
                 </Box>
-                <Button onClick={() => setOpenAddCategory(true)} sx={{ margin: "10px" }} color="success" variant="outlined">+ New Category</Button>
+                
             </Box>
             <Box sx={{ width: "50vw" }}>
                 <Box sx={{ borderBottom: 1, padding: "15px 0" }}>MENU ITEMS</Box>
