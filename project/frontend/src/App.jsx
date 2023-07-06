@@ -18,6 +18,7 @@ import WaitStaff from './pages/WaitStaff';
 import DeleteAccount from './pages/DeleteAccount';
 import ViewItems from './components/ViewItems';
 import Menu from './pages/Menu';
+import ManagerEditMenu from './pages/ManagerEditMenu';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -91,7 +92,10 @@ function App() {
             }
           }
         ]
-      }
+      }, { 
+        path: "/managereditmenu",
+        element: <ManagerEditMenu />,
+      },
     ]
   }]);
 
