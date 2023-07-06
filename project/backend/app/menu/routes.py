@@ -1,6 +1,8 @@
 from flask import request, jsonify
 from http import HTTPStatus
 from app import app, db
+from sqlalchemy import desc
+
 from .models import Items, Categories, Ingredients, Contains
 
 @app.route('/menu/categories', methods=['POST'])
@@ -57,6 +59,8 @@ def add_items():
     calories = data['calories']
     points = data['points']
 
+    #TODO: MIGHT have to check if the category id is correct and exists
+
     max_position = db.session.query(db.func.max(Items.position)).scalar()
     next_position = max_position + 1 if max_position is not None else 1
 
@@ -64,7 +68,6 @@ def add_items():
 
     if item:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
-    
 
     # Create a new Items instance
     item = Items(
@@ -114,6 +117,12 @@ def delete_items():
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
     db.session.delete(item)
+
+    items_to_update = Items.query.filter(Items.position > item.position).all()
+
+    for item in items_to_update:
+        item.position -= 1
+
     db.session.commit()
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Item deleted successfully'})
@@ -133,9 +142,16 @@ def delete_categories():
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
     db.session.delete(category)
+
+    categories_to_update = Categories.query.filter(Categories.position > category.position).all()
+
+    for category in categories_to_update:
+        category.position -= 1
+
     db.session.commit()
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Category deleted successfully'})
+
 
 @app.route('/menu/items/<category_id>', methods=['GET'])
 def get_items(category_id):
@@ -174,12 +190,22 @@ def update_item_position():
     data = request.get_json()
     app.logger.info(f"data: {data}")
 
-    item = Items.query.get(data['item_id'])
+    new_position = data['new_position']
+    current_item = Items.query.get(data['item_id'])
 
-    if not item:
+    if not current_item:
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
     
-    item.position = data['position']
+    items_to_update = Items.query.filter(Items.position >= new_position, Items.item_id != current_item.item_id).order_by(desc(Items.position)).all()
+
+    for item in items_to_update:
+        app.logger.info(f"item: {item.name}")
+        if item.item_id == current_item.item_id:
+            item.position = new_position
+        else:
+            app.logger.info(f"adding 1 to {item.name}")
+            item.position += 1
+
     db.session.commit()
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Item position updated'})
@@ -191,12 +217,20 @@ def update_category_position():
     data = request.get_json()
     app.logger.info(f"data: {data}")
 
-    category = Categories.query.get(data['category_id'])
+    new_position = data['new_position']
+    current_category = Categories.query.get(data['category_id'])
 
-    if not category:
+    if not current_category:
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
     
-    category.position = data['position']
+    categories_to_update = Categories.query.filter(Categories.position >= new_position).order_by(desc(Categories.position)).all()
+
+    for category in categories_to_update:
+        if category.id == current_category.id:
+            category.position = new_position
+        else:
+            category.position += 1
+
     db.session.commit()
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Category position updated'})
@@ -212,6 +246,7 @@ def get_item_details(item_id):
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
     
     return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
+
 
 @app.route('/menu/items', methods=['PUT'])
 def update_items():

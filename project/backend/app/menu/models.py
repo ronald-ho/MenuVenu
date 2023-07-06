@@ -1,7 +1,4 @@
-import random
 from dataclasses import dataclass
-from sqlalchemy import Column, Integer, String, func
-from sqlalchemy.orm import relationship
 
 from app import db
 
@@ -10,6 +7,8 @@ class Categories(db.Model):
     category_id     = db.Column(db.Integer, primary_key = True)
     name            = db.Column(db.String(120), unique = True, nullable = False)
     position        = db.Column(db.Integer, unique = True, nullable = False)
+
+    Items           = db.relationship('Items', backref='categories', cascade="all, delete-orphan")
 
     def to_dict(self):
         return {
@@ -36,8 +35,7 @@ class Items(db.Model):
     position        = db.Column(db.Integer, unique = True, nullable = False)
     points          = db.Column(db.Integer, nullable = True)
 
-    category        = relationship("Categories", backref="items")
-    ingredients     = relationship('Ingredients', secondary='contains', backref='items')
+    ingredients     = db.relationship('Ingredients', secondary='contains', backref='items')
 
      
     def to_dict(self):
