@@ -9,6 +9,10 @@ from app.authentication.models import Customers
 from app.orders import routes
 from app.orders.models import DiningTables, OrderedItems, Orders
 
+# Menu routes and models
+from app.menu import routes
+from app.menu.models import Categories, Ingredients, Items, Contains
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

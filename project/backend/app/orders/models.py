@@ -1,7 +1,7 @@
 from .. import db
 from dataclasses import dataclass
 from sqlalchemy.sql import func
-from app.authentication.models import Customers
+from ..authentication.models import Customers
 from app.menu.models import Items
 
 @dataclass
