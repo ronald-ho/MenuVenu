@@ -146,7 +146,7 @@ def order_item():
     new_ordered_item = OrderedItems(
         order_id=order.order_id,
         customer_id=data['customer_id'],
-        item=item.item_id
+        item=item.id
     )
 
     db.session.add(new_ordered_item)
@@ -200,7 +200,7 @@ def get_ordered_items():
 
     # for each ordered item, get the relevant menu item
     for ordered_item in ordered_item_list:
-        item = Items.query.filter_by(item_id=ordered_item.item_id).first()
+        item = Items.query.filter_by(id=ordered_item.item_id).first()
         item_list.append(item.to_dict())
 
     return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})

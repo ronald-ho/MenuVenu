@@ -30,7 +30,7 @@ def delete_items():
     """
     data = data_logger(request)
 
-    item = Items.query.filter_by(item_id=data["item_id"]).first()
+    item = Items.query.filter_by(id=data["item_id"]).first()
     if not item:
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
@@ -53,7 +53,7 @@ def delete_categories():
     """
     data = data_logger(request)
 
-    category = Categories.query.filter_by(category_id=data["category_id"]).first()
+    category = Categories.query.filter_by(id=data["category_id"]).first()
 
     if not category:
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
@@ -81,7 +81,7 @@ def get_items(category_id):
 
     item_list = []
 
-    for item in category.items:
+    for item in category.Items:
         item_list.append(item.to_dict())
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Items found', 'items': item_list})
