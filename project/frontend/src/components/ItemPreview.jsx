@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function ItemPreview({ item }) {
     return (
-        <Box component={Link} sx={{margin: "5px", border: "1px solid black"}}>
+        <Box component={Link} to={"../order/1"} sx={{margin: "5px", border: "1px solid black"}}>
             <Typography variant="h3">{item.name}</Typography>
             <img src={item.image} style={{maxWidth: "100px", maxHeight: "100px"}}/>
             <Typography>${item.price}</Typography>

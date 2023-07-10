@@ -134,3 +134,15 @@ export async function get_items(params) {
         return body2;
     }
 }
+
+export async function get_item(params) {
+    console.log(params.itemid);
+    return {
+        item_id: 3,
+        name: "Seafood basket",
+        image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Hspchips_%28cropped%29.jpg",
+        price: 15.00,
+        points: 80,
+        description: 'shidma fartma ballsma'
+    }
+}

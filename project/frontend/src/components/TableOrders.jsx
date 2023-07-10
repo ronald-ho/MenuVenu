@@ -14,7 +14,7 @@ function TableOrders({ table }) {
     }, []);
 
     return (
-        <Box sx={{margin: "1px solid black", padding: "5px"}}>
+        <Box sx={{border: "1px solid black", padding: "5px", margin: "5px"}}>
             <Typography variant="h3">Table {table}</Typography>
             <Table>
                 <TableHead>

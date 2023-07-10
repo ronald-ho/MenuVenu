@@ -18,14 +18,16 @@ function ProfilePopup({ open, setOpen }) {
     }
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <>
+        {info && <Dialog open={open} onClose={handleClose}>
             <DialogTitle>{info.full_name}</DialogTitle>
             <DialogContent>
                 <DialogContentText>Email address: {info.email}</DialogContentText>
                 <DialogContentText>MV Points: {info.points}</DialogContentText>
                 <DialogContentText>MyFitnessPal: Unconnected</DialogContentText>
             </DialogContent>
-        </Dialog>
+        </Dialog>}
+        </>
     )
 }
 
