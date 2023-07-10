@@ -32,5 +32,5 @@ class Orders(db.Model):
 class OrderedItems(db.Model):
     order_item_id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey(Orders.order_id))
-    customer_id = db.Column(db.Integer, db.ForeignKey(Customers.customer_id))
+    customer_id = db.Column(db.Integer, db.ForeignKey(Customers.id))
     item_id = db.Column(db.Integer, db.ForeignKey(Items.id), primary_key=True)

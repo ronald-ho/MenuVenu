@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 @dataclass
 class Customers(UserMixin, db.Model):
-    customer_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     full_name = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(255), nullable=False)
@@ -28,11 +28,11 @@ class Customers(UserMixin, db.Model):
         return check_password_hash(self.password, password)
 
     def get_id(self):
-        return self.customer_id
+        return self.id
 
     def to_dict(self):
         return {
-            'customer_id': self.customer_id,
+            'customer_id': self.id,
             'email': self.email,
             'full_name': self.full_name,
             'points': self.points,

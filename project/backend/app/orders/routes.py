@@ -140,7 +140,7 @@ def order_item():
 
     # reduce points from customer total if customer did redeem points
     else:
-        customer = Customers.query.filter_by(customer_id=data['customer_id'])
+        customer = Customers.query.filter_by(id=data['customer_id'])
         customer.points = customer.points - item.points
 
     new_ordered_item = OrderedItems(
