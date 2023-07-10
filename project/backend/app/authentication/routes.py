@@ -1,19 +1,20 @@
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import jsonify, request, Blueprint
 
 # Local imports
 from .. import app, db
 from .models import Customers
 from .services import MailService, CustomerService
 
+auth = Blueprint('auth', __name__)
 reset_dict = {}
 
 
 # ====================================================================================================
 # Register new user
 
-@app.route('/auth/register', methods=['POST'])
+@auth.route('/register', methods=['POST'])
 def register():
     data = data_logger(request)
 
@@ -23,7 +24,7 @@ def register():
 # ====================================================================================================
 # Login user
 
-@app.route('/auth/login', methods=['POST'])
+@auth.route('/login', methods=['POST'])
 def login():
     data = data_logger(request)
 
@@ -44,7 +45,7 @@ def login():
 # ====================================================================================================
 # Logout user
 
-@app.route('/auth/logout', methods=['POST'])
+@auth.route('/logout', methods=['POST'])
 def logout():
     # might have to introduce tokens
     return jsonify({'status': HTTPStatus.OK, 'message': 'Logout successful'})
@@ -53,7 +54,7 @@ def logout():
 # ====================================================================================================
 # Delete user
 
-@app.route('/auth/delete', methods=['DELETE'])
+@auth.route('/delete', methods=['DELETE'])
 def delete():
     data = data_logger(request)
 
@@ -71,7 +72,7 @@ def delete():
 # ====================================================================================================
 # Update user details
 
-@app.route('/auth/update', methods=['PUT'])
+@auth.route('/update', methods=['PUT'])
 def update():
     data = data_logger(request)
 
@@ -96,7 +97,7 @@ def update():
 
 # ====================================================================================================
 # Reset password
-@app.route('/auth/reset/password/request', methods=['POST'])
+@auth.route('/reset/password/request', methods=['POST'])
 def generate_OTP():
     data = data_logger(request)
 
@@ -119,7 +120,7 @@ def generate_OTP():
     return jsonify({'status': HTTPStatus.OK, 'message': 'OTP sent to email'})
 
 
-@app.route('/auth/reset/password/code', methods=['POST'])
+@auth.route('/reset/password/code', methods=['POST'])
 def verify_OTP():
     data = data_logger(request)
 
@@ -138,7 +139,7 @@ def verify_OTP():
     return jsonify({'status': HTTPStatus.OK, 'message': 'OTP verified'})
 
 
-@app.route('/auth/reset/password/confirm', methods=['POST'])
+@auth.route('/reset/password/confirm', methods=['POST'])
 def reset_password():
     data = data_logger(request)
 
@@ -160,7 +161,7 @@ def reset_password():
 # ====================================================================================================
 # Find user
 
-@app.route('/auth/customer/<customer_id>', methods=['GET'])
+@auth.route('/customer/<customer_id>', methods=['GET'])
 def find_user(customer_id):
     app.logger.info(f"Received find user request: {customer_id}")
 
