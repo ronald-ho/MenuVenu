@@ -5,7 +5,7 @@ from .. import db
 
 @dataclass
 class Categories(db.Model):
-    category_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
     position = db.Column(db.Integer, unique=False, nullable=False)
 
@@ -21,13 +21,13 @@ class Categories(db.Model):
 
 @dataclass
 class Ingredients(db.Model):
-    ingredient_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
 
 
 @dataclass
 class Items(db.Model):
-    item_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
     description = db.Column(db.String(255), nullable=True)
     image = db.Column(db.String(255), nullable=True)

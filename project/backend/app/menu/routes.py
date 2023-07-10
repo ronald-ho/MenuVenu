@@ -1,84 +1,34 @@
 from http import HTTPStatus
 
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 
 from .models import Items, Categories
-from .services import ItemService, CategoryService
+from .services import ItemService, CategoryService, MenuService
 from .. import app, db
 
+menu = Blueprint('menu', __name__)
 
-@app.route('/menu/categories', methods=['POST'])
+
+@menu.route('/categories', methods=['POST'])
 def add_categories():
-    """
-    Add categories to menu 
-    """
-    data = request.get_json()
-    app.logger.info(f"data from front end: {data}")
+    data = data_logger(request)
 
-    category_name = data['name']
-    category = Categories.query.filter_by(name=category_name).first()
-
-    if category:
-        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Category already exists'})
-
-    next_position = CategoryService.get_next_position()
-
-    # Create a new Category instance
-    new_category = CategoryService.create_new_category(category_name, next_position)
-
-    # Return a JSON response indicating success and the added category's details
-    response = {
-        'status': HTTPStatus.CREATED,
-        'message': 'Category added successfully',
-        'category': new_category.to_dict()
-    }
-    return jsonify(response)
+    return CategoryService.create_new_category(data)
 
 
-@app.route('/menu/items', methods=['POST'])
+@menu.route('/items', methods=['POST'])
 def add_items():
-    """
-    Add items to menu
-    """
-    # Get the item details from the request JSON data
-    data = request.get_json()
-    app.logger.info(f"data from front end: {data}")
-    name = data['name']
-    description = data['description']
-    image = data['image']
-    price = data['price']
-    category_id = data['category_id']
-    calories = data['calories']
-    points = data['points']
+    data = data_logger(request)
 
-    # TODO: MIGHT have to check if the category id is correct and exists
-
-    item = Items.query.filter_by(name=name).first()
-    if item:
-        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
-
-    next_position = ItemService.get_next_position()
-
-    # Create a new Items instance
-    new_item = ItemService.create_new_item(name, description, image, price, category_id, calories, next_position,
-                                           points)
-
-    # Return a JSON response indicating success and the added item's details
-    response = {
-        'status': HTTPStatus.CREATED,
-        'message': 'Item added successfully',
-        'item': new_item.to_dict()
-    }
-    return jsonify(response)
+    return ItemService.create_new_item(data)
 
 
-@app.route('/menu/items', methods=['DELETE'])
+@menu.route('/items', methods=['DELETE'])
 def delete_items():
     """
     Delete items from menu
     """
-    data = request.get_json()
-    app.logger.info(f"data from front end: {data}")
+    data = data_logger(request)
 
     item = Items.query.filter_by(item_id=data["item_id"]).first()
     if not item:
@@ -96,13 +46,12 @@ def delete_items():
     return jsonify({'status': HTTPStatus.OK, 'message': 'Item deleted successfully'})
 
 
-@app.route('/menu/categories', methods=['DELETE'])
+@menu.route('/categories', methods=['DELETE'])
 def delete_categories():
     """
     Delete categories from menu
     """
-    data = request.get_json()
-    app.logger.info(f"data from front end: {data}")
+    data = data_logger(request)
 
     category = Categories.query.filter_by(category_id=data["category_id"]).first()
 
@@ -121,7 +70,7 @@ def delete_categories():
     return jsonify({'status': HTTPStatus.OK, 'message': 'Category deleted successfully'})
 
 
-@app.route('/menu/items/<category_id>', methods=['GET'])
+@menu.route('/items/<category_id>', methods=['GET'])
 def get_items(category_id):
     app.logger.info(f"category_id: {category_id}")
 
@@ -138,7 +87,7 @@ def get_items(category_id):
     return jsonify({'status': HTTPStatus.OK, 'message': 'Items found', 'items': item_list})
 
 
-@app.route('/menu/categories', methods=['GET'])
+@menu.route('/categories', methods=['GET'])
 def get_categories():
     app.logger.info("Getting categories from database")
 
@@ -149,23 +98,25 @@ def get_categories():
     return jsonify({'status': HTTPStatus.OK, 'message': 'Categories found', 'categories': category_list})
 
 
-@app.route('/menu/item/position', methods=['PUT'])
+@menu.route('/item/position', methods=['PUT'])
 def update_item_position():
-    data = request.get_json()
-    app.logger.info(f"data: {data}")
+    data = data_logger(request)
+
+    # return MenuService.update_entity_position(Items, data)
 
     return ItemService.update_item_position(data)
 
 
-@app.route('/menu/category/position', methods=['PUT'])
+@menu.route('/category/position', methods=['PUT'])
 def update_category_position():
-    data = request.get_json()
-    app.logger.info(f"data: {data}")
+    data = data_logger(request)
+
+    # return MenuService.update_entity_position(Categories, data)
 
     return CategoryService.update_category_position(data)
 
 
-@app.route('/menu/item/details/<item_id>', methods=['GET'])
+@menu.route('/item/details/<item_id>', methods=['GET'])
 def get_item_details(item_id):
     app.logger.info("Getting item details from database")
 
@@ -177,17 +128,21 @@ def get_item_details(item_id):
     return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
 
 
-@app.route('/menu/item', methods=['PUT'])
+@menu.route('/item', methods=['PUT'])
 def update_item_details():
-    data = request.get_json()
-    app.logger.info(f"data from front end: {data}")
+    data = data_logger(request)
 
     return ItemService.update_item_details(data)
 
 
-@app.route('/menu/category', methods=['PUT'])
+@menu.route('/category', methods=['PUT'])
 def update_category_details():
-    data = request.get_json()
-    app.logger.info(f"data from front end: {data}")
+    data = data_logger(request)
 
     return CategoryService.update_category_details(data)
+
+
+def data_logger(request):
+    data = request.get_json()
+    app.logger.info(f"Received request from frontend: {data}")
+    return data
