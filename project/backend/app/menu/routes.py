@@ -1,9 +1,10 @@
-from flask import request, jsonify
 from http import HTTPStatus
-from .. import app, db
-from .services import ItemService, CategoryService
 
-from .models import Items, Categories, Ingredients, Contains
+from flask import request, jsonify
+
+from .models import Items, Categories
+from .services import ItemService, CategoryService
+from .. import app, db
 
 
 @app.route('/menu/categories', methods=['POST'])

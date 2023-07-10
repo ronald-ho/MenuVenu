@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from flask import jsonify
 
-from .. import db
 from .models import Items, Categories
+from .. import db
 
 
 class ItemService:
