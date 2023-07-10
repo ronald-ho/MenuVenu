@@ -3,7 +3,7 @@ from http import HTTPStatus
 from flask import request, jsonify, Blueprint
 
 from .models import Items, Categories
-from .services import ItemService, CategoryService, MenuService
+from .services import ItemService, CategoryService
 from .. import app, db
 
 menu = Blueprint('menu', __name__)
