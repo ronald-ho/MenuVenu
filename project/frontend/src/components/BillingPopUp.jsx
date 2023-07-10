@@ -32,8 +32,8 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
         }
 
         setCustomerId(localStorage.getItem("mvuser"));
-        setBill(10);
-        // getBill();
+        // setBill(10);
+        getBill();
       }, []); 
 
     return (
