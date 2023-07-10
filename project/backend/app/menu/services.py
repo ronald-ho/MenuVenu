@@ -58,6 +58,28 @@ class ItemService:
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Item position updated'})
 
+    @staticmethod
+    def update_item_details(data):
+        item = Items.query.filter_by(item_id=data["item_id"]).first()
+        if not item:
+            return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
+
+        name_check = Items.query.filter_by(name=data["name"]).first()
+        if name_check and name_check.item_id != item.item_id:
+            return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Item name already exists'})
+
+        item.name = data["name"]
+        item.description = data["description"]
+        item.image = data["image"]
+        item.price = data["price"]
+        item.category_id = data["category_id"]
+        item.calories = data["calories"]
+        item.points = data["points"]
+
+        db.session.commit()
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Item updated successfully'})
+
 
 class CategoryService:
     @staticmethod
@@ -106,3 +128,16 @@ class CategoryService:
         db.session.commit()
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Category position updated'})
+
+    @staticmethod
+    def update_category_details(data):
+        category = Categories.query.filter_by(category_id=data["category_id"]).first()
+
+        if not category:
+            return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
+
+        category.name = data["name"]
+
+        db.session.commit()
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Category updated successfully'})

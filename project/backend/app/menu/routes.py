@@ -59,7 +59,8 @@ def add_items():
     next_position = ItemService.get_next_position()
 
     # Create a new Items instance
-    new_item = ItemService.create_new_item(name, description, image, price, category_id, calories, next_position, points)
+    new_item = ItemService.create_new_item(name, description, image, price, category_id, calories, next_position,
+                                           points)
 
     # Return a JSON response indicating success and the added item's details
     response = {
@@ -175,44 +176,17 @@ def get_item_details(item_id):
     return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
 
 
-@app.route('/menu/items', methods=['PUT'])
-def update_items():
-
+@app.route('/menu/item', methods=['PUT'])
+def update_item_details():
     data = request.get_json()
     app.logger.info(f"data from front end: {data}")
 
-    item = Items.query.filter_by(item_id=data["item_id"]).first()
+    return ItemService.update_item_details(data)
 
-    if not item:
-        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
-    item.name = data["name"]
-    item.description = data["description"]
-    item.image = data["image"]
-    item.price = data["price"]
-    item.category_id = data["category_id"]
-    item.calories = data["calories"]
-    item.position = data["position"]
-    item.points = data["points"]
-
-    db.session.commit()
-
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Item updated successfully'})
-
-@app.route('/menu/categories', methods=['PUT'])
-def update_categories():
-
+@app.route('/menu/category', methods=['PUT'])
+def update_category_details():
     data = request.get_json()
     app.logger.info(f"data from front end: {data}")
 
-    category = Categories.query.filter_by(category_id=data["category_id"]).first()
-
-    if not category:
-        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
-
-    category.name = data["name"]
-    category.position = data["position"]
-
-    db.session.commit()
-
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Category updated successfully'})
+    return CategoryService.update_category_details(data)
