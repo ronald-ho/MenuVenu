@@ -44,12 +44,14 @@ class ItemService:
             return jsonify({'status': HTTPStatus.OK, 'message': 'Item position updated'})
 
         elif curr_position > new_position:
-            items_to_update = Items.query.filter(Items.position < curr_position, Items.position >= new_position).all()
+            items_to_update = Items.query.filter(Items.position < curr_position,
+                                                 Items.position >= new_position).all()
             for item in items_to_update:
                 item.position += 1
 
         else:
-            items_to_update = Items.query.filter(Items.position > curr_position, Items.position <= new_position).all()
+            items_to_update = Items.query.filter(Items.position > curr_position,
+                                                 Items.position <= new_position).all()
             for item in items_to_update:
                 item.position -= 1
 
@@ -115,11 +117,13 @@ class CategoryService:
             return jsonify({'status': HTTPStatus.OK, 'message': 'Category position updated'})
 
         elif curr_position > new_position:
-            categories_to_update = Categories.query.filter(Categories.position < curr_position, Categories.position >= new_position).all()
+            categories_to_update = Categories.query.filter(Categories.position < curr_position,
+                                                           Categories.position >= new_position).all()
             for category in categories_to_update:
                 category.position += 1
         else:
-            categories_to_update = Categories.query.filter(Categories.position > curr_position, Categories.position <= new_position).all()
+            categories_to_update = Categories.query.filter(Categories.position > curr_position,
+                                                           Categories.position <= new_position).all()
             for category in categories_to_update:
                 category.position -= 1
 
@@ -132,9 +136,12 @@ class CategoryService:
     @staticmethod
     def update_category_details(data):
         category = Categories.query.filter_by(category_id=data["category_id"]).first()
-
         if not category:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
+
+        name_check = Categories.query.filter_by(name=data["name"]).first()
+        if name_check and name_check.category_id != category.category_id:
+            return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Category name already exists'})
 
         category.name = data["name"]
 
