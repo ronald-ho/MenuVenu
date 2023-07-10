@@ -1,4 +1,3 @@
-import logging
 from http import HTTPStatus
 
 from flask import jsonify, request
@@ -6,10 +5,7 @@ from flask import jsonify, request
 # Local imports
 from .. import app, db
 from .models import Customers
-from .services import MailService, UserService
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from .services import MailService, CustomerService
 
 reset_dict = {}
 
@@ -21,11 +17,7 @@ reset_dict = {}
 def register():
     data = data_logger(request)
 
-    # Create new user
-    if UserService.create_new_user(data['email'], data['full_name'], data['password']):
-        return jsonify({'status': HTTPStatus.CREATED, 'message': 'New user created'})
-    else:
-        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User already exists'})
+    return CustomerService.create_new_user(data)
 
 
 # ====================================================================================================
@@ -119,7 +111,6 @@ def generate_OTP():
 
     # Add reset code to dictionary
     reset_dict[reset_code] = data['email']
-    logger.info(f"reset_dict: {reset_dict}")
 
     # Send the OTP to the user's email
     MailService.send_email(data['email'], reset_code)
@@ -171,7 +162,7 @@ def reset_password():
 
 @app.route('/auth/customer/<customer_id>', methods=['GET'])
 def find_user(customer_id):
-    logger.info(f"Received find user request: {customer_id}")
+    app.logger.info(f"Received find user request: {customer_id}")
 
     customer = Customers.query.get(customer_id)
 
@@ -183,5 +174,5 @@ def find_user(customer_id):
 
 def data_logger(request):
     data = request.get_json()
-    logger.info(f"Received request from frontend: {data}")
+    app.logger.info(f"Received request from frontend: {data}")
     return data

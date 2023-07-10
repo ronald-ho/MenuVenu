@@ -14,10 +14,12 @@ CORS(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 @login_manager.user_loader
 def load_user(customer_id):
     from .authentication.models import Customers
     return Customers.query.get(int(customer_id))
+
 
 # Logger configuration
 app.logger.setLevel(logging.INFO)
