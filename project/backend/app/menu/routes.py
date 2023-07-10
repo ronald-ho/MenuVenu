@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from http import HTTPStatus
 from .. import app, db
-from sqlalchemy import desc
+from .services import ItemService, CategoryService
 
 from .models import Items, Categories, Ingredients, Contains
 
@@ -12,34 +12,24 @@ def add_categories():
     Add categories to menu 
     """
     data = request.get_json()
-
     app.logger.info(f"data from front end: {data}")
 
     category_name = data['name']
-
     category = Categories.query.filter_by(name=category_name).first()
-    max_position = db.session.query(db.func.max(Categories.position)).scalar()
-    next_position = max_position + 1 if max_position is not None else 1
 
     if category:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Category already exists'})
 
-    # Create a new Category instance
-    category = Categories(name=category_name, position=next_position)
+    next_position = CategoryService.get_next_position()
 
-    # Add the category to the database
-    db.session.add(category)
-    db.session.commit()
+    # Create a new Category instance
+    new_category = CategoryService.create_new_category(category_name, next_position)
 
     # Return a JSON response indicating success and the added category's details
     response = {
         'status': HTTPStatus.CREATED,
         'message': 'Category added successfully',
-        'category': {
-            'id': category.category_id,
-            'name': category.name,
-            'position': category.position
-        }
+        'category': new_category.to_dict()
     }
     return jsonify(response)
 
@@ -62,45 +52,20 @@ def add_items():
 
     # TODO: MIGHT have to check if the category id is correct and exists
 
-    max_position = db.session.query(db.func.max(Items.position)).scalar()
-    next_position = max_position + 1 if max_position is not None else 1
-
     item = Items.query.filter_by(name=name).first()
-
     if item:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
 
-    # Create a new Items instance
-    item = Items(
-        name=name,
-        description=description,
-        image=image,
-        price=price,
-        category_id=category_id,
-        calories=calories,
-        position=next_position,
-        points=points
-    )
+    next_position = ItemService.get_next_position()
 
-    # Add the item to the database
-    db.session.add(item)
-    db.session.commit()
+    # Create a new Items instance
+    new_item = ItemService.create_new_item(name, description, image, price, category_id, calories, next_position, points)
 
     # Return a JSON response indicating success and the added item's details
     response = {
         'status': HTTPStatus.CREATED,
         'message': 'Item added successfully',
-        'item': {
-            'item_id': item.item_id,
-            'name': item.name,
-            'description': item.description,
-            'image': item.image,
-            'price': float(item.price),
-            'category_id': item.category_id,
-            'calories': item.calories,
-            'position': item.position,
-            'points': item.points
-        }
+        'item': new_item.to_dict()
     }
     return jsonify(response)
 
@@ -182,33 +147,12 @@ def get_categories():
     return jsonify({'status': HTTPStatus.OK, 'message': 'Categories found', 'categories': category_list})
 
 
-# TODO: UPDATE NEEDS CHANGING TO UPDATE POSITION
-
 @app.route('/menu/item/position', methods=['PUT'])
 def update_item_position():
     data = request.get_json()
     app.logger.info(f"data: {data}")
 
-    new_position = data['new_position']
-    current_item = Items.query.get(data['item_id'])
-
-    if not current_item:
-        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
-
-    items_to_update = Items.query.filter(Items.position >= new_position,
-                                         Items.item_id != current_item.item_id).order_by(desc(Items.position)).all()
-
-    for item in items_to_update:
-        app.logger.info(f"item: {item.name}")
-        if item.item_id == current_item.item_id:
-            item.position = new_position
-        else:
-            app.logger.info(f"adding 1 to {item.name}")
-            item.position += 1
-
-    db.session.commit()
-
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Item position updated'})
+    return ItemService.update_item_position(data)
 
 
 @app.route('/menu/category/position', methods=['PUT'])
@@ -216,24 +160,7 @@ def update_category_position():
     data = request.get_json()
     app.logger.info(f"data: {data}")
 
-    new_position = data['new_position']
-    current_category = Categories.query.get(data['category_id'])
-
-    if not current_category:
-        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
-
-    categories_to_update = Categories.query.filter(Categories.position >= new_position).order_by(
-        desc(Categories.position)).all()
-
-    for category in categories_to_update:
-        if category.id == current_category.id:
-            category.position = new_position
-        else:
-            category.position += 1
-
-    db.session.commit()
-
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Category position updated'})
+    return CategoryService.update_category_position(data)
 
 
 @app.route('/menu/item/details/<item_id>', methods=['GET'])
@@ -250,15 +177,42 @@ def get_item_details(item_id):
 
 @app.route('/menu/items', methods=['PUT'])
 def update_items():
-    """
-    Update items
-    """
-    pass
 
+    data = request.get_json()
+    app.logger.info(f"data from front end: {data}")
+
+    item = Items.query.filter_by(item_id=data["item_id"]).first()
+
+    if not item:
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
+
+    item.name = data["name"]
+    item.description = data["description"]
+    item.image = data["image"]
+    item.price = data["price"]
+    item.category_id = data["category_id"]
+    item.calories = data["calories"]
+    item.position = data["position"]
+    item.points = data["points"]
+
+    db.session.commit()
+
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Item updated successfully'})
 
 @app.route('/menu/categories', methods=['PUT'])
 def update_categories():
-    """
-    Update categories
-    """
-    pass
+
+    data = request.get_json()
+    app.logger.info(f"data from front end: {data}")
+
+    category = Categories.query.filter_by(category_id=data["category_id"]).first()
+
+    if not category:
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
+
+    category.name = data["name"]
+    category.position = data["position"]
+
+    db.session.commit()
+
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Category updated successfully'})
