@@ -31,7 +31,7 @@ class Items(db.Model):
     name = db.Column(db.String(120), unique=True, nullable=False)
     description = db.Column(db.String(255), nullable=True)
     image = db.Column(db.String(255), nullable=True)
-    price = db.Column(db.Numeric(6, 2), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey(Categories.category_id))
     calories = db.Column(db.Integer, nullable=True)
     position = db.Column(db.Integer, unique=False, nullable=False)
@@ -45,7 +45,7 @@ class Items(db.Model):
             'name': self.name,
             'description': self.description,
             'image': self.image,
-            'price': float(self.price),
+            'price': self.price,
             'category_id': self.category_id,
             'calories': self.calories,
             'position': self.position,
