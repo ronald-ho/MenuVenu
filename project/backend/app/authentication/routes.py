@@ -4,7 +4,7 @@ from http import HTTPStatus
 from flask import jsonify, request
 
 # Local imports
-from app import app, db
+from .. import app, db
 from .models import Customers
 from .services import MailService, UserService
 

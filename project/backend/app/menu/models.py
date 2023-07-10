@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app import db
+from .. import db
 
 @dataclass
 class Categories(db.Model):

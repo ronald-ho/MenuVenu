@@ -1,7 +1,7 @@
 from flask_mail import Message
 
 # Local imports
-from app import db, mail
+from .. import db, mail
 from .models import Customers
 
 
