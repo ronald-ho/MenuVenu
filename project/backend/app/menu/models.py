@@ -41,6 +41,7 @@ class Items(db.Model):
 
     def to_dict(self):
         return {
+            'id': self.id,
             'name': self.name,
             'description': self.description,
             'image': self.image,
