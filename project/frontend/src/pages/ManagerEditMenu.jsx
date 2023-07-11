@@ -8,6 +8,7 @@ import AddItemPopUp from "../components/AddItemPopUp";
 
 function ManagerEditMenu () {
     const categories = useLoaderData();
+    const [activeCategory, setActiveCategory] = React.useState('');
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
     const [openAddItem, setOpenAddItem] = React.useState(false);
 
@@ -38,12 +39,23 @@ function ManagerEditMenu () {
                 <Box>
                     <Outlet />
                 </Box>
-                <Button onClick={() => setOpenAddItem(true)} sx={{ margin: "10px" }} color="success" variant="outlined">
+                <Button 
+                    onClick={() => {
+                        const path = window.location.pathname;
+                        const n = path.lastIndexOf('/');
+                        const activeCategoryId = path.substring(n + 1);
+                        setActiveCategory(activeCategoryId);
+                        setOpenAddItem(true);
+                    }}
+                    sx={{ margin: "10px" }} 
+                    color="success" 
+                    variant="outlined"
+                >
                     <Add /> New Menu Item
                 </Button>
             </Box>
             {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory}/>}
-            {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem}/>}
+            {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem} categoryId={activeCategory} />}
         </Box>
     )
 }

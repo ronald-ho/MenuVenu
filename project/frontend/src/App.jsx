@@ -106,7 +106,7 @@ function App() {
         loader: get_categories,
         children: [
           {
-            path: ":catid",
+            path: ":categoryid",
             element: <ItemList />,
             loader: async ({params}) => {
               return get_items(params);
