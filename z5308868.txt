@@ -23,3 +23,8 @@ Week 5
 * During our lab this week we had presented our Sprint 1 progress in Demo A. The tutor provided us with positive feedback and suggested that we work on improving the UI for the next sprint and to let him know during the next class about what we want to do for Sprint 2/3, as we were still deciding for a couple of user stories. 
 * We had our Retrospective A meeting to reflect on how our first sprint went and to discuss what we could do for Sprint 2. In this meeting we also delegated user stories for each person to work on.
 * Ronald submitted the finalised Retrospective A report for the team before the deadline. 
+
+Week 6
+* This week I worked on the frontend for manager adding category and item to the menu. I had a bit of trouble with the design of the category tabs and getting the buttons/links working as I wanted, as it should act like a navbar. In the end I managed to figure it out.
+* I had an assessment for another course due this week, so I didn't have time to work on much else. 
+* My plan for Week 7 is to continue working on manager edit menu before going to kitchen and waitstaff functionality, which I accidentally made a start on in Sprint 1 when it wasn't required yet.
