@@ -21,7 +21,7 @@ class ItemService:
             description=data['description'],
             image=data['image'],
             price=data['price'],
-            category_id=data['category_id'],
+            category=data['category_id'],
             calories=data['calories'],
             points=data['points'],
             position=ItemService.get_next_position()
@@ -74,19 +74,19 @@ class ItemService:
 
     @staticmethod
     def update_item_details(data):
-        item = Items.query.filter_by(item_id=data["item_id"]).first()
+        item = Items.query.filter_by(id=data["item_id"]).first()
         if not item:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
         name_check = Items.query.filter_by(name=data["name"]).first()
-        if name_check and name_check.item_id != item.item_id:
+        if name_check and name_check.id != item.id:
             return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Item name already exists'})
 
         item.name = data["name"]
         item.description = data["description"]
         item.image = data["image"]
         item.price = data["price"]
-        item.category_id = data["category_id"]
+        item.category = data["category_id"]
         item.calories = data["calories"]
         item.points = data["points"]
 
@@ -158,12 +158,12 @@ class CategoryService:
 
     @staticmethod
     def update_category_details(data):
-        category = Categories.query.filter_by(category_id=data["category_id"]).first()
+        category = Categories.query.filter_by(id=data["category_id"]).first()
         if not category:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
         name_check = Categories.query.filter_by(name=data["name"]).first()
-        if name_check and name_check.category_id != category.category_id:
+        if name_check and name_check.id != category.id:
             return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Category name already exists'})
 
         category.name = data["name"]
