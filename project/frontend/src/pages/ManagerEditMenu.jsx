@@ -4,10 +4,12 @@ import { Box, Button } from "@mui/material";
 import { Add } from '@mui/icons-material';
 import AddCategoryPopUp from "../components/AddCategoryPopUp";
 import CategoryListItem from "../components/CategoryListItem";
+import AddItemPopUp from "../components/AddItemPopUp";
 
 function ManagerEditMenu () {
     const categories = useLoaderData();
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
+    const [openAddItem, setOpenAddItem] = React.useState(false);
 
     return (
         <Box sx={{
@@ -36,11 +38,12 @@ function ManagerEditMenu () {
                 <Box>
                     <Outlet />
                 </Box>
-                <Button sx={{ margin: "10px" }} color="success" variant="outlined">
+                <Button onClick={() => setOpenAddItem(true)} sx={{ margin: "10px" }} color="success" variant="outlined">
                     <Add /> New Menu Item
                 </Button>
             </Box>
             {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory}/>}
+            {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem}/>}
         </Box>
     )
 }
