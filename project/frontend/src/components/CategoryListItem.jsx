@@ -2,10 +2,12 @@ import { Box, IconButton, Typography } from "@mui/material";
 import { Delete, DragHandle, Edit } from '@mui/icons-material';
 import React from "react";
 import { NavLink } from "react-router-dom";
+import UpdateCategoryPopUp from "./UpdateCategoryPopUp";
 
 function CategoryListItem ({ category }) {
     // Maybe add :hover in external stylesheet for active category
     // Make DragHandle clickable
+    const [openUpdateCategory, setOpenUpdateCategory] = React.useState(false);
 
     return (
         <>
@@ -46,13 +48,20 @@ function CategoryListItem ({ category }) {
                 </Box>
                 <Box>
                     <IconButton aria-label="edit"> 
-                        <Edit sx={{ color: "black" }} />
+                        <Edit onClick={() => setOpenUpdateCategory(true)} sx={{ color: "black" }} />
                     </IconButton>
                     <IconButton aria-label="delete">
                         <Delete color="error"/>
                     </IconButton>
                 </Box>
             </Box> 
+            {openUpdateCategory && 
+                <UpdateCategoryPopUp 
+                    open={openUpdateCategory} 
+                    setOpen={setOpenUpdateCategory}
+                    currCategory={category}
+                />
+            }
         </>
     )
 }
