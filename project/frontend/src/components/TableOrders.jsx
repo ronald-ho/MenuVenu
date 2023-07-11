@@ -1,17 +1,21 @@
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from "@mui/material";
 import React from "react";
+import { apiCall } from "../helpers/helpers";
 
-function TableOrders({ table }) {
+function TableOrders({ trigger }) {
     const [orders, setOrders] = React.useState([]);
-
+    const table = localStorage.getItem("mvtable");
     const fetchdata = async () => {
-        /* add when route done */
-        setOrders([]);
+        const body = {
+            "table_id": localStorage.getItem("mvtable")
+        };
+        const response = await apiCall("orders/get_ordered_items", "POST", body);
+        setOrders(response.ordered_list);
     }
 
     React.useEffect(() => {
         fetchdata();
-    }, []);
+    }, [trigger]);
 
     return (
         <Box sx={{border: "1px solid black", padding: "5px", margin: "5px"}}>

@@ -9,6 +9,7 @@ import TableOrders from "../components/TableOrders";
 function Menu () {
     const categories = useLoaderData();
 
+    const [updatetable, setUpdatetable] = React.useState(0);
     const [openBilling, setOpenBilling] = React.useState(false);
     const [showInfo, setShowInfo] = React.useState(null);
     const [showAlert, setShowAlert] = React.useState(null);
@@ -35,9 +36,9 @@ function Menu () {
             <Box sx={{border: "1px solid black", margin: "10px", padding: "10px", textAlign: "center"}}>
                 {categories.map((category) => <CategoryButton key={category.category_id} category={category}/>)}
             </Box>
-            <Outlet />
+            <Outlet context={setUpdatetable}/>
             {/*rename to table order thing*/}
-            <TableOrders />
+            <TableOrders trigger={updatetable} />
             <Box sx={{ position: 'absolute', bottom: '24px', right: '10px' }}>
                 <Button onClick={() => setOpenBilling(true)} variant="contained" sx={{ marginRight: '10px', width: '140px' }}>Request Bill</Button>
                 <Button onClick={handleCallStaff} variant="contained" sx={{ width: '140px' }}>Call Staff</Button>
