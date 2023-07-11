@@ -81,7 +81,7 @@ def get_items(category_id):
 
     item_list = []
 
-    for item in category.Items:
+    for item in category.items:
         item_list.append(item.to_dict())
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Items found', 'items': item_list})
