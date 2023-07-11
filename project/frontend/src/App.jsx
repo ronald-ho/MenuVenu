@@ -102,10 +102,11 @@ function App() {
       }, { 
         path: "/managereditmenu",
         element: <ManagerEditMenu />,
+        loader: get_categories,
         children: [
           {
             path: ":categoryid",
-            element: <ManagerEditMenu />,
+            element: <ManagerEditMenu />
           }
         ]
       }

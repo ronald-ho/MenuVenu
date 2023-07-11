@@ -12,7 +12,7 @@ function AddCategoryPopUp ({ open, setOpen }) {
             return;
         }
 
-        const data = await apiCall("menu/add/categories", "POST", { 'name': categoryName });
+        const data = await apiCall("menu/categories", "POST", { 'name': categoryName });
         if (data.category) {
             // make feedback alert like assistance?
             console.log("Category successfully added");
