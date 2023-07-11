@@ -17,3 +17,14 @@ After we created all the user stories, I decided to start working on the backend
 I created the base file structure of the project and pushed it into github first so that my teammates can work on different parts of the code
 User authentication routes were finished before the lab 
 I started working on using Docker to containerize the backend
+
+Week 4
+Did major integration testing for frontend, backend, and database to ensure that everything is working
+Worked on refining the authentication routes and constantly had meetings with teammembers to ensure the same api calls are being made
+made changes to docker file so that backend will wait for the database to be active and receiving requests to create all the tables
+
+Week 5
+Demo during class was excellent, we were able to finish everything on time and give a good demo to our tutor.
+In the class our teammates talked about what to do next sprint, and were able to decide on a solid timeline and sprint 2
+Retrospective A report was completed that night with all the members dicussing what went well and what not so good
+I handed the retro in a day before the deadline
