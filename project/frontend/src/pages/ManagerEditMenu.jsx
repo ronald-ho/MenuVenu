@@ -1,5 +1,5 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
 import { Box, Button } from "@mui/material";
 import { Add } from '@mui/icons-material';
 import AddCategoryPopUp from "../components/AddCategoryPopUp";
@@ -27,12 +27,13 @@ function ManagerEditMenu () {
                 </Button>
                 <Box>
                     {categories.map((category) => (
-                        <CategoryListItem key={category.category_id} id={category.category_id} name={category.name}/>
+                        <CategoryListItem key={category.category_id} category={category}/>
                     ))}
                 </Box>
             </Box>
             <Box sx={{ width: "50vw" }}>
                 <Box sx={{ borderBottom: 1, padding: "15px 0" }}>MENU ITEMS</Box>
+                <Outlet />
             </Box>
             {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory}/>}
         </Box>

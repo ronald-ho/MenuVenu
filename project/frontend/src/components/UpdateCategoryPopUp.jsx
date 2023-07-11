@@ -2,8 +2,8 @@ import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextF
 import { apiCall } from "../helpers/helpers";
 import React from "react";
 
-function UpdateCategoryPopUp ({ open, setOpen, id, currName }) {
-    const [newName, setNewName] = React.useState(currName);
+function UpdateCategoryPopUp ({ open, setOpen, category }) {
+    const [newName, setNewName] = React.useState(category.name);
     const [alert, setAlert] = React.useState('');
 
     async function handleUpdate() {
@@ -12,7 +12,7 @@ function UpdateCategoryPopUp ({ open, setOpen, id, currName }) {
             return;
         }
 
-        const data = await apiCall("menu/categories", "PUT", { 'id': id, 'name': newName });
+        const data = await apiCall("menu/categories", "PUT", { 'id': category.category_id, 'name': newName });
         if (data.category) {
             // make feedback alert like assistance?
             console.log("Category successfully updated");

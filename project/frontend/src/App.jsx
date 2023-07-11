@@ -20,6 +20,7 @@ import ViewItems from './components/ViewItems';
 import Menu from './pages/Menu';
 import OrderItem from './pages/OrderItem';
 import ManagerEditMenu from './pages/ManagerEditMenu';
+import ItemList from './components/ItemList';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -105,8 +106,11 @@ function App() {
         loader: get_categories,
         children: [
           {
-            path: ":categoryid",
-            element: <ManagerEditMenu />
+            path: ":catid",
+            element: <ItemList />,
+            loader: async ({params}) => {
+              return get_items(params);
+            }
           }
         ]
       }

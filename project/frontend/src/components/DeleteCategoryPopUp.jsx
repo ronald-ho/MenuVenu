@@ -2,9 +2,9 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/
 import { apiCall } from "../helpers/helpers";
 import React from "react";
 
-function DeleteCategoryPopUp ({ open, setOpen, id, name }) {
+function DeleteCategoryPopUp ({ open, setOpen, category}) {
     async function handleDelete() {
-        const data = await apiCall("menu/categories", "DELETE", { 'category_id': id });
+        const data = await apiCall("menu/categories", "DELETE", { 'category_id': category.category_id });
         if (data.category) {
             // make feedback alert like assistance?
             console.log("Category deleted");
@@ -26,7 +26,7 @@ function DeleteCategoryPopUp ({ open, setOpen, id, name }) {
             >
                 <DialogTitle>{"Delete Category"}</DialogTitle>
                 <DialogContent>
-                    Are you sure you want to delete the {name} category?
+                    Are you sure you want to delete the {category.name} category?
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} variant="contained" color="error">Cancel</Button>

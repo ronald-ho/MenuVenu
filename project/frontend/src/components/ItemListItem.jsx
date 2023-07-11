@@ -2,15 +2,10 @@ import { Box, IconButton, Typography } from "@mui/material";
 import { Delete, DragHandle, Edit } from '@mui/icons-material';
 import React from "react";
 import { NavLink } from "react-router-dom";
-import UpdateCategoryPopUp from "./UpdateCategoryPopUp";
-import DeleteCategoryPopUp from "./DeleteCategoryPopUp";
 
-function CategoryListItem ({ category }) {
-    // Maybe add :hover in external stylesheet for active category
+function ItemListItem ({ item }) {
+    // Maybe add :hover in external stylesheet
     // Make DragHandle clickable
-    const [openUpdateCategory, setOpenUpdateCategory] = React.useState(false);
-    const [openDeleteCategory, setOpenDeleteCategory] = React.useState(false);
-
     return (
         <>
             <Box  
@@ -23,7 +18,7 @@ function CategoryListItem ({ category }) {
                     justifyContent: "space-between",
                     margin: "0 0 2px 0",
                     padding: "0",
-                    width: "20vw"
+                    width: "50vw"
                 }}
             >
                 <Box 
@@ -37,7 +32,7 @@ function CategoryListItem ({ category }) {
                     <DragHandle color="secondary" />
                     <Typography
                         component={NavLink}
-                        to={""+category.category_id}
+                        to={""+item.item_id}
                         style={({ isActive }) => {
                             return {
                                 color: "black",
@@ -46,34 +41,20 @@ function CategoryListItem ({ category }) {
                             };
                         }}
                     >
-                        {category.name}
+                        {item.name}
                     </Typography>
                 </Box>
                 <Box>
                     <IconButton aria-label="edit"> 
-                        <Edit onClick={() => setOpenUpdateCategory(true)} sx={{ color: "black" }} />
+                        <Edit sx={{ color: "black" }} />
                     </IconButton>
                     <IconButton aria-label="delete">
-                        <Delete onClick={() => setOpenDeleteCategory(true)} color="error"/>
+                        <Delete color="error"/>
                     </IconButton>
                 </Box>
             </Box> 
-            {openUpdateCategory && 
-                <UpdateCategoryPopUp 
-                    open={openUpdateCategory} 
-                    setOpen={setOpenUpdateCategory}
-                    category={category}
-                />
-            }
-            {openDeleteCategory && 
-                <DeleteCategoryPopUp 
-                    open={openDeleteCategory} 
-                    setOpen={setOpenDeleteCategory}
-                    category={category}
-                />
-            }
         </>
     )
 }
 
-export default CategoryListItem;
+export default ItemListItem;
