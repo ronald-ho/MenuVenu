@@ -27,9 +27,6 @@ class Customers(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def get_id(self):
-        return self.id
-
     def to_dict(self):
         return {
             'customer_id': self.id,
