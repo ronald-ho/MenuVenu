@@ -1,122 +1,148 @@
-from flask import request, jsonify
+from http import HTTPStatus
 
-from app import app, db
-from .models import Items, Categories, Ingredients, Contains
+from flask import request, jsonify, Blueprint
 
-@app.route('/menu/add/categories', methods=['POST'])
+from .models import Items, Categories
+from .services import ItemService, CategoryService
+from .. import app, db
+
+menu = Blueprint('menu', __name__)
+
+
+@menu.route('/categories', methods=['POST'])
 def add_categories():
-    """
-    Add categories to menu
-    """
-    pass    
+    data = data_logger(request)
 
-@app.route('/menu/add/items', methods=['POST'])
+    return CategoryService.create_new_category(data)
+
+
+@menu.route('/items', methods=['POST'])
 def add_items():
-    """
-    Add items to menu
-    """
-    pass
+    data = data_logger(request)
 
-@app.route('/menu/items', methods=['DELETE'])
+    return ItemService.create_new_item(data)
+
+
+@menu.route('/items', methods=['DELETE'])
 def delete_items():
     """
     Delete items from menu
     """
-    pass
+    data = data_logger(request)
 
-@app.route('/menu/categories', methods=['DELETE'])
+    item = Items.query.filter_by(item_id=data["item_id"]).first()
+    if not item:
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
+
+    db.session.delete(item)
+
+    items_to_update = Items.query.filter(Items.position > item.position).all()
+
+    for item in items_to_update:
+        item.position -= 1
+
+    db.session.commit()
+
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Item deleted successfully'})
+
+
+@menu.route('/categories', methods=['DELETE'])
 def delete_categories():
     """
     Delete categories from menu
     """
-    pass
+    data = data_logger(request)
 
-@app.route('/menu/items/<category_id>', methods=['GET'])
+    category = Categories.query.filter_by(category_id=data["category_id"]).first()
+
+    if not category:
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
+
+    db.session.delete(category)
+
+    categories_to_update = Categories.query.filter(Categories.position > category.position).all()
+
+    for category in categories_to_update:
+        category.position -= 1
+
+    db.session.commit()
+
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Category deleted successfully'})
+
+
+@menu.route('/items/<category_id>', methods=['GET'])
 def get_items(category_id):
-
     app.logger.info(f"category_id: {category_id}")
 
     category = Categories.query.get(category_id)
 
     if not category:
-        return jsonify({'status': 404, 'message': 'Category not found'})
-    
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
+
     item_list = []
 
     for item in category.items:
         item_list.append(item.to_dict())
 
-    return jsonify({'status': 200, 'message': 'Items found', 'items': item_list})
-    
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Items found', 'items': item_list})
 
-@app.route('/menu/categories', methods=['GET'])
+
+@menu.route('/categories', methods=['GET'])
 def get_categories():
-    
     app.logger.info("Getting categories from database")
 
     categories = Categories.query.all()
 
     category_list = [categories.to_dict() for categories in categories]
 
-    return jsonify({'status': 200, 'message': 'Categories found', 'categories': category_list})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Categories found', 'categories': category_list})
 
 
-@app.route('/menu/item/position', methods=['PUT'])
+@menu.route('/item/position', methods=['PUT'])
 def update_item_position():
-    
-    data = request.get_json()
-    app.logger.info(f"data: {data}")
+    data = data_logger(request)
 
-    item = Items.query.get(data['item_id'])
+    # return MenuService.update_entity_position(Items, data)
 
-    if not item:
-        return jsonify({'status': 404, 'message': 'Item not found'})
-    
-    item.position = data['position']
-    db.session.commit()
-
-    return jsonify({'status': 200, 'message': 'Item position updated'})
+    return ItemService.update_item_position(data)
 
 
-@app.route('/menu/category/position', methods=['PUT'])
+@menu.route('/category/position', methods=['PUT'])
 def update_category_position():
+    data = data_logger(request)
 
-    data = request.get_json()
-    app.logger.info(f"data: {data}")
+    # return MenuService.update_entity_position(Categories, data)
 
-    category = Categories.query.get(data['category_id'])
+    return CategoryService.update_category_position(data)
 
-    if not category:
-        return jsonify({'status': 404, 'message': 'Category not found'})
-    
-    category.position = data['position']
-    db.session.commit()
 
-    return jsonify({'status': 200, 'message': 'Category position updated'})
-
-@app.route('/menu/item/details/<item_id>', methods=['GET'])
+@menu.route('/item/details/<item_id>', methods=['GET'])
 def get_item_details(item_id):
-    
     app.logger.info("Getting item details from database")
 
     item = Items.query.get(item_id)
 
     if not item:
-        return jsonify({'status': 404, 'message': 'Item not found'})
-    
-    return jsonify({'status': 200, 'message': 'Item found', 'item': item.to_dict()})
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
-@app.route('/menu/items', methods=['PUT'])
-def update_items():
-    """
-    Update items
-    """
-    pass
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
 
-@app.route('/menu/categories', methods=['PUT'])
-def update_categories():
-    """
-    Update categories
-    """
-    pass    
 
+@menu.route('/item', methods=['PUT'])
+def update_item_details():
+    data = data_logger(request)
+
+    return ItemService.update_item_details(data)
+
+
+@menu.route('/category', methods=['PUT'])
+def update_category_details():
+    data = data_logger(request)
+
+    return CategoryService.update_category_details(data)
+
+
+def data_logger(request):
+    data = request.get_json()
+    app.logger.info(f"Received request from frontend: {data}")
+    return data

@@ -14,10 +14,12 @@ CORS(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 @login_manager.user_loader
 def load_user(customer_id):
     from .authentication.models import Customers
     return Customers.query.get(int(customer_id))
+
 
 # Logger configuration
 app.logger.setLevel(logging.INFO)
@@ -38,3 +40,9 @@ app.config['MAIL_PASSWORD'] = 'epoekmdhdlqiletx'
 
 db = SQLAlchemy(app)
 mail = Mail(app)
+
+from .authentication.routes import auth
+from .menu.routes import menu
+
+app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(menu, url_prefix='/menu')

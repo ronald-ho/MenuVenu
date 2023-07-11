@@ -11,7 +11,7 @@ wait_for() {
     start_ts=$(date +%s)
     while :
     do
-        if (echo -n > /dev/tcp/$HOST/$PORT) >/dev/null 2>&1; then
+        if (echo -n > /dev/tcp/"$HOST"/"$PORT") >/dev/null 2>&1; then
             end_ts=$(date +%s)
             echo "$HOST:$PORT is available after $((end_ts - start_ts)) seconds!"
             break
