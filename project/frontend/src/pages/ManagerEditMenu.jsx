@@ -27,7 +27,7 @@ function ManagerEditMenu () {
                 </Button>
                 <Box>
                     {categories.map((category) => (
-                        <CategoryListItem key={category.category_id} category={category.name}/>
+                        <CategoryListItem key={category.category_id} id={category.category_id} name={category.name}/>
                     ))}
                 </Box>
             </Box>

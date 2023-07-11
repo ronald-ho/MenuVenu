@@ -3,11 +3,13 @@ import { Delete, DragHandle, Edit } from '@mui/icons-material';
 import React from "react";
 import { NavLink } from "react-router-dom";
 import UpdateCategoryPopUp from "./UpdateCategoryPopUp";
+import DeleteCategoryPopUp from "./DeleteCategoryPopUp";
 
-function CategoryListItem ({ category }) {
+function CategoryListItem ({ id, name }) {
     // Maybe add :hover in external stylesheet for active category
     // Make DragHandle clickable
     const [openUpdateCategory, setOpenUpdateCategory] = React.useState(false);
+    const [openDeleteCategory, setOpenDeleteCategory] = React.useState(false);
 
     return (
         <>
@@ -34,7 +36,7 @@ function CategoryListItem ({ category }) {
                     <DragHandle color="secondary" />
                     <Typography
                         component={NavLink}
-                        to={""+category}
+                        to={""+name}
                         style={({ isActive }) => {
                             return {
                                 color: "black",
@@ -43,7 +45,7 @@ function CategoryListItem ({ category }) {
                             };
                         }}
                     >
-                        {category}
+                        {name}
                     </Typography>
                 </Box>
                 <Box>
@@ -51,7 +53,7 @@ function CategoryListItem ({ category }) {
                         <Edit onClick={() => setOpenUpdateCategory(true)} sx={{ color: "black" }} />
                     </IconButton>
                     <IconButton aria-label="delete">
-                        <Delete color="error"/>
+                        <Delete onClick={() => setOpenDeleteCategory(true)} color="error"/>
                     </IconButton>
                 </Box>
             </Box> 
@@ -59,7 +61,16 @@ function CategoryListItem ({ category }) {
                 <UpdateCategoryPopUp 
                     open={openUpdateCategory} 
                     setOpen={setOpenUpdateCategory}
-                    currCategory={category}
+                    id={id}
+                    currName={name}
+                />
+            }
+            {openDeleteCategory && 
+                <DeleteCategoryPopUp 
+                    open={openDeleteCategory} 
+                    setOpen={setOpenDeleteCategory}
+                    id={id}
+                    name={name}
                 />
             }
         </>

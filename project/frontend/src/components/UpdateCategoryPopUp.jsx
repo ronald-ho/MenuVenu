@@ -2,17 +2,17 @@ import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextF
 import { apiCall } from "../helpers/helpers";
 import React from "react";
 
-function UpdateCategoryPopUp ({ open, setOpen, currCategory }) {
-    const [categoryName, setCategoryName] = React.useState(currCategory);
+function UpdateCategoryPopUp ({ open, setOpen, id, currName }) {
+    const [newName, setNewName] = React.useState(currName);
     const [alert, setAlert] = React.useState('');
 
-    async function handleAdd() {
-        if (categoryName === "") {
+    async function handleUpdate() {
+        if (newName === "") {
             setAlert("Please enter a category name");
             return;
         }
 
-        const data = await apiCall("menu/categories", "PUT", { 'name': categoryName });
+        const data = await apiCall("menu/categories", "PUT", { 'id': id, 'name': newName });
         if (data.category) {
             // make feedback alert like assistance?
             console.log("Category successfully updated");
@@ -38,15 +38,15 @@ function UpdateCategoryPopUp ({ open, setOpen, currCategory }) {
                         label="Update category name"
                         variant="outlined" 
                         margin="normal"
-                        value={categoryName}
+                        value={newName}
                         onChange={(e) => {
-                            setCategoryName(e.target.value);
+                            setNewName(e.target.value);
                         }}
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} variant="contained" color="error">Cancel</Button>
-                    <Button onClick={handleAdd} variant="contained" color="success">Update</Button>
+                    <Button onClick={handleUpdate} variant="contained" color="success">Update</Button>
                 </DialogActions>
                 {alert && <Alert severity="error" aria-label='errorAlert'>{alert}</Alert>}
             </Dialog>
