@@ -39,7 +39,7 @@ def login():
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
     # Returns the main menu page
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful', 'customer_id': user.customer_id})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful', 'customer_id': user.id})
 
 
 # ====================================================================================================
@@ -59,7 +59,7 @@ def delete():
     data = data_logger(request)
 
     # Check if password is correct
-    user = Customers.query.filter_by(customer_id=data['customer_id']).first()
+    user = Customers.query.filter_by(id=data['customer_id']).first()
     if not user.check_password(data['password']):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
@@ -76,7 +76,7 @@ def delete():
 def update():
     data = data_logger(request)
 
-    user = Customers.query.filter_by(customer_id=data['customer_id']).first()
+    user = Customers.query.filter_by(id=data['customer_id']).first()
 
     # Check if email already exists
     if user.email != data['new_email'] and Customers.query.filter_by(email=data['new_email']).first():

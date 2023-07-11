@@ -61,15 +61,15 @@ def pay_bill():
     logger.info(f"Received pay bill request: {data}")
 
     # find order associated with table
-    table = DiningTables.query.filter_by(table_number=data['table_number']).first()
-    order = Orders.query.filter_by(paid=False).filter_by(table_id=table.table_id).first()
+    table = DiningTables.query.filter_by(number=data['table_number']).first()
+    order = Orders.query.filter_by(paid=False).filter_by(table=table.number).first()
 
     if not order:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
 
     order.paid = True
     db.session.commit()
-    occupied_flags.remove(table.table_number)
+    occupied_flags.remove(table.number)
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Order paid'})
 
@@ -80,8 +80,8 @@ def get_bill():
     logger.info(f"Received get bill request: {data}")
 
     # find order associated with table
-    table = DiningTables.query.filter_by(table_number=data['table_number']).first()
-    order = Orders.query.filter_by(paid=False).filter_by(table_id=table.table_id).first()
+    table = DiningTables.query.filter_by(number=data['table_number']).first()
+    order = Orders.query.filter_by(paid=False).filter_by(table=table.number).first()
 
     if not order:
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
@@ -95,12 +95,12 @@ def select_table():
     logger.info(f"Received table selection request: {data}")
 
     # get table that was selected
-    table = DiningTables.query.filter_by(table_number=data['table_number']).first()
+    table = DiningTables.query.filter_by(number=data['table_number']).first()
 
     # creates a new order for table if it was not occupied yet
-    if table.table_number not in occupied_flags:
+    if table.number not in occupied_flags:
         new_order = Orders(
-            table_id=table.table_number,
+            table=table.number,
             order_date=datetime.now(),
             total_amount=0,
             paid=False
@@ -109,7 +109,7 @@ def select_table():
         db.session.add(new_order)
         db.session.commit()
 
-        occupied_flags.append(table.table_number)
+        occupied_flags.append(table.number)
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Table selected'})
 
@@ -132,7 +132,7 @@ def order_item():
     item = Items.query.filter_by(name=data['name']).first()
 
     # get order that is associated with table
-    order = Orders.query.filter_by(paid=False).filter_by(table_id=data['table_id']).first()
+    order = Orders.query.filter_by(paid=False).filter_by(table=data['table_id']).first()
 
     # add cost of item to order total if customer did not redeem points
     if not data['redeem']:
@@ -140,13 +140,13 @@ def order_item():
 
     # reduce points from customer total if customer did redeem points
     else:
-        customer = Customers.query.filter_by(customer_id=data['customer_id'])
+        customer = Customers.query.filter_by(id=data['customer_id'])
         customer.points = customer.points - item.points
 
     new_ordered_item = OrderedItems(
-        order_id=order.order_id,
-        customer_id=data['customer_id'],
-        item=item.item_id
+        order=order.id,
+        customer=data['customer_id'],
+        item=item.id
     )
 
     db.session.add(new_ordered_item)
@@ -191,16 +191,16 @@ def get_ordered_items():
     logger.info(f"Received get ordered items request: {data}")
 
     # get current order associated with table
-    order = Orders.query.filter_by(paid=False).filter_by(table_number=data['table_number']).first()
+    order = Orders.query.filter_by(paid=False).filter_by(table=data['table_number']).first()
 
     # get ordered items associated with order
-    ordered_item_list = OrderedItems.query.filter_by(order_id=order.order_id)
+    ordered_item_list = OrderedItems.query.filter_by(order=order.id)
 
     item_list = []
 
     # for each ordered item, get the relevant menu item
     for ordered_item in ordered_item_list:
-        item = Items.query.filter_by(item_id=ordered_item.item_id).first()
+        item = Items.query.filter_by(id=ordered_item.item).first()
         item_list.append(item.to_dict())
 
     return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})
