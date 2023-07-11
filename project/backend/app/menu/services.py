@@ -8,21 +8,33 @@ from .. import db
 
 class ItemService:
     @staticmethod
-    def create_new_item(name, description, image, price, category_id, calories, position, points):
+    def create_new_item(data):
+
+        item_name = data['name']
+
+        item = Items.query.filter_by(name=item_name).first()
+        if item:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
+
         new_item = Items(
-            name=name,
-            description=description,
-            image=image, price=price,
-            category_id=category_id,
-            calories=calories,
-            position=position,
-            points=points
+            name=item_name,
+            description=data['description'],
+            image=data['image'],
+            price=data['price'],
+            category=data['category_id'],
+            calories=data['calories'],
+            points=data['points'],
+            position=ItemService.get_next_position()
         )
 
         db.session.add(new_item)
         db.session.commit()
 
-        return Items.query.filter_by(name=name).first()
+        return jsonify({
+            'status': HTTPStatus.CREATED,
+            'message': 'Item added successfully',
+            'item': new_item.to_dict()
+        })
 
     @staticmethod
     def get_next_position():
@@ -62,19 +74,19 @@ class ItemService:
 
     @staticmethod
     def update_item_details(data):
-        item = Items.query.filter_by(item_id=data["item_id"]).first()
+        item = Items.query.filter_by(id=data["item_id"]).first()
         if not item:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
         name_check = Items.query.filter_by(name=data["name"]).first()
-        if name_check and name_check.item_id != item.item_id:
+        if name_check and name_check.id != item.id:
             return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Item name already exists'})
 
         item.name = data["name"]
         item.description = data["description"]
         item.image = data["image"]
         item.price = data["price"]
-        item.category_id = data["category_id"]
+        item.category = data["category_id"]
         item.calories = data["calories"]
         item.points = data["points"]
 
@@ -85,16 +97,27 @@ class ItemService:
 
 class CategoryService:
     @staticmethod
-    def create_new_category(name, position):
+    def create_new_category(data):
+
+        category_name = data['name']
+
+        category = Categories.query.filter_by(name=category_name).first()
+        if category:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Category already exists'})
+
         new_category = Categories(
-            name=name,
-            position=position
+            name=category_name,
+            position=CategoryService.get_next_position()
         )
 
         db.session.add(new_category)
         db.session.commit()
 
-        return Categories.query.filter_by(name=name).first()
+        return jsonify({
+            'status': HTTPStatus.CREATED,
+            'message': 'Category added successfully',
+            'category': new_category.to_dict()
+        })
 
     @staticmethod
     def get_next_position():
@@ -135,12 +158,12 @@ class CategoryService:
 
     @staticmethod
     def update_category_details(data):
-        category = Categories.query.filter_by(category_id=data["category_id"]).first()
+        category = Categories.query.filter_by(id=data["category_id"]).first()
         if not category:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
         name_check = Categories.query.filter_by(name=data["name"]).first()
-        if name_check and name_check.category_id != category.category_id:
+        if name_check and name_check.id != category.id:
             return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Category name already exists'})
 
         category.name = data["name"]
@@ -148,3 +171,39 @@ class CategoryService:
         db.session.commit()
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Category updated successfully'})
+
+
+# class MenuService:
+#     @staticmethod
+#     def update_entity_position(entity, data):
+#         entity_name = entity.__name__
+#
+#         new_position = data['new_position']
+#
+#         current_entity = entity.query.get(data['entity_id'])
+#
+#         if not current_entity:
+#             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': f'{entity_name} not found'})
+#
+#         curr_position = current_entity.position
+#
+#         if curr_position == new_position:
+#             return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
+#
+#         elif curr_position > new_position:
+#             entities_to_update = entity.query.filter(entity.position < curr_position,
+#                                                      entity.position >= new_position).all()
+#             for entity in entities_to_update:
+#                 entity.position += 1
+#
+#         else:
+#             entities_to_update = entity.query.filter(entity.position > curr_position,
+#                                                      entity.position <= new_position).all()
+#             for entity in entities_to_update:
+#                 entity.position -= 1
+#
+#         current_entity.position = new_position
+#
+#         db.session.commit()
+#
+#         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})

@@ -1,19 +1,20 @@
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import jsonify, request, Blueprint
 
 # Local imports
 from .. import app, db
 from .models import Customers
 from .services import MailService, CustomerService
 
+auth = Blueprint('auth', __name__)
 reset_dict = {}
 
 
 # ====================================================================================================
 # Register new user
 
-@app.route('/auth/register', methods=['POST'])
+@auth.route('/register', methods=['POST'])
 def register():
     data = data_logger(request)
 
@@ -23,7 +24,7 @@ def register():
 # ====================================================================================================
 # Login user
 
-@app.route('/auth/login', methods=['POST'])
+@auth.route('/login', methods=['POST'])
 def login():
     data = data_logger(request)
 
@@ -38,13 +39,13 @@ def login():
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
     # Returns the main menu page
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful', 'customer_id': user.customer_id})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Login successful', 'customer_id': user.id})
 
 
 # ====================================================================================================
 # Logout user
 
-@app.route('/auth/logout', methods=['POST'])
+@auth.route('/logout', methods=['POST'])
 def logout():
     # might have to introduce tokens
     return jsonify({'status': HTTPStatus.OK, 'message': 'Logout successful'})
@@ -53,12 +54,12 @@ def logout():
 # ====================================================================================================
 # Delete user
 
-@app.route('/auth/delete', methods=['DELETE'])
+@auth.route('/delete', methods=['DELETE'])
 def delete():
     data = data_logger(request)
 
     # Check if password is correct
-    user = Customers.query.filter_by(customer_id=data['customer_id']).first()
+    user = Customers.query.filter_by(id=data['customer_id']).first()
     if not user.check_password(data['password']):
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
@@ -71,11 +72,11 @@ def delete():
 # ====================================================================================================
 # Update user details
 
-@app.route('/auth/update', methods=['PUT'])
+@auth.route('/update', methods=['PUT'])
 def update():
     data = data_logger(request)
 
-    user = Customers.query.filter_by(customer_id=data['customer_id']).first()
+    user = Customers.query.filter_by(id=data['customer_id']).first()
 
     # Check if email already exists
     if user.email != data['new_email'] and Customers.query.filter_by(email=data['new_email']).first():
@@ -96,7 +97,7 @@ def update():
 
 # ====================================================================================================
 # Reset password
-@app.route('/auth/reset/password/request', methods=['POST'])
+@auth.route('/reset/password/request', methods=['POST'])
 def generate_OTP():
     data = data_logger(request)
 
@@ -119,7 +120,7 @@ def generate_OTP():
     return jsonify({'status': HTTPStatus.OK, 'message': 'OTP sent to email'})
 
 
-@app.route('/auth/reset/password/code', methods=['POST'])
+@auth.route('/reset/password/code', methods=['POST'])
 def verify_OTP():
     data = data_logger(request)
 
@@ -138,7 +139,7 @@ def verify_OTP():
     return jsonify({'status': HTTPStatus.OK, 'message': 'OTP verified'})
 
 
-@app.route('/auth/reset/password/confirm', methods=['POST'])
+@auth.route('/reset/password/confirm', methods=['POST'])
 def reset_password():
     data = data_logger(request)
 
@@ -160,7 +161,7 @@ def reset_password():
 # ====================================================================================================
 # Find user
 
-@app.route('/auth/customer/<customer_id>', methods=['GET'])
+@auth.route('/customer/<customer_id>', methods=['GET'])
 def find_user(customer_id):
     app.logger.info(f"Received find user request: {customer_id}")
 
