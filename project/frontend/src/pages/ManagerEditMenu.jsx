@@ -12,28 +12,33 @@ function ManagerEditMenu () {
     return (
         <Box sx={{
             border: 1,
-            borderTop: 0,
+            borderRadius: "25px",
             display: "flex",
             flexDirection: "row",
-            height: "85vh",
-            margin: "auto",
+            height: "83vh",
+            margin: "10px auto 0 auto",
             textAlign: "center",
             width: "70vw"
         }}>
             <Box sx={{ borderRight: 1, width: "20vw" }}>
                 <Box sx={{ borderBottom: 1, padding: "15px 0"}}>CATEGORIES</Box>
-                <Button onClick={() => setOpenAddCategory(true)} sx={{ margin: "10px" }} color="success" variant="outlined">
-                    <Add /> New Category
-                </Button>
                 <Box>
                     {categories.map((category) => (
                         <CategoryListItem key={category.category_id} category={category}/>
                     ))}
                 </Box>
+                <Button onClick={() => setOpenAddCategory(true)} sx={{ margin: "10px" }} color="success" variant="outlined">
+                    <Add /> New Category
+                </Button>
             </Box>
             <Box sx={{ width: "50vw" }}>
                 <Box sx={{ borderBottom: 1, padding: "15px 0" }}>MENU ITEMS</Box>
-                <Outlet />
+                <Box>
+                    <Outlet />
+                </Box>
+                <Button sx={{ margin: "10px" }} color="success" variant="outlined">
+                    <Add /> New Menu Item
+                </Button>
             </Box>
             {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory}/>}
         </Box>

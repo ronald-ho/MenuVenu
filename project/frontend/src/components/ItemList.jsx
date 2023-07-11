@@ -7,9 +7,9 @@ function ItemList() {
     const items = useLoaderData();
 
     return (
-        <Box>
+        <>
             {items.map((item) => <ItemListItem key={item.item_id} item={item} />)}
-        </Box>
+        </>
     )
 }
 

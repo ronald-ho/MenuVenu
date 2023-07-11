@@ -15,15 +15,14 @@ function CategoryListItem ({ category }) {
         <>
             <Box  
                 sx={{
-                    borderBottom: 1,
-                    borderTop: 1,
-                    borderRadius: 0,
+                    border: 1,
+                    borderRadius: "10px",
                     display: "flex",
                     height: "40px",
                     justifyContent: "space-between",
-                    margin: "0 0 2px 0",
+                    margin: "5px auto 0 auto",
                     padding: "0",
-                    width: "20vw"
+                    width: "19vw"
                 }}
             >
                 <Box 
