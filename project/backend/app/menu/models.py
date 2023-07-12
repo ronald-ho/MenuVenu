@@ -59,3 +59,8 @@ class Items(db.Model):
 class Contains(db.Model):
     item = db.Column(db.Integer, db.ForeignKey(Items.id), primary_key=True)
     ingredient = db.Column(db.Integer, db.ForeignKey(Ingredients.id), primary_key=True)
+
+@dataclass
+class BelongsTo(db.Model):
+    category = db.Column(db.Integer, db.ForeignKey(Categories.id), primary_key=True)
+    item = db.Column(db.Integer, db.ForeignKey(Items.id), primary_key=True)

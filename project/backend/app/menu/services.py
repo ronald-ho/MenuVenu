@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import jsonify
 
-from .models import Items, Categories
+from .models import Items, Categories, Contains, BelongsTo
 from .. import db
 
 
@@ -29,6 +29,15 @@ class ItemService:
         )
 
         db.session.add(new_item)
+
+        for category_id in categories:
+            belongs_to = BelongsTo(category=category_id, item=new_item.id)
+            db.session.add(belongs_to)
+
+        for ingredient_id in ingredients:
+            contains = Contains(item=new_item.id, ingredient=ingredient_id)
+            db.session.add(contains)
+
         db.session.commit()
 
         return jsonify({
