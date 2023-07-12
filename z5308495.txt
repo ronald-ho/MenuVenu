@@ -16,6 +16,16 @@ Worked and finished on the proposal. I worked on writing and shwoing user storie
 Starting on code for backend, working on Order.
 
 Week 4
+Finished assistance and billing
+Had a meeting to further discuss progress and pick up any additional roles that were needed
+Prepared for our demo next week
+
+Week 5
 Finished my parts with sprint 1 which included request assistance, request bill and select table
 Did some group debugging on various parts of our code before our demonstration
 Unfortunately I was not able to attend the demo due to COVID
+
+Week 7
+Flex week in week 6 so not too much progress
+Started on order item, kitchen preparation. Now need to test against database and frontend.
+Discussed about implementation of chatbot and may use OpenAI.
