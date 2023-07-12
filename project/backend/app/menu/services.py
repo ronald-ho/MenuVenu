@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import jsonify
 
-from .models import Items, Categories, Contains, BelongsTo
+from .models import Items, Categories, Contains, BelongsTo, Ingredients
 from .. import db
 
 
@@ -11,6 +11,7 @@ class ItemService:
     def create_new_item(data):
 
         item_name = data['name']
+        ingredients = data['ingredients']
 
         item = Items.query.filter_by(name=item_name).first()
         if item:
@@ -29,12 +30,15 @@ class ItemService:
         )
 
         db.session.add(new_item)
+        db.session.commit()
 
-        for category_id in categories:
-            belongs_to = BelongsTo(category=category_id, item=new_item.id)
-            db.session.add(belongs_to)
+        # Add the item to the category
+        belongs_to = BelongsTo(category=data['category_id'], item=new_item.id)
+        db.session.add(belongs_to)
 
-        for ingredient_id in ingredients:
+        # Add the ingredients to the item
+        for ingredient in ingredients:
+            ingredient_id = Ingredients.query.filter_by(name=ingredient).first().id
             contains = Contains(item=new_item.id, ingredient=ingredient_id)
             db.session.add(contains)
 
@@ -182,7 +186,6 @@ class CategoryService:
         db.session.commit()
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Category updated successfully'})
-
 
 # class MenuService:
 #     @staticmethod
