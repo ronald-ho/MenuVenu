@@ -35,7 +35,8 @@ class Items(db.Model):
     category = db.Column(db.Integer, db.ForeignKey(Categories.id))
     calories = db.Column(db.Integer, nullable=True)
     position = db.Column(db.Integer, unique=False, nullable=False)
-    points = db.Column(db.Integer, nullable=True)
+    points_to_redeem = db.Column(db.Integer, nullable=True)
+    points_earned = db.Column(db.Integer, nullable=True)
 
     ingredients = db.relationship('Ingredients', secondary='contains', backref='items')
 
@@ -48,7 +49,8 @@ class Items(db.Model):
             'category_id': self.category,
             'calories': self.calories,
             'position': self.position,
-            'points': self.points,
+            'points_to_redeem': self.points_to_redeem,
+            'points_earned': self.points_earned,
             'ingredients': [ingredient.name for ingredient in self.ingredients]
         }
 

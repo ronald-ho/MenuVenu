@@ -23,7 +23,8 @@ class ItemService:
             price=data['price'],
             category=data['category_id'],
             calories=data['calories'],
-            points=data['points'],
+            points_to_redeem=data['points_to_redeem'],
+            points_earned=data['points_earned'],
             position=ItemService.get_next_position()
         )
 
@@ -88,7 +89,8 @@ class ItemService:
         item.price = data["price"]
         item.category = data["category_id"]
         item.calories = data["calories"]
-        item.points = data["points"]
+        item.points_to_redeem = data["points_to_redeem"]
+        item.points_earned = data["points_earned"]
 
         db.session.commit()
 
