@@ -22,8 +22,16 @@ Helped with user stories, such as proposing UI decisions
 Added criteria for the new chatbot feature
 
 Week 4:
-Some more stuff
+Some more stuff 
+--> Manager login
+--> User update profile checks
 
 Week 5:
 Finialised iteration 1, worked on backend for smth forgot
 more database for iteration 2, started menuj manager
+
+Week 6:
+add category and add item 
+testing those stuff with postman
+added implementation for relationship contains and bleongs to
+waiting for front end to get ingredients working for proper testing
