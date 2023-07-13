@@ -24,6 +24,8 @@ class Ingredients(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
 
+    items = db.relationship('Items', secondary='item_ingredient', back_populates='ingredients')
+
 
 @dataclass
 class Items(db.Model):
@@ -38,7 +40,7 @@ class Items(db.Model):
     points_to_redeem = db.Column(db.Integer, nullable=True)
     points_earned = db.Column(db.Integer, nullable=True)
 
-    ingredients = db.relationship('Ingredients', secondary='contains', backref='items')
+    ingredients = db.relationship('Ingredients', secondary='item_ingredient', back_populates='items')
 
     def to_dict(self):
         return {
@@ -55,12 +57,20 @@ class Items(db.Model):
         }
 
 
-@dataclass
-class Contains(db.Model):
-    item = db.Column(db.Integer, db.ForeignKey(Items.id), primary_key=True)
-    ingredient = db.Column(db.Integer, db.ForeignKey(Ingredients.id), primary_key=True)
+item_ingredient = db.Table(
+    'item_ingredient',
+    db.Column('item_id', db.Integer, db.ForeignKey('items.id'), primary_key=True),
+    db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredients.id'), primary_key=True)
+)
 
-@dataclass
-class BelongsTo(db.Model):
-    category = db.Column(db.Integer, db.ForeignKey(Categories.id), primary_key=True)
-    item = db.Column(db.Integer, db.ForeignKey(Items.id), primary_key=True)
+
+# @dataclass
+# class Contains(db.Model):
+#     item = db.Column(db.Integer, db.ForeignKey(Items.id), primary_key=True)
+#     ingredient = db.Column(db.Integer, db.ForeignKey(Ingredients.id), primary_key=True)
+#
+#
+# @dataclass
+# class BelongsTo(db.Model):
+#     category = db.Column(db.Integer, db.ForeignKey(Categories.id), primary_key=True)
+#     item = db.Column(db.Integer, db.ForeignKey(Items.id), primary_key=True)
