@@ -81,6 +81,7 @@ class ItemService:
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
 
+
 class CategoryService:
     @staticmethod
     def create_new_category(data):
