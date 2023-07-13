@@ -3,7 +3,7 @@ from http import HTTPStatus
 from flask import request, jsonify, Blueprint
 
 from .models import Items, Categories
-from .services import ItemService, CategoryService
+from .services import ItemService, CategoryService, MenuService
 from .. import app, db
 
 menu = Blueprint('menu', __name__)
@@ -102,18 +102,14 @@ def get_categories():
 def update_item_position():
     data = data_logger(request)
 
-    # return MenuService.update_entity_position(Items, data)
-
-    return ItemService.update_item_position(data)
+    return MenuService.update_entity_position(Items, data)
 
 
 @menu.route('/category/position', methods=['PUT'])
 def update_category_position():
     data = data_logger(request)
 
-    # return MenuService.update_entity_position(Categories, data)
-
-    return CategoryService.update_category_position(data)
+    return MenuService.update_entity_position(Categories, data)
 
 
 @menu.route('/item/details/<item_id>', methods=['GET'])

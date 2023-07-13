@@ -26,7 +26,7 @@ class ItemService:
             calories=data['calories'],
             points_to_redeem=data['points_to_redeem'],
             points_earned=data['points_earned'],
-            position=ItemService.get_next_position()
+            position=MenuService.get_next_position(Items)
         )
 
         db.session.add(new_item)
@@ -49,42 +49,6 @@ class ItemService:
             'message': 'Item added successfully',
             'item': new_item.to_dict()
         })
-
-    @staticmethod
-    def get_next_position():
-        max_position = db.session.query(db.func.max(Items.position)).scalar()
-        next_position = max_position + 1 if max_position is not None else 1
-
-        return next_position
-
-    @staticmethod
-    def update_item_position(data):
-        new_position = data['new_position']
-        current_item = Items.query.get(data['item_id'])
-
-        if not current_item:
-            return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
-        curr_position = current_item.position
-
-        if curr_position == new_position:
-            return jsonify({'status': HTTPStatus.OK, 'message': 'Item position updated'})
-
-        elif curr_position > new_position:
-            items_to_update = Items.query.filter(Items.position < curr_position,
-                                                 Items.position >= new_position).all()
-            for item in items_to_update:
-                item.position += 1
-
-        else:
-            items_to_update = Items.query.filter(Items.position > curr_position,
-                                                 Items.position <= new_position).all()
-            for item in items_to_update:
-                item.position -= 1
-
-        current_item.position = new_position
-        db.session.commit()
-
-        return jsonify({'status': HTTPStatus.OK, 'message': 'Item position updated'})
 
     @staticmethod
     def update_item_details(data):
@@ -122,7 +86,7 @@ class CategoryService:
 
         new_category = Categories(
             name=category_name,
-            position=CategoryService.get_next_position()
+            position=MenuService.get_next_position(Categories)
         )
 
         db.session.add(new_category)
@@ -133,43 +97,6 @@ class CategoryService:
             'message': 'Category added successfully',
             'category': new_category.to_dict()
         })
-
-    @staticmethod
-    def get_next_position():
-        max_position = db.session.query(db.func.max(Categories.position)).scalar()
-        next_position = max_position + 1 if max_position is not None else 1
-
-        return next_position
-
-    @staticmethod
-    def update_category_position(data):
-        new_position = data['new_position']
-        current_category = Categories.query.get(data['category_id'])
-
-        if not current_category:
-            return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
-
-        curr_position = current_category.position
-
-        if curr_position == new_position:
-            return jsonify({'status': HTTPStatus.OK, 'message': 'Category position updated'})
-
-        elif curr_position > new_position:
-            categories_to_update = Categories.query.filter(Categories.position < curr_position,
-                                                           Categories.position >= new_position).all()
-            for category in categories_to_update:
-                category.position += 1
-        else:
-            categories_to_update = Categories.query.filter(Categories.position > curr_position,
-                                                           Categories.position <= new_position).all()
-            for category in categories_to_update:
-                category.position -= 1
-
-        current_category.position = new_position
-
-        db.session.commit()
-
-        return jsonify({'status': HTTPStatus.OK, 'message': 'Category position updated'})
 
     @staticmethod
     def update_category_details(data):
@@ -187,37 +114,50 @@ class CategoryService:
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Category updated successfully'})
 
-# class MenuService:
-#     @staticmethod
-#     def update_entity_position(entity, data):
-#         entity_name = entity.__name__
-#
-#         new_position = data['new_position']
-#
-#         current_entity = entity.query.get(data['entity_id'])
-#
-#         if not current_entity:
-#             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': f'{entity_name} not found'})
-#
-#         curr_position = current_entity.position
-#
-#         if curr_position == new_position:
-#             return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
-#
-#         elif curr_position > new_position:
-#             entities_to_update = entity.query.filter(entity.position < curr_position,
-#                                                      entity.position >= new_position).all()
-#             for entity in entities_to_update:
-#                 entity.position += 1
-#
-#         else:
-#             entities_to_update = entity.query.filter(entity.position > curr_position,
-#                                                      entity.position <= new_position).all()
-#             for entity in entities_to_update:
-#                 entity.position -= 1
-#
-#         current_entity.position = new_position
-#
-#         db.session.commit()
-#
-#         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
+
+class MenuService:
+    @staticmethod
+    def update_entity_position(entity, data):
+        entity_name = entity.__name__
+        current_entity = entity
+
+        if entity == Items:
+            entity_name = 'Item'
+            current_entity = Items.query.get(data['item_id'])
+        elif entity == Categories:
+            entity_name = 'Category'
+            current_entity = Categories.query.get(data['category_id'])
+
+        if not current_entity:
+            return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': f'{entity_name} not found'})
+
+        new_position = data['new_position']
+        curr_position = current_entity.position
+
+        if curr_position == new_position:
+            return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
+
+        elif curr_position > new_position:
+            entities_to_update = entity.query.filter(entity.position < curr_position,
+                                                     entity.position >= new_position).all()
+            for entity in entities_to_update:
+                entity.position += 1
+
+        else:
+            entities_to_update = entity.query.filter(entity.position > curr_position,
+                                                     entity.position <= new_position).all()
+            for entity in entities_to_update:
+                entity.position -= 1
+
+        current_entity.position = new_position
+
+        db.session.commit()
+
+        return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
+
+    @staticmethod
+    def get_next_position(entity):
+        max_position = db.session.query(db.func.max(entity.position)).scalar()
+        next_position = max_position + 1 if max_position is not None else 1
+
+        return next_position
