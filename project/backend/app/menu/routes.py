@@ -84,6 +84,13 @@ def update_category_details():
     return CategoryService.update_category_details(data)
 
 
+@menu.route('/item/ingredients/<item_id>', methods=['GET'])
+def get_item_ingredients(item_id):
+    app.logger.info("Getting item ingredients from database")
+
+    return ItemService.get_item_ingredients(item_id)
+
+
 def data_logger(request):
     data = request.get_json()
     app.logger.info(f"Received request from frontend: {data}")

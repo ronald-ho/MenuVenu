@@ -81,6 +81,18 @@ class ItemService:
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
 
+    @staticmethod
+    def get_item_ingredients(item_id):
+        item = Items.query.get(item_id)
+
+        if not item:
+            return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
+
+        return jsonify({
+            'status': HTTPStatus.OK,
+            'message': 'Item found',
+            'ingredients': [ingredient.name for ingredient in item.ingredients]
+        })
 
 class CategoryService:
     @staticmethod
