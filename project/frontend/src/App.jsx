@@ -19,6 +19,8 @@ import DeleteAccount from './pages/DeleteAccount';
 import ViewItems from './components/ViewItems';
 import Menu from './pages/Menu';
 import OrderItem from './pages/OrderItem';
+import KitchenOrders from './pages/KitchenOrders';
+import KitchenStaffLogin from './pages/KitchenStaffLogin';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -98,6 +100,12 @@ function App() {
             }
           }
         ]
+      }, {
+        path: "/kitchen",
+        element: <KitchenOrders />
+      }, {
+        path: "/kitchenlogin",
+        element: <KitchenStaffLogin />
       }
     ]
   }]);
