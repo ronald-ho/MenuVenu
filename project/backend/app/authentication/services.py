@@ -112,10 +112,8 @@ class StaffService:
 
 
 class ResetService:
-    reset_dict = dict()
-
     @staticmethod
-    def generate_OTP(data):
+    def generate_OTP(data, reset_dict):
         email = data['email']
 
         user = Customers.query.filter_by(email=email).first()
@@ -128,7 +126,7 @@ class ResetService:
         reset_code = Customers.generate_reset_code(user)
 
         # Add reset code to dictionary
-        ResetService.reset_dict[reset_code] = email
+        reset_dict[reset_code] = email
 
         # Send the OTP to the user's email
         MailService.send_email(email, reset_code)
@@ -137,22 +135,22 @@ class ResetService:
         return jsonify({'status': HTTPStatus.OK, 'message': 'OTP sent to email'})
 
     @staticmethod
-    def verify_OTP(data):
+    def verify_OTP(data, reset_dict):
         email = data['email']
         reset_code = int(data['reset_code'])
 
         # Check if reset code exists
-        if reset_code not in ResetService.reset_dict:
+        if reset_code not in reset_dict:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
 
         # Check if email matches the reset code
-        if ResetService.reset_dict[reset_code] != email:
+        if reset_dict[reset_code] != email:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'OTP verified'})
 
     @staticmethod
-    def reset_password(data):
+    def reset_password(data, reset_dict):
         email = data['email']
         reset_code = int(data['reset_code'])
         new_password = data['new_password']
@@ -162,7 +160,7 @@ class ResetService:
         customer.set_password(new_password)
         db.session.commit()
 
-        ResetService.reset_dict.pop(reset_code)
+        reset_dict.pop(reset_code)
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Password reset successful'})
 

@@ -8,9 +8,8 @@ from .services import CustomerService, ResetService
 
 auth = Blueprint('auth', __name__)
 
+reset_dict = dict()
 
-# ====================================================================================================
-# Register new user
 
 @auth.route('/register', methods=['POST'])
 def register_customer():
@@ -18,9 +17,6 @@ def register_customer():
 
     return CustomerService.create_new_customer(data)
 
-
-# ====================================================================================================
-# Login user
 
 @auth.route('/login', methods=['POST'])
 def login_customer():
@@ -34,17 +30,11 @@ def login_customer():
 #
 
 
-# ====================================================================================================
-# Logout user
-
 @auth.route('/logout', methods=['POST'])
 def logout_customer():
     # might have to introduce tokens
     return jsonify({'status': HTTPStatus.OK, 'message': 'Logout successful'})
 
-
-# ====================================================================================================
-# Delete user
 
 @auth.route('/delete', methods=['DELETE'])
 def delete_customer():
@@ -53,9 +43,6 @@ def delete_customer():
     return CustomerService.delete_customer(data)
 
 
-# ====================================================================================================
-# Update user details
-
 @auth.route('/update', methods=['PUT'])
 def update_customer():
     data = data_logger(request)
@@ -63,31 +50,26 @@ def update_customer():
     return CustomerService.update_customer(data)
 
 
-# ====================================================================================================
-# Reset password
 @auth.route('/reset/password/request', methods=['POST'])
 def generate_OTP():
     data = data_logger(request)
 
-    return ResetService.generate_OTP(data)
+    return ResetService.generate_OTP(data, reset_dict)
 
 
 @auth.route('/reset/password/code', methods=['POST'])
 def verify_OTP():
     data = data_logger(request)
 
-    return ResetService.verify_OTP(data)
+    return ResetService.verify_OTP(data, reset_dict)
 
 
 @auth.route('/reset/password/confirm', methods=['POST'])
 def reset_password():
     data = data_logger(request)
 
-    return ResetService.reset_password(data)
+    return ResetService.reset_password(data, reset_dict)
 
-
-# ====================================================================================================
-# Find user
 
 @auth.route('/customer/<customer_id>', methods=['GET'])
 def find_customer(customer_id):
