@@ -11,7 +11,7 @@ from app.orders.models import DiningTables, OrderedItems, Orders
 
 # Menu routes and models
 from app.menu import routes
-from app.menu.models import Categories, Ingredients, Items, Contains
+from app.menu.models import Categories, Ingredients, Items
 
 if __name__ == '__main__':
     with app.app_context():
