@@ -11,3 +11,6 @@ I started working on the front end side of the project. I made a react project a
 
 Week 4
 I started linking the frontend to the backend once the backend API functions were done. There was a lot of debugging to do with regards to that. Also I made some other screens for a menu prototype, and reworked the table select and update account screens to match the backend functionality which was different to what I expected. 
+
+Week 5
+Started working on Sprint 2. I designed some of the pages for viewing the menu and ordering items. Routes werent done yet so it was just the appearance for now with no functionality.
