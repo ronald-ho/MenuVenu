@@ -34,7 +34,7 @@ def delete_items():
     if not item:
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
-    db.session.delete(item)
+    db.session.delete_customer()
 
     items_to_update = Items.query.filter(Items.position > item.position).all()
 
@@ -58,7 +58,7 @@ def delete_categories():
     if not category:
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
-    db.session.delete(category)
+    db.session.delete_customer()
 
     categories_to_update = Categories.query.filter(Categories.position > category.position).all()
 
