@@ -71,9 +71,8 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
             itemIngredients.push(ingredientName);
         }
         else {
-            itemIngredients = ingredients.filter(i => i !== ingredientName);
-        }
-        console.log(ingredients); 
+            itemIngredients = itemIngredients.filter(i => i !== ingredientName);
+        } 
     }
 
     const labelCellStyle = {
