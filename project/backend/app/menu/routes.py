@@ -1,6 +1,4 @@
-from http import HTTPStatus
-
-from flask import request, jsonify, Blueprint
+from flask import request, Blueprint
 
 from .models import Items, Categories
 from .services import ItemService, CategoryService, MenuService
