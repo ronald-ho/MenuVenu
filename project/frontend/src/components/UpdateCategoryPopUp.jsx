@@ -12,7 +12,7 @@ function UpdateCategoryPopUp ({ open, setOpen, category }) {
             return;
         }
 
-        const data = await apiCall("menu/categories", "PUT", { 'id': category.category_id, 'name': newName });
+        const data = await apiCall("menu/category", "PUT", { 'id': category.category_id, 'name': newName });
         if (data.category) {
             // make feedback alert like assistance?
             console.log("Category successfully updated");

@@ -4,7 +4,7 @@ import React from "react";
 
 function DeleteCategoryPopUp ({ open, setOpen, category}) {
     async function handleDelete() {
-        const data = await apiCall("menu/categories", "DELETE", { 'category_id': category.category_id });
+        const data = await apiCall("menu/category", "DELETE", { 'category_id': category.category_id });
         if (data.category) {
             // make feedback alert like assistance?
             console.log("Category deleted");

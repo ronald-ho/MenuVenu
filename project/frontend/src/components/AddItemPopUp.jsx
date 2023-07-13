@@ -4,15 +4,30 @@ import React from "react";
 
 function AddItemPopUp ({ open, setOpen, categoryId }) {
     const [name, setName] = React.useState('');
-    const [price, setPrice] = React.useState('');
-    const [image, setImage] = React.useState('');
-    const [description, setDescription] = React.useState('');
-    const [calories, setCalories] = React.useState('');
+    const [price, setPrice] = React.useState(null);
+    const [image, setImage] = React.useState(null);
+    const [description, setDescription] = React.useState(null);
+    const [calories, setCalories] = React.useState(null);
+    const [pointsToRedeem, setPointsToRedeem] = React.useState(null);
+    const [pointsEarned, setPointsEarned] = React.useState(null);
     const [alert, setAlert] = React.useState('');
+    const [allIngredients, setAllIngredients] = React.useState([]);
+    let itemIngredients = [];
 
+    React.useEffect(() => {
+        const allIngredients = async () => {
+            const data = await apiCall("menu/ingredients", "GET", {});
+            if (data.message === 200) {
+                setAllIngredients(data.ingredients);
+            }
+        }
+        
+        allIngredients();
+    }, []);
+    
     async function handleSubmit(e) {
         e.preventDefault();
-        console.log(image);
+        
         if (name === "") {
             setAlert("Please enter an item name");
             return;
@@ -29,13 +44,15 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
             'price': price,
             'image': image,
             'description': description,
-            // 'calories': calories,
-            // 'points': points
-            // redeem with, buy to earn
-            // dietary tags...
+            'calories': calories,
+            'points_to_redeem': pointsToRedeem,
+            'points_earned': pointsEarned,
+            'ingredients': itemIngredients
         };
 
-        const data = await apiCall("menu/items", "POST", newItem);
+        console.log(newItem);
+
+        const data = await apiCall("menu/item", "POST", newItem);
         if (data.item) {
             // make feedback alert like assistance?
             console.log("item successfully added");
@@ -48,6 +65,16 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
     const handleCancel = () => {
         setOpen(false);
     };
+
+    function handleCheckIngredient (ingredientState, ingredientName) {
+        if (ingredientState) {
+            itemIngredients.push(ingredientName);
+        }
+        else {
+            itemIngredients = ingredients.filter(i => i !== ingredientName);
+        }
+        console.log(ingredients); 
+    }
 
     const labelCellStyle = {
         border: 0,
@@ -72,7 +99,6 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                 <DialogTitle>{"Add New Item"}</DialogTitle>
                 <form onSubmit={(e) => handleSubmit(e)}>
                 <DialogContent>
-                
                     <Table>
                         <TableRow>
                             <TableCell sx={labelCellStyle}><Typography>Name*</Typography></TableCell>
@@ -88,6 +114,10 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                             <TableCell sx={labelCellStyle}><Typography>Price*</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    type="number"
+                                    inputProps={{
+                                        step: 0.01
+                                    }}
                                     onChange={(e) => setPrice(e.target.value)}
                                     size="small" 
                                     InputProps={{
@@ -122,6 +152,8 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                             <TableCell sx={labelCellStyle}><Typography>Energy</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    type="number"
+                                    onChange={(e) => setCalories(e.target.value)}
                                     size="small" 
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">calories</InputAdornment>,
@@ -130,9 +162,11 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                             </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Buy using</Typography></TableCell>
+                            <TableCell sx={labelCellStyle}><Typography>Redeem using</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    type="number"
+                                    onChange={(e) => setPointsToRedeem(e.target.value)}
                                     size="small" 
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
@@ -144,6 +178,8 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                             <TableCell sx={labelCellStyle}><Typography>Buy to earn</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    type="number"
+                                    onChange={(e) => setPointsEarned(e.target.value)}
                                     size="small" 
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
@@ -154,10 +190,14 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                         <TableRow>
                             <TableCell sx={labelCellStyle}><Typography>Dietary tags</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
-                                <FormControlLabel control={<Checkbox />} label="Vegetarian" />
-                                <FormControlLabel control={<Checkbox />} label="Nuts" />
-                                <FormControlLabel control={<Checkbox />} label="Dairy" />
-                                <FormControlLabel control={<Checkbox />} label="Spicy" />
+                                {allIngredients.map((ingredient, index) => (
+                                    <FormControlLabel 
+                                        key={index}
+                                        onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
+                                        control={<Checkbox />} 
+                                        label={ingredient} 
+                                    />
+                                ))}
                             </TableCell>
                         </TableRow>
                     </Table>
