@@ -84,11 +84,11 @@ def update_category_details():
     return CategoryService.update_category_details(data)
 
 
-@menu.route('/item/ingredients/<item_id>', methods=['GET'])
-def get_item_ingredients(item_id):
+@menu.route('/ingredients', methods=['GET'])
+def get_item_ingredients():
     app.logger.info("Getting item ingredients from database")
 
-    return ItemService.get_item_ingredients(item_id)
+    return MenuService.get_all_ingredients()
 
 
 def data_logger(request):

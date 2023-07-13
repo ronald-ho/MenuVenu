@@ -81,18 +81,6 @@ class ItemService:
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
 
-    @staticmethod
-    def get_item_ingredients(item_id):
-        item = Items.query.get(item_id)
-
-        if not item:
-            return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
-
-        return jsonify({
-            'status': HTTPStatus.OK,
-            'message': 'Item found',
-            'ingredients': [ingredient.name for ingredient in item.ingredients]
-        })
 
 class CategoryService:
     @staticmethod
@@ -194,6 +182,13 @@ class MenuService:
         db.session.commit()
 
         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} deleted successfully'})
+
+    @staticmethod
+    def get_all_ingredients():
+        ingredients = Ingredients.query.all()
+        ingredients_list = [ingredient.name for ingredient in ingredients]
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Ingredients found', 'ingredients': ingredients_list})
 
     @staticmethod
     def get_next_position(entity):
