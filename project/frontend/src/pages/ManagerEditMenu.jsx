@@ -10,8 +10,8 @@ function ManagerEditMenu () {
     const [categories, setCategories] = React.useState(useLoaderData());
     const [activeCategory, setActiveCategory] = React.useState('');
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
-    const [openAddItem, setOpenAddItem] = React.useState(false);
-    const [showAddItemBtn, setShowAddItemBtn] = React.useState(false);
+   
+
 
     return (
         <Box sx={{
@@ -32,7 +32,6 @@ function ManagerEditMenu () {
                             key={category.category_id} 
                             category={category} 
                             setCategories={setCategories} 
-                            setShowAddItemBtn={setShowAddItemBtn}
                         />
                     ))}
                 </Box>
@@ -44,30 +43,10 @@ function ManagerEditMenu () {
             </Box>
             <Box sx={{ width: "45vw" }}>
                 <Box sx={{ borderBottom: 1, padding: "15px 0" }}>MENU ITEMS</Box>
-                <Box sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
-                    <Outlet />
-                </Box>
-                {showAddItemBtn && 
-                    <Box sx={{borderTop: 1}}>
-                        <Button 
-                            onClick={() => {
-                                const path = window.location.pathname;
-                                const n = path.lastIndexOf('/');
-                                const activeCategoryId = path.substring(n + 1);
-                                setActiveCategory(activeCategoryId);
-                                setOpenAddItem(true);
-                            }}
-                            sx={{ margin: "10px" }} 
-                            color="success" 
-                            variant="outlined"
-                        >
-                            <Add /> New Menu Item
-                        </Button>
-                    </Box>
-                }
+                <Outlet />
             </Box>
             {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory} setCategories={setCategories} />}
-            {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem} categoryId={activeCategory} />}
+           
         </Box>
     )
 }
