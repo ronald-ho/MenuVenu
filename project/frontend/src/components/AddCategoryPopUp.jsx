@@ -1,28 +1,33 @@
+import React from "react";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
-import React from "react";
+import { get_categories } from "../helpers/loaderfunctions";
 
-function AddCategoryPopUp ({ open, setOpen }) {
+
+function AddCategoryPopUp ({ open, setOpen, setCategories, ref }) {
     const [categoryName, setCategoryName] = React.useState('');
     const [alert, setAlert] = React.useState('');
-
+    
     async function handleAdd() {
         if (categoryName === "") {
             setAlert("Please enter a category name");
             return;
         }
 
-        const data = await apiCall("menu/categories", "POST", { 'name': categoryName });
+        const data = await apiCall("menu/category", "POST", { 'name': categoryName });
         if (data.category) {
+            const categories = await get_categories();
+            setCategories(categories);            
+            handleClose();
             // make feedback alert like assistance?
             console.log("Category successfully added");
         } 
         else {
-            console.log("Failed to add category");
+            setAlert(data.message);
         }
     }
 
-    const handleCancel = () => {
+    const handleClose = () => {
         setOpen(false);
     };
 
@@ -30,7 +35,7 @@ function AddCategoryPopUp ({ open, setOpen }) {
         <>
             <Dialog
                 open={open}
-                onClose={handleCancel}
+                onClose={handleClose}
             >
                 <DialogTitle>{"Add New Category"}</DialogTitle>
                 <DialogContent>
@@ -45,7 +50,7 @@ function AddCategoryPopUp ({ open, setOpen }) {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancel} variant="contained" color="error">Cancel</Button>
+                    <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>
                     <Button onClick={handleAdd} variant="contained" color="success">Add</Button>
                 </DialogActions>
                 {alert && <Alert severity="error" aria-label='errorAlert'>{alert}</Alert>}

@@ -81,9 +81,13 @@ export async function change_details (request) {
 }
 
 export const get_categories = async () => {
-    /*api call */
     const response = await apiCall("menu/categories", "GET", {});
-    return response['categories'];
+    console.log(response.categories)
+    if (response.status == 200) {
+        return response.categories;
+    } else {
+        return [];
+    }
 }
 
 export async function get_items(params) {
@@ -93,7 +97,7 @@ export async function get_items(params) {
         return response.items;
     } else {
         console.log("OH NO");
-        return []
+        return [];
     }
 }
 
