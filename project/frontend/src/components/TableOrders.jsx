@@ -7,7 +7,7 @@ function TableOrders({ trigger }) {
     const table = localStorage.getItem("mvtable");
     const fetchdata = async () => {
         const body = {
-            "table_id": localStorage.getItem("mvtable")
+            "table": localStorage.getItem("mvtable")
         };
         const response = await apiCall("orders/get_ordered_items", "POST", body);
         setOrders(response.ordered_list);
