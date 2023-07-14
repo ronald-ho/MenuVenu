@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import UpdateCategoryPopUp from "./UpdateCategoryPopUp";
 import DeleteCategoryPopUp from "./DeleteCategoryPopUp";
 
-function CategoryListItem ({ category }) {
+function CategoryListItem ({ category, setCategories }) {
     // Maybe add :hover in external stylesheet for active category
     // Make DragHandle clickable
     const [openUpdateCategory, setOpenUpdateCategory] = React.useState(false);
@@ -62,6 +62,7 @@ function CategoryListItem ({ category }) {
                     open={openUpdateCategory} 
                     setOpen={setOpenUpdateCategory}
                     category={category}
+                    setCategories={setCategories}
                 />
             }
             {openDeleteCategory && 

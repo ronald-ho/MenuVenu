@@ -3,8 +3,7 @@ import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextF
 import { apiCall } from "../helpers/helpers";
 import { get_categories } from "../helpers/loaderfunctions";
 
-
-function AddCategoryPopUp ({ open, setOpen, setCategories, ref }) {
+function AddCategoryPopUp ({ open, setOpen, setCategories }) {
     const [categoryName, setCategoryName] = React.useState('');
     const [alert, setAlert] = React.useState('');
     

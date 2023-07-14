@@ -1,8 +1,9 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import React from "react";
+import { get_categories } from "../helpers/loaderfunctions";
 
-function UpdateCategoryPopUp ({ open, setOpen, category }) {
+function UpdateCategoryPopUp ({ open, setOpen, category, setCategories }) {
     const [newName, setNewName] = React.useState(category.name);
     const [alert, setAlert] = React.useState('');
 
@@ -13,16 +14,19 @@ function UpdateCategoryPopUp ({ open, setOpen, category }) {
         }
 
         const data = await apiCall("menu/category", "PUT", { 'category_id': category.category_id, 'name': newName });
-        if (data.category) {
+        if (data.status === 200) {
             // make feedback alert like assistance?
+            const categories = await get_categories();
+            setCategories(categories);            
+            handleClose();
             console.log("Category successfully updated");
         } 
         else {
-            console.log("Failed to update category");
+            setAlert(data.message);
         }
     }
 
-    const handleCancel = () => {
+    const handleClose = () => {
         setOpen(false);
     };
 
@@ -30,7 +34,7 @@ function UpdateCategoryPopUp ({ open, setOpen, category }) {
         <>
             <Dialog
                 open={open}
-                onClose={handleCancel}
+                onClose={handleClose}
             >
                 <DialogTitle>{"Update Category"}</DialogTitle>
                 <DialogContent>
@@ -45,7 +49,7 @@ function UpdateCategoryPopUp ({ open, setOpen, category }) {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancel} variant="contained" color="error">Cancel</Button>
+                    <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>
                     <Button onClick={handleUpdate} variant="contained" color="success">Update</Button>
                 </DialogActions>
                 {alert && <Alert severity="error" aria-label='errorAlert'>{alert}</Alert>}

@@ -47,7 +47,7 @@ function ManagerEditMenu () {
                 <Box sx={{ borderBottom: 1, padding: "15px 0"}}>CATEGORIES</Box>
                 <Box sx={{ height: "68vh", padding: "0 0 5px 0", overflowY: "scroll" }}>
                     {categories && categories.map((category) => (
-                        <CategoryListItem key={category.category_id} category={category}/>
+                        <CategoryListItem key={category.category_id} category={category} setCategories={setCategories} />
                     ))}
                 </Box>
                 <Box sx={{ borderTop: 1 }}>
@@ -76,7 +76,7 @@ function ManagerEditMenu () {
                     <Add /> New Menu Item
                 </Button>
             </Box>
-            {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory} setCategories={setCategories} ref={bottomCategory} />}
+            {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory} setCategories={setCategories} />}
             {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem} categoryId={activeCategory} />}
         </Box>
     )
