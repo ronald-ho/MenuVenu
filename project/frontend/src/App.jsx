@@ -108,9 +108,9 @@ function App() {
           {
             path: ":categoryid",
             element: <ItemList />,
-            loader: async ({params}) => {
-              return get_items(params);
-            }
+            // loader: async ({params}) => {
+            //   return get_items(params);
+            // }
           }
         ]
       }

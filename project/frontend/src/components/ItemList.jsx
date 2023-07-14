@@ -1,9 +1,22 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ItemListItem from "./ItemListItem";
+import { apiCall } from "../helpers/helpers";
+import { get_items } from "../helpers/loaderfunctions";
 
 function ItemList() {
-    const items = useLoaderData();
+    const params = useParams();
+    console.log(params);
+
+    const [items, setItems] = React.useState([]);
+    
+    React.useEffect(() => {
+        const getItems = async () => {
+            const activeCategoryItems = await get_items(params);
+            setItems(activeCategoryItems);
+        }
+        getItems();
+    }, [params]);
 
     return (
         <>

@@ -5,11 +5,15 @@ import { NavLink } from "react-router-dom";
 import UpdateCategoryPopUp from "./UpdateCategoryPopUp";
 import DeleteCategoryPopUp from "./DeleteCategoryPopUp";
 
-function CategoryListItem ({ category, setCategories }) {
+function CategoryListItem ({ category, setCategories, setShowAddItemBtn }) {
     // Maybe add :hover in external stylesheet for active category
     // Make DragHandle clickable
     const [openUpdateCategory, setOpenUpdateCategory] = React.useState(false);
     const [openDeleteCategory, setOpenDeleteCategory] = React.useState(false);
+    
+    React.useEffect(() => {
+        setShowAddItemBtn(true);
+    }, []);
 
     return (
         <>
@@ -22,7 +26,7 @@ function CategoryListItem ({ category, setCategories }) {
                     justifyContent: "space-between",
                     margin: "5px auto 0 auto",
                     padding: "0",
-                    width: "19vw"
+                    width: "23vw"
                 }}
             >
                 <Box 

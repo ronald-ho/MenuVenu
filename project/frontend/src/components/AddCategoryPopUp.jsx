@@ -16,7 +16,8 @@ function AddCategoryPopUp ({ open, setOpen, setCategories }) {
         const data = await apiCall("menu/category", "POST", { 'name': categoryName });
         if (data.category) {
             const categories = await get_categories();
-            setCategories(categories);            
+            setCategories(categories);   
+            // use navigate to new category?
             handleClose();
             // make feedback alert like assistance?
             console.log("Category successfully added");

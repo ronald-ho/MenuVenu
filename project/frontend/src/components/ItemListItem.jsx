@@ -20,7 +20,7 @@ function ItemListItem ({ item }) {
                     justifyContent: "space-between",
                     margin: "5px auto 0 auto",
                     padding: "0",
-                    width: "49vw"
+                    width: "43vw"
                 }}
 
                 onClick={() => setOpenItemInfo(true)}

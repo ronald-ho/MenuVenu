@@ -1,11 +1,15 @@
 import { Alert, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, Table, TableCell, TableRow, TextField, Typography } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function AddItemPopUp ({ open, setOpen, categoryId }) {
+    const  navigate = useNavigate();
+
     const [name, setName] = React.useState('');
     const [price, setPrice] = React.useState(null);
-    const [image, setImage] = React.useState(null);
+    const [imageData, setImageData] = React.useState(null);
+    const [imageFilename, setImageFilename] = React.useState([]);
     const [description, setDescription] = React.useState(null);
     const [calories, setCalories] = React.useState(null);
     const [pointsToRedeem, setPointsToRedeem] = React.useState(null);
@@ -15,14 +19,14 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
     let itemIngredients = [];
 
     React.useEffect(() => {
-        const allIngredients = async () => {
+        const getAllIngredients = async () => {
             const data = await apiCall("menu/ingredients", "GET", {});
             if (data.message === 200) {
                 setAllIngredients(data.ingredients);
             }
         }
         
-        allIngredients();
+        getAllIngredients();
     }, []);
     
     async function handleSubmit(e) {
@@ -33,7 +37,7 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
             return;
         }
 
-        if (price === "" || parseInt(price) === 0) {
+        if (!price || parseInt(price) === 0) {
             setAlert("Please enter a valid price");
             return;
         }
@@ -42,7 +46,8 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
             'category_id': categoryId,
             'name': name,
             'price': price,
-            'image': image,
+            'image': imageData,
+            // 'filename' : imageFilename,
             'description': description,
             'calories': calories,
             'points_to_redeem': pointsToRedeem,
@@ -54,17 +59,34 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
 
         const data = await apiCall("menu/item", "POST", newItem);
         if (data.item) {
+            navigate(`/managereditmenu/${categoryId}`);
+            handleClose();
             // make feedback alert like assistance?
             console.log("item successfully added");
         } 
         else {
-            console.log("Failed to add item");
+            setAlert(data.message);
         }
     }
 
-    const handleCancel = () => {
+    const handleClose = () => {
         setOpen(false);
     };
+
+    function handleImageInput (e) {
+        const file = e.target.files[0];
+
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imageData = e.target.result;
+                console.log(imageData);
+                setImageData(imageData);
+                // setImageFilename(file.name);
+            }
+            reader.readAsDataURL(file);
+        } 
+    }
 
     function handleCheckIngredient (ingredientState, ingredientName) {
         if (ingredientState) {
@@ -91,7 +113,7 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
         <>
             <Dialog
                 open={open}
-                onClose={handleCancel}
+                onClose={handleClose}
                 fullWidth
                 maxWidth="xs"
             >
@@ -130,8 +152,9 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                             <TableCell sx={labelCellStyle}><Typography>Image</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <input 
-                                    onChange={(e) => setImage(e.target.value)}
+                                    onChange={(e) => handleImageInput(e)}
                                     type="file" 
+                                    accept="image/jpeg, image/png, image/jpg"
                                 />
                             </TableCell>
                         </TableRow>
@@ -203,7 +226,7 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                     {alert && <Alert severity="error" aria-label='errorAlert'>{alert}</Alert>}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancel} variant="contained" color="error">Cancel</Button>
+                    <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>
                     <Button type="submit" variant="contained" color="success">Add</Button>
                 </DialogActions>
                 </form>

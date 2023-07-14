@@ -135,6 +135,7 @@ class CategoryService:
         if not category:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
+        # Need to order by position
         items = category.items
         
         items_list = [item.to_dict() for item in items]
