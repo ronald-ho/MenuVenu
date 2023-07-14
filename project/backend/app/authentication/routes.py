@@ -25,9 +25,18 @@ def login_customer():
     return CustomerService.login_customer(data)
 
 
-# @auth.route('/login/staff', methods=['POST'])
-# def login_staff():
-#
+@auth.route('/login/staff', methods=['POST'])
+def login_staff():
+    data = data_logger(request)
+
+    return CustomerService.login_customer(data)
+
+
+@auth.route('/login/manager', methods=['POST'])
+def login_manager():
+    data = data_logger(request)
+
+    return CustomerService.login_customer(data)
 
 
 @auth.route('/logout', methods=['POST'])

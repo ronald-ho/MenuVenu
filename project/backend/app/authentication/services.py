@@ -6,6 +6,7 @@ from flask_mail import Message
 # Local imports
 from .. import db, mail
 from .models import Customers
+from ..restaurant.models import Restaurants
 
 
 class CustomerService:
@@ -109,6 +110,22 @@ class StaffService:
         password = data['password']
 
         # Check if password is correct
+        if password != Restaurants.staff_password:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Staff login successful'})
+
+
+class ManagerService:
+    @staticmethod
+    def login_manager(data):
+        password = data['password']
+
+        # Check if password is correct
+        if password != Restaurants.manager_password:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Manager login successful'})
 
 
 class ResetService:
