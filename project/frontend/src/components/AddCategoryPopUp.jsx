@@ -2,8 +2,10 @@ import React from "react";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import { get_categories } from "../helpers/loaderfunctions";
+import { useNavigate } from "react-router-dom";
 
 function AddCategoryPopUp ({ open, setOpen, setCategories }) {
+    const navigate = useNavigate();
     const [categoryName, setCategoryName] = React.useState('');
     const [alert, setAlert] = React.useState('');
     
@@ -17,7 +19,7 @@ function AddCategoryPopUp ({ open, setOpen, setCategories }) {
         if (data.category) {
             const categories = await get_categories();
             setCategories(categories);   
-            // use navigate to new category?
+            navigate(`/managereditmenu/${data.category.category_id}`);
             handleClose();
             // make feedback alert like assistance?
             console.log("Category successfully added");

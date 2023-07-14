@@ -23,8 +23,8 @@ function ItemList() {
     }, [params]);
 
     return (
-        <Box sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
-            <Box>
+        <>
+            <Box sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
                 {items.map((item) => <ItemListItem key={item.item_id} item={item} />)}
             </Box>
             <Box sx={{borderTop: 1}}>
@@ -40,7 +40,7 @@ function ItemList() {
                 </Button>
             </Box>
             {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem} categoryId={params.categoryid} />}
-        </Box>
+        </>
     )
 }
 
