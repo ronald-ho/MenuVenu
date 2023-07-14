@@ -165,7 +165,7 @@ def order_item():
 
     flag = {
         'name': item.name,
-        'table_number': data['table_number']
+        'table_number': data['table_id']
     }
 
     kitchen_flags.append(flag)
@@ -202,7 +202,7 @@ def get_ordered_items():
     logger.info(f"Received get ordered items request: {data}")
 
     # get current order associated with table
-    order = Orders.query.filter_by(paid=False).filter_by(table_id=data['table_id']).first()
+    order = Orders.query.filter_by(paid=False).filter_by(table=data['table_id']).first()
 
     # get ordered items associated with order
     ordered_item_list = OrderedItems.query.filter_by(order=order.id)
