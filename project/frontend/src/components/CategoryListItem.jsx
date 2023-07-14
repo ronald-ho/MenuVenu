@@ -70,6 +70,7 @@ function CategoryListItem ({ category, setCategories }) {
                     open={openDeleteCategory} 
                     setOpen={setOpenDeleteCategory}
                     category={category}
+                    setCategories={setCategories}
                 />
             }
         </>

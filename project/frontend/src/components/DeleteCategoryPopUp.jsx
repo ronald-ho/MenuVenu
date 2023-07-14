@@ -1,12 +1,16 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import React from "react";
+import { get_categories } from "../helpers/loaderfunctions";
 
-function DeleteCategoryPopUp ({ open, setOpen, category}) {
+function DeleteCategoryPopUp ({ open, setOpen, category, setCategories }) {
     async function handleDelete() {
         const data = await apiCall("menu/category", "DELETE", { 'category_id': category.category_id });
-        if (data.category) {
+        if (data.status === 200) {
             // make feedback alert like assistance?
+            const categories = await get_categories();
+            setCategories(categories);            
+            handleClose();
             console.log("Category deleted");
         } 
         else {
@@ -14,7 +18,7 @@ function DeleteCategoryPopUp ({ open, setOpen, category}) {
         }
     }
 
-    const handleCancel = () => {
+    const handleClose = () => {
         setOpen(false);
     };
 
@@ -22,14 +26,14 @@ function DeleteCategoryPopUp ({ open, setOpen, category}) {
         <>
             <Dialog
                 open={open}
-                onClose={handleCancel}
+                onClose={handleClose}
             >
                 <DialogTitle>{"Delete Category"}</DialogTitle>
                 <DialogContent>
                     Are you sure you want to delete the {category.name} category?
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancel} variant="contained" color="error">Cancel</Button>
+                    <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>
                     <Button onClick={handleDelete} variant="contained" color="success">Delete</Button>
                 </DialogActions>
             </Dialog>
