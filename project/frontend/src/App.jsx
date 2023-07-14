@@ -104,7 +104,7 @@ function App() {
         path: "/kitchen",
         element: <KitchenOrders />
       }, {
-        path: "/kitchenlogin",
+        path: "/kitchenstafflogin",
         element: <KitchenStaffLogin />
       }
     ]
