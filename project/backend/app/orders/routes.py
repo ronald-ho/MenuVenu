@@ -156,6 +156,7 @@ def order_item():
     new_ordered_item = OrderedItems(
         order=order.id,
         customer=data['customer_id'],
+        order_time=datetime.now(),
         item=item.id
     )
 
