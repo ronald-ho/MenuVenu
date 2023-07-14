@@ -58,50 +58,7 @@ def get_tables():
 def order_item():
     data = data_logger(request)
 
-<<<<<<< HEAD
-    # get item that was ordered
-    item = Items.query.filter_by(name=data['name']).first()
-
-    # get order that is associated with table
-    order = Orders.query.filter_by(paid=False).filter_by(table=data['table_id']).first()
-
-    customer = Customers.query.filter_by(id=data['customer_id'])
-
-    # add cost of item to order total if customer did not redeem points and add any points earnable
-    if not data['redeem']:
-
-        order.total_amount = order.total_amount + item.price
-
-        customer.points += item.points_earned
-
-    # reduce points from customer total if customer did redeem points and has enough points (customers cannot earn points if using points purchase)
-    else:
-        if customer.points > item.points_to_redeem:
-            customer.points -= item.points_to_redeem
-        else:
-            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
-
-    new_ordered_item = OrderedItems(
-        order=order.id,
-        customer=data['customer_id'],
-        order_time=datetime.now(),
-        item=item.id
-    )
-
-    db.session.add(new_ordered_item)
-    db.session.commit()
-
-    flag = {
-        'name': item.name,
-        'table_number': data['table_id']
-    }
-
-    kitchen_flags.append(flag)
-
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Item ordered'})
-=======
     return order_service.order_item(data)
->>>>>>> 1b5203ce0527861fafa26a2cc276e12ffdb426f9
 
 
 @app.route('/orders/kitchen/prepared', methods=['POST'])
@@ -121,24 +78,7 @@ def get_order_list():
 def get_ordered_items():
     data = data_logger(request)
 
-<<<<<<< HEAD
-    # get current order associated with table
-    order = Orders.query.filter_by(paid=False).filter_by(table=data['table']).first()
-
-    # get ordered items associated with order
-    ordered_item_list = OrderedItems.query.filter_by(order=order.id)
-
-    item_list = []
-
-    # for each ordered item, get the relevant menu item
-    for ordered_item in ordered_item_list:
-        item = Items.query.filter_by(id=ordered_item.item).first()
-        item_list.append(item.to_dict())
-
-    return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})
-=======
     return order_service.get_ordered_items(data)
->>>>>>> 1b5203ce0527861fafa26a2cc276e12ffdb426f9
 
 
 @app.route('/orders/waitstaff/served', methods=['POST'])
