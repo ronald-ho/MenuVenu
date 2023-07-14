@@ -21,6 +21,8 @@ import Menu from './pages/Menu';
 import OrderItem from './pages/OrderItem';
 import ManagerEditMenu from './pages/ManagerEditMenu';
 import ItemList from './components/ItemList';
+import KitchenOrders from './pages/KitchenOrders';
+import KitchenStaffLogin from './pages/KitchenStaffLogin';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -108,11 +110,14 @@ function App() {
           {
             path: ":categoryid",
             element: <ItemList />,
-            // loader: async ({params}) => {
-            //   return get_items(params);
-            // }
           }
         ]
+      }, {
+        path: "/kitchen",
+        element: <KitchenOrders />
+      }, {
+        path: "/kitchenstafflogin",
+        element: <KitchenStaffLogin />
       }
     ]
   }]);
