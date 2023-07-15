@@ -124,7 +124,7 @@ class CategoryService:
 
     @staticmethod
     def get_all_categories():
-        categories = Categories.query.all()
+        categories = Categories.query.order_by(Categories.position).all()
         categories_list = [category.to_dict() for category in categories]
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Categories found', 'categories': categories_list})
@@ -135,7 +135,9 @@ class CategoryService:
         if not category:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
+        # Need to order by position
         items = category.items
+        
         items_list = [item.to_dict() for item in items]
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Items found', 'items': items_list})
