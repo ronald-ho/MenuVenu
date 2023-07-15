@@ -34,5 +34,6 @@ class Orders(db.Model):
 class OrderedItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order = db.Column(db.Integer, db.ForeignKey(Orders.id))
+    order_time = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     customer = db.Column(db.Integer, db.ForeignKey(Customers.id))
     item = db.Column(db.Integer, db.ForeignKey(Items.id))
