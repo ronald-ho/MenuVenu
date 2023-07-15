@@ -174,14 +174,9 @@ class OrderService:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not have an order'})
 
         # get ordered items associated with order
-        ordered_item_list = OrderedItems.query.filter_by(order=order.id)
+        ordered_item_list = OrderedItems.query.filter_by(order=order.id).order_by(OrderedItems.order_time).all()
 
-        item_list = []
-
-        # for each ordered item, get the relevant menu item
-        for ordered_item in ordered_item_list:
-            item = Items.query.filter_by(id=ordered_item.item).first()
-            item_list.append(item.to_dict())
+        item_list = [ordered_item.to_dict() for ordered_item in ordered_item_list]
 
         return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})
 
