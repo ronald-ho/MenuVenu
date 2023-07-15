@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from http import HTTPStatus
 
 from flask import jsonify
@@ -161,12 +161,16 @@ class OrderService:
     def get_order_list(self):
         return jsonify({'status': HTTPStatus.OK, 'order_list': self.kitchen_flags})
 
+
     @staticmethod
     def get_ordered_items(data):
         table_id = data['table_id']
 
         # get current order associated with table
-        order = Orders.query.filter_by(paid=False).filter_by(table_id=table_id).first()
+        order = Orders.query.filter_by(paid=False).filter_by(table=table_id).first()
+
+        if not order:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not have an order'})
 
         # get ordered items associated with order
         ordered_item_list = OrderedItems.query.filter_by(order=order.id)
