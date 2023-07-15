@@ -1,11 +1,11 @@
+import random
 from http import HTTPStatus
 
 from flask import jsonify
 from flask_mail import Message
 
-# Local imports
-from .. import db, mail
 from .models import Customers
+from .. import db, mail
 from ..restaurant.models import Restaurants
 
 
@@ -130,20 +130,19 @@ class ManagerService:
 
 class ResetService:
     @staticmethod
-    def generate_OTP(data, reset_dict):
+    def generate_OTP(data):
         email = data['email']
 
-        user = Customers.query.filter_by(email=email).first()
+        customer = Customers.query.filter_by(email=email).first()
 
         # Check if user exists
-        if not user:
+        if not customer:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'User does not exist'})
 
         # Generate OTP
-        reset_code = Customers.generate_reset_code(user)
-
-        # Add reset code to dictionary
-        reset_dict[reset_code] = email
+        reset_code = Customers.generate_reset_code(customer)
+        customer.set_reset_code(reset_code)
+        db.session.commit()
 
         # Send the OTP to the user's email
         MailService.send_email(email, reset_code)
@@ -152,32 +151,28 @@ class ResetService:
         return jsonify({'status': HTTPStatus.OK, 'message': 'OTP sent to email'})
 
     @staticmethod
-    def verify_OTP(data, reset_dict):
+    def verify_OTP(data):
         email = data['email']
         reset_code = int(data['reset_code'])
 
-        # Check if reset code exists
-        if reset_code not in reset_dict:
-            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
+        customer = Customers.query.filter_by(email=email).first()
 
-        # Check if email matches the reset code
-        if reset_dict[reset_code] != email:
+        # Check if reset code exists
+        if not Customers.check_reset_code(customer, reset_code):
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid reset code'})
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'OTP verified'})
 
     @staticmethod
-    def reset_password(data, reset_dict):
+    def reset_password(data):
         email = data['email']
-        reset_code = int(data['reset_code'])
         new_password = data['new_password']
 
         customer = Customers.query.filter_by(email=email).first()
 
         customer.set_password(new_password)
+        customer.reset_code = None
         db.session.commit()
-
-        reset_dict.pop(reset_code)
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Password reset successful'})
 

@@ -8,8 +8,6 @@ from .services import CustomerService, ResetService
 
 auth = Blueprint('auth', __name__)
 
-reset_dict = dict()
-
 
 @auth.route('/register', methods=['POST'])
 def register_customer():
@@ -63,21 +61,21 @@ def update_customer():
 def generate_OTP():
     data = data_logger(request)
 
-    return ResetService.generate_OTP(data, reset_dict)
+    return ResetService.generate_OTP(data)
 
 
 @auth.route('/reset/password/code', methods=['POST'])
 def verify_OTP():
     data = data_logger(request)
 
-    return ResetService.verify_OTP(data, reset_dict)
+    return ResetService.verify_OTP(data)
 
 
 @auth.route('/reset/password/confirm', methods=['POST'])
 def reset_password():
     data = data_logger(request)
 
-    return ResetService.reset_password(data, reset_dict)
+    return ResetService.reset_password(data)
 
 
 @auth.route('/customer/<customer_id>', methods=['GET'])

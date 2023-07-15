@@ -1,5 +1,6 @@
 import random
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 
 from .. import db
 from flask_login import UserMixin
@@ -15,11 +16,23 @@ class Customers(UserMixin, db.Model):
     points = db.Column(db.Integer, nullable=False)
     calories_burnt = db.Column(db.Integer, nullable=False)
     calories_gained = db.Column(db.Integer, nullable=False)
-    reset_code = None
+    reset_code = db.Column(db.String(255), nullable=True)
+    reset_code_expiry = db.Column(db.DateTime, nullable=True)
 
     def generate_reset_code(self):
         self.reset_code = random.randint(100000, 999999)
         return self.reset_code
+
+    def set_reset_code(self, reset_code):
+        self.reset_code = generate_password_hash(str(reset_code))
+        self.reset_code_expiry = datetime.utcnow() + timedelta(minutes=5)
+
+    def check_reset_code(self, reset_code):
+        if datetime.utcnow() > self.reset_code_expiry:
+            self.reset_code = None
+            self.reset_code_expiry = None
+            return False
+        return check_password_hash(str(self.reset_code), str(reset_code))
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
