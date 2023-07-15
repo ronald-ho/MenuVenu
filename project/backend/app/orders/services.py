@@ -10,34 +10,43 @@ from ..menu.models import Items
 
 
 class AssistService:
-    def __init__(self):
-        self.assistance_flags = []
 
-    def request_assist(self, data):
+    @staticmethod
+    def request_assist(data):
         table_number = data['table_number']
-        if table_number in self.assistance_flags:
+        table = DiningTables.query.filter_by(number=table_number).first()
+
+        if table.assistance:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Assistance already requested'})
         else:
-            self.assistance_flags.append(table_number)
+            table.assistance = True
+            db.session.commit()
             return jsonify({'status': HTTPStatus.OK, 'message': 'Assistance requested'})
 
-    def finish_assist(self, data):
+    @staticmethod
+    def finish_assist(data):
         table_number = data['table_number']
-        if table_number not in self.assistance_flags:
+        table = DiningTables.query.filter_by(number=table_number).first()
+
+        if not table.assistance:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table did not need assistance'})
         else:
-            self.assistance_flags.remove(table_number)
+            table.assistance = False
+            db.session.commit()
             return jsonify({'status': HTTPStatus.OK, 'message': 'Assistance completed'})
 
-    def get_assist(self):
-        return jsonify({'status': HTTPStatus.OK, 'assistance_list': self.assistance_flags})
+    @staticmethod
+    def get_assist():
+        tables_assistance = DiningTables.query.filter_by(assistance=True).all()
+        tables_assistance_list = [table.number for table in tables_assistance]
+
+        return jsonify({'status': HTTPStatus.OK, 'assistance_list': tables_assistance_list})
 
 
 class TableService:
-    def __init__(self):
-        self.occupied_flags = []
 
-    def pay_bill(self, data):
+    @staticmethod
+    def pay_bill(data):
         table_number = data['table_number']
         redeem = data['redeem']
 
@@ -49,10 +58,11 @@ class TableService:
 
         if redeem:
             order.total_amount = order.total_amount * 0.9
+            # TODO: remove points from customer
 
         order.paid = True
+        table.occupied = False
         db.session.commit()
-        self.occupied_flags.remove(table.number)
 
         return jsonify({'status': HTTPStatus.OK, 'amount': order.total_amount})
 
@@ -68,13 +78,14 @@ class TableService:
 
         return jsonify({'status': HTTPStatus.OK, 'bill': order.total_amount})
 
-    def select_table(self, data):
+    @staticmethod
+    def select_table(data):
         table_number = data['table_number']
 
         table = DiningTables.query.filter_by(number=table_number).first()
 
         # creates a new order for table if it was not occupied yet
-        if table.number not in self.occupied_flags:
+        if not table.occupied:
             new_order = Orders(
                 table=table.number,
                 order_date=datetime.now(),
@@ -82,27 +93,28 @@ class TableService:
                 paid=False
             )
 
+            table.occupied = True
+
             db.session.add(new_order)
             db.session.commit()
 
-            self.occupied_flags.append(table.number)
-
         return jsonify({'status': HTTPStatus.OK, 'message': 'Table selected'})
 
-    def get_tables(self):
-        table_list = DiningTables.query.all()
+    @staticmethod
+    def get_tables():
+        all_tables = DiningTables.query.all()
+        occupied_tables = DiningTables.query.filter_by(occupied=True).all()
 
-        table_list = [table.to_dict() for table in table_list]
+        table_list = [table.to_dict() for table in all_tables]
+        occupied_table_list = [table.number for table in occupied_tables]
 
-        return jsonify({'status': HTTPStatus.OK, 'table_list': table_list, 'occupied_list': self.occupied_flags})
+        return jsonify({'status': HTTPStatus.OK, 'table_list': table_list, 'occupied_list': occupied_table_list})
 
 
 class OrderService:
-    def __init__(self):
-        self.kitchen_flags = []
-        self.serve_flags = []
 
-    def order_item(self, data):
+    @staticmethod
+    def order_item(data):
         item_name = data['name']
         table_id = data['table_id']
         customer_id = data['customer_id']
@@ -134,34 +146,28 @@ class OrderService:
         db.session.add(new_ordered_item)
         db.session.commit()
 
-        flag = {
-            'name': item.name,
-            'table_number': data['table_number']
-        }
-
-        self.kitchen_flags.append(flag)
-
         return jsonify({'status': HTTPStatus.OK, 'message': 'Item ordered'})
 
-    def kitchen_prepared(self, data):
-        item_name = data['name']
-        table_number = data['table_number']
+    @staticmethod
+    def kitchen_prepared(data):
+        ordered_item_id = data['ordered_item_id']
 
-        prepared_item = {
-            'name': item_name,
-            'table_number': table_number
-        }
+        ordered_item = OrderedItems.query.filter_by(id=ordered_item_id).first()
 
-        if prepared_item not in self.kitchen_flags:
+        if ordered_item.prepared:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Ordered item not in kitchen list'})
         else:
-            self.kitchen_flags.remove(prepared_item)
-            self.serve_flags.append(prepared_item)
+            ordered_item.prepared = True
+            db.session.commit()
             return jsonify({'status': HTTPStatus.OK, 'message': 'Ordered item prepared and ready to serve'})
 
-    def get_order_list(self):
-        return jsonify({'status': HTTPStatus.OK, 'order_list': self.kitchen_flags})
+    @staticmethod
+    def get_order_list():
+        ordered_items = OrderedItems.query.filter_by(prepared=False).all()
 
+        kitchen_order_list = [item.to_dict() for item in ordered_items]
+
+        return jsonify({'status': HTTPStatus.OK, 'order_list': kitchen_order_list})
 
     @staticmethod
     def get_ordered_items(data):
@@ -174,26 +180,34 @@ class OrderService:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not have an order'})
 
         # get ordered items associated with order
-        ordered_item_list = OrderedItems.query.filter_by(order=order.id).order_by(OrderedItems.order_time).all()
+        ordered_item_list = OrderedItems.query.filter_by(order=order.id)
 
-        item_list = [ordered_item.to_dict() for ordered_item in ordered_item_list]
+        item_list = []
+
+        # for each ordered item, get the relevant menu item
+        for ordered_item in ordered_item_list:
+            item = Items.query.filter_by(id=ordered_item.item).first()
+            item_list.append(item.to_dict())
 
         return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})
 
-    def waitstaff_served(self, data):
-        item_name = data['name']
-        table_number = data['table_number']
+    @staticmethod
+    def waitstaff_served(data):
+        ordered_item_id = data['ordered_item_id']
 
-        served_item = {
-            'name': item_name,
-            'table_number': table_number
-        }
+        ordered_item = OrderedItems.query.filter_by(id=ordered_item_id).first()
 
-        if served_item not in self.serve_flags:
+        if ordered_item.served:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Served item not in serve list'})
         else:
-            self.serve_flags.remove(served_item)
+            ordered_item.served = True
+            db.session.commit()
             return jsonify({'status': HTTPStatus.OK, 'message': 'Item successfully served'})
 
-    def get_serve_list(self):
-        return jsonify({'status': HTTPStatus.OK, 'serve_list': self.serve_flags})
+    @staticmethod
+    def get_serve_list():
+        served_items = OrderedItems.query.filter_by(served=False).filter_by(prepared=True).all()
+
+        serve_list = [item.to_dict() for item in served_items]
+
+        return jsonify({'status': HTTPStatus.OK, 'serve_list': serve_list})

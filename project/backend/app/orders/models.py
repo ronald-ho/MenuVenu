@@ -11,6 +11,8 @@ from ..menu.models import Items
 class DiningTables(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.Integer, unique=True, nullable=False)
+    assistance = db.Column(db.Boolean, default=False)
+    occupied = db.Column(db.Boolean, default=False)
 
     def to_dict(self):
         return {
@@ -35,6 +37,8 @@ class OrderedItems(db.Model):
     order_time = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     customer = db.Column(db.Integer, db.ForeignKey(Customers.id))
     item = db.Column(db.Integer, db.ForeignKey(Items.id))
+    prepared = db.Column(db.Boolean, default=False)
+    served = db.Column(db.Boolean, default=False)
 
     order_details = db.relationship('Orders', backref='ordered_items')
     item_details = db.relationship('Items', backref='ordered_items')
@@ -42,7 +46,7 @@ class OrderedItems(db.Model):
 
     def to_dict(self):
         return {
-            'order_id': self.order_details.id,
+            'ordered_item_id': self.id,
             'table_number': self.order_details.table,
             'order_time': self.order_time,
             'customer_name': self.customer_details.full_name,
