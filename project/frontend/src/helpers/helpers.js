@@ -19,17 +19,4 @@ export async function apiCall (path, method, body) {
   
     const response = await fetch(`http://localhost:${config.BACKEND_PORT}/` + path, options);
     return await response.json();
-  }
-  
-  export async function getSessionId ({ quizId }) {
-    const startGameData = await apiCall('admin/quiz/' + quizId + '/start', 'POST', {});
-    if (startGameData.error) {
-      console.log(startGameData.error);
-    }
-    const quizData = await apiCall('admin/quiz/' + quizId, 'GET', {});
-    if (quizData.error) {
-      console.log(quizData.error);
-    } else {
-      return quizData.active;
-    }
-  }
+}
