@@ -19,6 +19,10 @@ import DeleteAccount from './pages/DeleteAccount';
 import ViewItems from './components/ViewItems';
 import Menu from './pages/Menu';
 import OrderItem from './pages/OrderItem';
+import ManagerEditMenu from './pages/ManagerEditMenu';
+import ItemList from './components/ItemList';
+import KitchenOrders from './pages/KitchenOrders';
+import KitchenStaffLogin from './pages/KitchenStaffLogin';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -98,6 +102,22 @@ function App() {
             }
           }
         ]
+      }, { 
+        path: "/managereditmenu",
+        element: <ManagerEditMenu />,
+        loader: get_categories,
+        children: [
+          {
+            path: ":categoryid",
+            element: <ItemList />,
+          }
+        ]
+      }, {
+        path: "/kitchen",
+        element: <KitchenOrders />
+      }, {
+        path: "/kitchenstafflogin",
+        element: <KitchenStaffLogin />
       }
     ]
   }]);

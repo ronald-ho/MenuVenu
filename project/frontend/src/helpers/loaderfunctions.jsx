@@ -74,33 +74,36 @@ export async function change_details (request) {
         new_password: data.password
     }
     const response = await apiCall("auth/update", "PUT", body);
-    if (response.status == 400) {
+    if (response.status === 400) {
         return "Email already exists"
     }
     return "Success!";
 }
 
 export const get_categories = async () => {
-    /*api call */
     const response = await apiCall("menu/categories", "GET", {});
-    return response['categories'];
+    console.log(response.categories)
+    if (response.status === 200) {
+        return response.categories;
+    } else {
+        return [];
+    }
 }
 
 export async function get_items(params) {
     console.log(params.categoryid);
     const response = await apiCall("menu/items/" + params.categoryid, "GET", {});
-    if (response.status == 200) {
+    if (response.status === 200) {
         return response.items;
     } else {
-        console.log("OH NO");
-        return []
+        return [];
     }
 }
 
 export async function get_item(params) {
     console.log(params.itemid);
     const response = await apiCall("menu/item/details/" + params.itemid, "GET", {});
-    if (response.status == 200) {
+    if (response.status === 200) {
         return response.item;
     } else {
         return null;

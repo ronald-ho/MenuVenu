@@ -15,10 +15,15 @@ function OrderItem() {
             "redeem": points,
             "customer_id": localStorage.getItem("mvuser")
         }
-        const response = await apiCall("orders/order_item", "POST", body);
-        if (response) {
-            console.log("bueno");
+        let i = 0;
+        while (i < ordercount) {
+            const response = await apiCall("orders/order_item", "POST", body);
+            if (response) {
+                console.log("bueno");
+            }
+            i++;
         }
+        
         updatevalue((c) => c + 1);
     }
 
