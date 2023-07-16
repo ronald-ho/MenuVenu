@@ -1,12 +1,12 @@
-import React from "react";
-import {useNavigate} from "react-router-dom";
+import React from 'react'
+import {useNavigate} from 'react-router-dom'
 import {Alert, Button, TextField, Typography} from "@mui/material";
 import {apiCall} from "../helpers/helpers";
 
-function WaitStaffLogin () {
+function ManagerLogin () {
     const navigate = useNavigate();
 
-    // Get waitstaff password from database 
+    // Get manager password from database
     const [password, setPassword] = React.useState('');
     const [showAlert, setShowAlert] = React.useState('');
 
@@ -17,11 +17,11 @@ function WaitStaffLogin () {
             password: password
         };
 
-        const data = await apiCall("auth/login/staff", "POST", body);
+        const data = await apiCall("auth/login/manager", "POST", body);
 
-        if (data.message === "Staff login successful") {
+        if (data.message === "Manager login successful") {
             // navigation needs to check
-            navigate("/waitstaff");
+            navigate("/managereditmenu");
         } else {
             setShowAlert(data.message);
         }
@@ -30,7 +30,7 @@ function WaitStaffLogin () {
     return (
         <>
             <form onSubmit={(e) => handleSubmit(e)} style={{textAlign: 'center'}}>
-                <Typography>Wait Staff Login</Typography>
+                <Typography>Manager Login</Typography>
                 <TextField sx={{margin: '10px'}} id='login-password' value={password} type="password" label='Password' placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} />
                 <br />
                 <Button variant="contained" type="submit">Submit</Button>
@@ -40,4 +40,4 @@ function WaitStaffLogin () {
     );
 }
 
-export default WaitStaffLogin;
+export default ManagerLogin;
