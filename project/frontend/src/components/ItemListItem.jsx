@@ -3,11 +3,13 @@ import { Delete, DragHandle, Edit } from '@mui/icons-material';
 import React from "react";
 import ItemInfoPopUp from "./ItemInfoPopUp";
 import UpdateItemPopUp from "./UpdateItemPopUp";
+import DeleteItemPopUp from "./DeleteItemPopUp";
 
 function ItemListItem ({ categoryId, item }) {
     // Make DragHandle clickable
     const [openItemInfo, setOpenItemInfo] = React.useState(false);
     const [openUpdateItem, setOpenUpdateItem] = React.useState(false);
+    const [openDeleteItem, setOpenDeleteItem] = React.useState(false);
     
     return (
         <>
@@ -50,7 +52,7 @@ function ItemListItem ({ categoryId, item }) {
                         aria-label="delete"
                         onClick={(e) => {
                             e.stopPropagation();
-                            // setOpenDeleteItem(true);
+                            setOpenDeleteItem(true);
                         }}
                     >
                         <Delete color="error"/>
@@ -59,6 +61,7 @@ function ItemListItem ({ categoryId, item }) {
             </Box> 
             {openItemInfo && <ItemInfoPopUp open={openItemInfo} setOpen={setOpenItemInfo} item={item} />}
             {openUpdateItem && <UpdateItemPopUp open={openUpdateItem} setOpen={setOpenUpdateItem} categoryId={categoryId} item={item} />}
+            {openDeleteItem && <DeleteItemPopUp open={openDeleteItem} setOpen={setOpenDeleteItem} categoryId={categoryId} item={item} />}
         </>
     )
 }

@@ -1,24 +1,21 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import React from "react";
-import { get_categories } from "../helpers/loaderfunctions";
 import { useNavigate } from "react-router-dom";
 
-function DeleteCategoryPopUp ({ open, setOpen, category, setCategories }) {
+function DeleteItemPopUp ({ open, setOpen, categoryId, item }) {
     const navigate = useNavigate();
 
     async function handleDelete() {
-        const data = await apiCall("menu/category", "DELETE", { 'category_id': category.category_id });
+        const data = await apiCall("menu/item", "DELETE", { 'item_id': item.id });
         if (data.status === 200) {
             // make feedback alert like assistance?
-            const categories = await get_categories();
-            setCategories(categories);   
-            navigate('/managereditmenu');
+            navigate(`/managereditmenu/${categoryId}`); 
             handleClose();
-            console.log("Category deleted");
+            console.log("item deleted");
         } 
         else {
-            console.log("Failed to delete category");
+            console.log("Failed to delete item");
         }
     }
 
@@ -32,10 +29,8 @@ function DeleteCategoryPopUp ({ open, setOpen, category, setCategories }) {
                 open={open}
                 onClose={handleClose}
             >
-                <DialogTitle>Delete Category</DialogTitle>
-                <DialogContent>
-                    Are you sure you want to delete the {category.name} category?
-                </DialogContent>
+                <DialogTitle>Delete Item</DialogTitle>
+                <DialogContent>Are you sure you want to delete the {item.name} item?</DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>
                     <Button onClick={handleDelete} variant="contained" color="success">Delete</Button>
@@ -45,4 +40,4 @@ function DeleteCategoryPopUp ({ open, setOpen, category, setCategories }) {
     )
 }
 
-export default DeleteCategoryPopUp;
+export default DeleteItemPopUp;

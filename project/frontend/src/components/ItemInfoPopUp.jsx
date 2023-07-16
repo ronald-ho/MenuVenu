@@ -23,11 +23,9 @@ function ItemInfoPopUp ({ open, setOpen, item}) {
                     }}
                 >
                     <Box sx={{ textAlign: "center", width: 3/8 }}>
-                        {item.image && 
-                            <Box sx={{ alignItems: "center", display: "flex", height: "150px", width: "150px" }}>
-                                <img src={item.image} alt={item.name} style={{ margin: "auto", maxWidth: "150px", maxHeight: "150px" }} />
-                            </Box>
-                        }
+                        <Box sx={{ alignItems: "center", display: "flex", height: "150px", width: "150px" }}>
+                            {item.image && <img src={item.image} alt={item.name} style={{ margin: "auto", maxWidth: "150px", maxHeight: "150px" }} />}
+                        </Box>
                         {item.calories && <Typography>{item.calories} Cal</Typography>}
                         {ingredients.map((i) => ( <Chip label={i} /> ))}
                     </Box>
