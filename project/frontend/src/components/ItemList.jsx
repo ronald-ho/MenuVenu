@@ -3,7 +3,6 @@ import { Box, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useParams } from "react-router-dom";
 import ItemListItem from "./ItemListItem";
-import { apiCall } from "../helpers/helpers";
 import { get_items } from "../helpers/loaderfunctions";
 import AddItemPopUp from "./AddItemPopUp";
 

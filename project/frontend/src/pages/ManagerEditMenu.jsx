@@ -6,6 +6,7 @@ import AddCategoryPopUp from "../components/AddCategoryPopUp";
 import CategoryListItem from "../components/CategoryListItem";
 
 function ManagerEditMenu () {
+
     const [categories, setCategories] = React.useState(useLoaderData());
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
    

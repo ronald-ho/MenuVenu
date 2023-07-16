@@ -5,7 +5,6 @@ import ItemInfoPopUp from "./ItemInfoPopUp";
 import UpdateItemPopUp from "./UpdateItemPopUp";
 
 function ItemListItem ({ categoryId, item }) {
-    // Maybe add :hover in external stylesheet
     // Make DragHandle clickable
     const [openItemInfo, setOpenItemInfo] = React.useState(false);
     const [openUpdateItem, setOpenUpdateItem] = React.useState(false);
@@ -16,7 +15,6 @@ function ItemListItem ({ categoryId, item }) {
                 sx={{
                     border: 1,
                     borderRadius: "10px",
-                    cursor: "pointer",
                     display: "flex",
                     height: "40px",
                     justifyContent: "space-between",
@@ -34,7 +32,7 @@ function ItemListItem ({ categoryId, item }) {
                     }}
                 >
                     <DragHandle color="secondary" />
-                    <Typography  onClick={() => setOpenItemInfo(true)}>{item.name}</Typography>
+                    <Typography sx={{ "&:hover": { color: "#551b8c", fontWeight: "bold" }, cursor: "pointer" }} onClick={() => setOpenItemInfo(true)}>{item.name}</Typography>
                 </Box>
                 <Box>
                     <IconButton aria-label="edit"  onClick={() => setOpenUpdateItem(true)}> 
