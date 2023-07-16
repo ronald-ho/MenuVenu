@@ -5,19 +5,29 @@ import { NavLink } from "react-router-dom";
 import UpdateCategoryPopUp from "./UpdateCategoryPopUp";
 import DeleteCategoryPopUp from "./DeleteCategoryPopUp";
 
-function CategoryListItem ({ category, setCategories }) {
-    // Maybe add :hover in external stylesheet for active category
+function CategoryListItem ({ category, setCategories}) {
     // Make DragHandle clickable
     const [openUpdateCategory, setOpenUpdateCategory] = React.useState(false);
     const [openDeleteCategory, setOpenDeleteCategory] = React.useState(false);
-
+   
     return (
         <>
             <Box  
+                component={NavLink}
+                to={""+category.category_id}
+                style={({ isActive }) => {
+                    return {
+                        backgroundColor: isActive ? "#e4d7ec" : "white", 
+                        color: "black",
+                        textDecoration: "none",
+                    };
+                }}
                 sx={{
+                    backgroundColor: "white",
                     border: 1,
                     borderRadius: "10px",
                     display: "flex",
+                    gap: 0,
                     height: "40px",
                     justifyContent: "space-between",
                     margin: "5px auto 0 auto",
@@ -30,30 +40,26 @@ function CategoryListItem ({ category, setCategories }) {
                         alignItems: "center",
                         display: "flex",
                         flexDirection: "row",
-                        gap: "10px"
                     }}
                 >
                     <DragHandle color="secondary" />
                     <Typography
-                        component={NavLink}
-                        to={""+category.category_id}
-                        style={({ isActive }) => {
-                            return {
-                                color: "black",
-                                fontWeight: isActive ? "bold" : "",
-                                textDecoration: "none",
-                            };
+                        sx={{ 
+                            textAlign: "left",
+                            padding: "8px 0 8px 10px",
+                            width: "15.5vw",
+                            "&:hover": { color: "#551b8c", fontWeight: "bold" },
                         }}
                     >
                         {category.name}
                     </Typography>
                 </Box>
-                <Box>
-                    <IconButton aria-label="edit"> 
-                        <Edit onClick={() => setOpenUpdateCategory(true)} sx={{ color: "black" }} />
+                <Box sx={{ width: "80px" }}>
+                    <IconButton aria-label="edit" onClick={() => setOpenUpdateCategory(true)} > 
+                        <Edit sx={{ color: "black" }} />
                     </IconButton>
-                    <IconButton aria-label="delete">
-                        <Delete onClick={() => setOpenDeleteCategory(true)} color="error"/>
+                    <IconButton aria-label="delete" onClick={() => setOpenDeleteCategory(true)} >
+                        <Delete color="error" />
                     </IconButton>
                 </Box>
             </Box> 

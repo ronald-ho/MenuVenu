@@ -51,7 +51,7 @@ class ItemService:
 
     @staticmethod
     def update_item_details(data):
-        item = Items.query.filter_by(id=data["item_id"]).first()
+        item = Items.query.filter_by(id=data["id"]).first()
         if not item:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
@@ -135,10 +135,10 @@ class CategoryService:
         if not category:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
-        # Need to order by position
         items = category.items
         
-        items_list = [item.to_dict() for item in items]
+        # Order items by position key
+        items_list = sorted([item.to_dict() for item in items], key=lambda x: x['position'])
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Items found', 'items': items_list})
 

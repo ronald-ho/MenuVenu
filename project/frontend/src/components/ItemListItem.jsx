@@ -2,15 +2,17 @@ import { Box, IconButton, Typography } from "@mui/material";
 import { Delete, DragHandle, Edit } from '@mui/icons-material';
 import React from "react";
 import ItemInfoPopUp from "./ItemInfoPopUp";
+import UpdateItemPopUp from "./UpdateItemPopUp";
 
-function ItemListItem ({ item }) {
-    // Maybe add :hover in external stylesheet
+function ItemListItem ({ categoryId, item }) {
     // Make DragHandle clickable
     const [openItemInfo, setOpenItemInfo] = React.useState(false);
-
+    const [openUpdateItem, setOpenUpdateItem] = React.useState(false);
+    
     return (
         <>
             <Box  
+                onClick={() => setOpenItemInfo(true)}
                 sx={{
                     border: 1,
                     borderRadius: "10px",
@@ -22,8 +24,6 @@ function ItemListItem ({ item }) {
                     padding: "0",
                     width: "43vw"
                 }}
-
-                onClick={() => setOpenItemInfo(true)}
             >
                 <Box 
                     sx={{
@@ -34,18 +34,31 @@ function ItemListItem ({ item }) {
                     }}
                 >
                     <DragHandle color="secondary" />
-                    <Typography>{item.name}</Typography>
+                    <Typography sx={{ "&:hover": { color: "#551b8c", fontWeight: "bold" }, cursor: "pointer" }} >{item.name}</Typography>
                 </Box>
                 <Box>
-                    <IconButton aria-label="edit"> 
+                    <IconButton 
+                        aria-label="edit"  
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenUpdateItem(true);
+                        }}
+                    > 
                         <Edit sx={{ color: "black" }} />
                     </IconButton>
-                    <IconButton aria-label="delete">
+                    <IconButton 
+                        aria-label="delete"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            // setOpenDeleteItem(true);
+                        }}
+                    >
                         <Delete color="error"/>
                     </IconButton>
                 </Box>
             </Box> 
             {openItemInfo && <ItemInfoPopUp open={openItemInfo} setOpen={setOpenItemInfo} item={item} />}
+            {openUpdateItem && <UpdateItemPopUp open={openUpdateItem} setOpen={setOpenUpdateItem} categoryId={categoryId} item={item} />}
         </>
     )
 }

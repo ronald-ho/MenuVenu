@@ -3,7 +3,6 @@ import { Box, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useParams } from "react-router-dom";
 import ItemListItem from "./ItemListItem";
-import { apiCall } from "../helpers/helpers";
 import { get_items } from "../helpers/loaderfunctions";
 import AddItemPopUp from "./AddItemPopUp";
 
@@ -25,7 +24,7 @@ function ItemList() {
     return (
         <>
             <Box sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
-                {items.map((item) => <ItemListItem key={item.item_id} item={item} />)}
+                {items.map((item) => <ItemListItem key={item.item_id} categoryId={params.categoryid} item={item} />)}
             </Box>
             <Box sx={{borderTop: 1}}>
                 <Button 
