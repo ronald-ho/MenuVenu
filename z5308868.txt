@@ -28,3 +28,7 @@ Week 6
 * This week I worked on the frontend for manager adding category and item to the menu. I had a bit of trouble with the design of the category tabs and getting the buttons/links working as I wanted, as it should act like a navbar. In the end I managed to figure it out.
 * I had an assessment for another course due this week, so I didn't have time to work on much else. 
 * My plan for Week 7 is to continue working on manager edit menu before going to kitchen and waitstaff functionality, which I accidentally made a start on in Sprint 1 when it wasn't required yet.
+
+Week 7
+* I worked on manager edit menu this week, it was more difficult and took longer than expected. During development, I tested my code with the backend and database to see if things were working as intended. There were a couple of issues that I did not foresee, where a significant issue I had was figuring out how to reflect changes to categories and menu items immediately on the frontend (e.g. delete category removes the category and corresponding items from the UI). However I was able to resolve these problems with the help of fellow team members. 
+* I spent some time working on the design of the edit menu interface.
