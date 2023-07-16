@@ -1,6 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Alert, Typography, TextField, Button } from "@mui/material";
+import {useNavigate} from "react-router-dom";
+import {Alert, Button, TextField, Typography} from "@mui/material";
+import {apiCall} from "../helpers/helpers";
 
 function KitchenStaffLogin () {
     const navigate = useNavigate();
@@ -12,15 +13,17 @@ function KitchenStaffLogin () {
     async function handleSubmit (event) {
         event.preventDefault();
         
-        // Implement once password is added in database 
+        const body = {
+            password: password
+        };
 
-        // if (!password) {
-        //     setShowAlert('Incorrect password');
-        // } else {
-        //     setShowAlert(null);
-        // }
+        const data = await apiCall("auth/login/staff/kitchen", "POST", body);
 
-        navigate("/kitchen");
+        if (data.message === "Staff login successful") {
+            navigate("/kitchen");
+        } else {
+            setShowAlert(data.message);
+        }
     }
 
     return (

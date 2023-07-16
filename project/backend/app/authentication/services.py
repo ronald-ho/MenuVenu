@@ -117,6 +117,18 @@ class StaffService:
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Staff login successful'})
 
+    @staticmethod
+    def login_kitchen_staff(data):
+        password = data['password']
+
+        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+
+        # Check if password is correct
+        if not Restaurants.check_staff_password(restaurant, password):
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Kitchen staff login successful'})
+
 
 class ManagerService:
     @staticmethod

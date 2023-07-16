@@ -20,7 +20,6 @@ function WaitStaffLogin () {
         const data = await apiCall("auth/login/staff", "POST", body);
 
         if (data.message === "Staff login successful") {
-            // navigation needs to check
             navigate("/waitstaff");
         } else {
             setShowAlert(data.message);

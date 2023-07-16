@@ -20,7 +20,6 @@ function ManagerLogin () {
         const data = await apiCall("auth/login/manager", "POST", body);
 
         if (data.message === "Manager login successful") {
-            // navigation needs to check
             navigate("/managereditmenu");
         } else {
             setShowAlert(data.message);

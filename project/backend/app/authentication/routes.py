@@ -22,6 +22,12 @@ def login_customer():
     return CustomerService.login_customer(data)
 
 
+@auth.route('/login/staff/kitchen', methods=['POST'])
+def login_kitchen_staff():
+    data = data_logger(request)
+
+    return StaffService.login_kitchen_staff(data)
+
 @auth.route('/login/staff', methods=['POST'])
 def login_staff():
     data = data_logger(request)
