@@ -8,7 +8,7 @@ function ItemListItem ({ categoryId, item }) {
     // Make DragHandle clickable
     const [openItemInfo, setOpenItemInfo] = React.useState(false);
     const [openUpdateItem, setOpenUpdateItem] = React.useState(false);
-
+    
     return (
         <>
             <Box  

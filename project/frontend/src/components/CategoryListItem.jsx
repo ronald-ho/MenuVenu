@@ -13,6 +13,15 @@ function CategoryListItem ({ category, setCategories}) {
     return (
         <>
             <Box  
+                component={NavLink}
+                to={""+category.category_id}
+                style={({ isActive }) => {
+                    return {
+                        backgroundColor: isActive ? "#e4d7ec" : "white", 
+                        color: "black",
+                        textDecoration: "none",
+                    };
+                }}
                 sx={{
                     backgroundColor: "white",
                     border: 1,
@@ -31,7 +40,6 @@ function CategoryListItem ({ category, setCategories}) {
                         alignItems: "center",
                         display: "flex",
                         flexDirection: "row",
-                        
                     }}
                 >
                     <DragHandle color="secondary" />
@@ -40,29 +48,18 @@ function CategoryListItem ({ category, setCategories}) {
                             textAlign: "left",
                             padding: "8px 0 8px 10px",
                             width: "15.5vw",
-                            verticalAlign: "middle",
-                            "&:hover": { color: "#551b8c", fontWeight: "bold" } 
-                        }}
-                        component={NavLink}
-                        to={""+category.category_id}
-                        style={({ isActive }) => {
-                            return {
-                                backgroundColor: isActive ? "#e4d7ec" : "white", 
-                                color: isActive ? "#551b8c" : "black",
-                                fontWeight: isActive ? "bold" : "",
-                                textDecoration: "none",
-                            };
+                            "&:hover": { color: "#551b8c", fontWeight: "bold" },
                         }}
                     >
                         {category.name}
                     </Typography>
                 </Box>
                 <Box sx={{ width: "80px" }}>
-                    <IconButton aria-label="edit"> 
-                        <Edit onClick={() => setOpenUpdateCategory(true)} sx={{ color: "black" }} />
+                    <IconButton aria-label="edit" onClick={() => setOpenUpdateCategory(true)} > 
+                        <Edit sx={{ color: "black" }} />
                     </IconButton>
-                    <IconButton aria-label="delete">
-                        <Delete onClick={() => setOpenDeleteCategory(true)} color="error"/>
+                    <IconButton aria-label="delete" onClick={() => setOpenDeleteCategory(true)} >
+                        <Delete color="error" />
                     </IconButton>
                 </Box>
             </Box> 
