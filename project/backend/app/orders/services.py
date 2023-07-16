@@ -48,17 +48,20 @@ class TableService:
     @staticmethod
     def pay_bill(data):
         table_number = data['table_number']
+        customer_id = data['customer_id']
         redeem = data['redeem']
 
         table = DiningTables.query.filter_by(number=table_number).first()
         order = Orders.query.filter_by(paid=False).filter_by(table=table.number).first()
+        customer = Customers.query.filter_by(id=customer_id).first()
 
         if not order:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
 
         if redeem:
             order.total_amount = order.total_amount * 0.9
-            # TODO: remove points from customer
+            customer.points -= 100
+            
 
         order.paid = True
         table.occupied = False
