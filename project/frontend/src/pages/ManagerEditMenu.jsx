@@ -4,15 +4,11 @@ import { Box, Button } from "@mui/material";
 import { Add } from '@mui/icons-material';
 import AddCategoryPopUp from "../components/AddCategoryPopUp";
 import CategoryListItem from "../components/CategoryListItem";
-import AddItemPopUp from "../components/AddItemPopUp";
 
 function ManagerEditMenu () {
     const [categories, setCategories] = React.useState(useLoaderData());
-    const [activeCategory, setActiveCategory] = React.useState('');
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
    
-
-
     return (
         <Box sx={{
             border: 1,

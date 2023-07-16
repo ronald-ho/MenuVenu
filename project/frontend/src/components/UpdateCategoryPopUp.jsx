@@ -36,7 +36,7 @@ function UpdateCategoryPopUp ({ open, setOpen, category, setCategories }) {
                 open={open}
                 onClose={handleClose}
             >
-                <DialogTitle>{"Update Category"}</DialogTitle>
+                <DialogTitle>Update Category</DialogTitle>
                 <DialogContent>
                     <TextField 
                         label="Update category name"

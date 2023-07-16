@@ -25,7 +25,7 @@ function ItemList() {
     return (
         <>
             <Box sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
-                {items.map((item) => <ItemListItem key={item.item_id} item={item} />)}
+                {items.map((item) => <ItemListItem key={item.item_id} categoryId={params.categoryid} item={item} />)}
             </Box>
             <Box sx={{borderTop: 1}}>
                 <Button 

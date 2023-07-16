@@ -3,20 +3,20 @@ import { apiCall } from "../helpers/helpers";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function AddItemPopUp ({ open, setOpen, categoryId }) {
+function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
     const  navigate = useNavigate();
 
-    const [name, setName] = React.useState('');
-    const [price, setPrice] = React.useState(null);
+    const [name, setName] = React.useState(item.name);
+    const [price, setPrice] = React.useState(item.price);
     const [imageData, setImageData] = React.useState(null);
     const [imageFilename, setImageFilename] = React.useState([]);
-    const [description, setDescription] = React.useState(null);
-    const [calories, setCalories] = React.useState(null);
-    const [pointsToRedeem, setPointsToRedeem] = React.useState(null);
-    const [pointsEarned, setPointsEarned] = React.useState(null);
+    const [description, setDescription] = React.useState(item.description);
+    const [calories, setCalories] = React.useState(item.calories);
+    const [pointsToRedeem, setPointsToRedeem] = React.useState(item.points_to_redeem);
+    const [pointsEarned, setPointsEarned] = React.useState(item.points_earned);
+    let itemIngredients = item.ingredients;
     const [alert, setAlert] = React.useState('');
     const [allIngredients, setAllIngredients] = React.useState([]);
-    let itemIngredients = [];
 
     React.useEffect(() => {
         const getAllIngredients = async () => {
@@ -31,18 +31,13 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
     
     async function handleSubmit(e) {
         e.preventDefault();
-        
-        if (name === "") {
-            setAlert("Please enter an item name");
-            return;
-        }
 
-        if (!price || parseInt(price) === 0) {
+        if (parseInt(price) === 0) {
             setAlert("Please enter a valid price");
             return;
         }
 
-        const newItem = {
+        const updatedItem = {
             'category_id': categoryId,
             'name': name,
             'price': price,
@@ -55,14 +50,14 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
             'ingredients': itemIngredients
         };
 
-        console.log(newItem);
+        console.log(updatedItem);
 
-        const data = await apiCall("menu/item", "POST", newItem);
+        const data = await apiCall("menu/item", "PUT", updatedItem);
         if (data.item) {
             navigate(`/managereditmenu/${categoryId}`);
             handleClose();
             // make feedback alert like assistance?
-            console.log("item successfully added");
+            console.log("item successfully updated");
         } 
         else {
             setAlert(data.message);
@@ -117,24 +112,26 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                 fullWidth
                 maxWidth="xs"
             >
-                <DialogTitle>Add New Item</DialogTitle>
+                <DialogTitle>Update Item</DialogTitle>
                 <form onSubmit={(e) => handleSubmit(e)}>
                 <DialogContent>
                     <Table>
                         <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Name*</Typography></TableCell>
+                            <TableCell sx={labelCellStyle}><Typography>Name</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
                                     onChange={(e) => setName(e.target.value)}
+                                    value={name}
                                     size="small" 
                                     sx={{ width: '254px'}} 
                                 />
                             </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Price*</Typography></TableCell>
+                            <TableCell sx={labelCellStyle}><Typography>Price</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    value={price}
                                     type="number"
                                     inputProps={{
                                         step: 0.01
@@ -152,6 +149,8 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                             <TableCell sx={labelCellStyle}><Typography>Image</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <input 
+                                    // fix this
+                                    value={image} 
                                     onChange={(e) => handleImageInput(e)}
                                     type="file" 
                                     accept="image/jpeg, image/png, image/jpg"
@@ -212,14 +211,23 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                         <TableRow>
                             <TableCell sx={labelCellStyle}><Typography>Dietary tags</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
-                                {allIngredients.map((ingredient, index) => (
-                                    <FormControlLabel 
-                                        key={index}
-                                        onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
-                                        control={<Checkbox />} 
-                                        label={ingredient} 
-                                    />
-                                ))}
+                                {allIngredients.map((ingredient, index) => {
+                                    itemIngredients.includes(ingredient) ? (
+                                        <FormControlLabel 
+                                            key={index}
+                                            onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
+                                            control={<Checkbox defaultChecked />} 
+                                            label={ingredient} 
+                                        />
+                                    ) : (
+                                        <FormControlLabel 
+                                            key={index}
+                                            onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
+                                            control={<Checkbox />} 
+                                            label={ingredient} 
+                                        />
+                                    )
+                                })}
                             </TableCell>
                         </TableRow>
                     </Table>
@@ -235,4 +243,4 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
     )
 }
 
-export default AddItemPopUp;
+export default UpdateItemPopUp;

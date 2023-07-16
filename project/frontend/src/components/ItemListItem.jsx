@@ -2,11 +2,13 @@ import { Box, IconButton, Typography } from "@mui/material";
 import { Delete, DragHandle, Edit } from '@mui/icons-material';
 import React from "react";
 import ItemInfoPopUp from "./ItemInfoPopUp";
+import UpdateItemPopUp from "./UpdateItemPopUp";
 
-function ItemListItem ({ item }) {
+function ItemListItem ({ categoryId, item }) {
     // Maybe add :hover in external stylesheet
     // Make DragHandle clickable
     const [openItemInfo, setOpenItemInfo] = React.useState(false);
+    const [openUpdateItem, setOpenUpdateItem] = React.useState(false);
 
     return (
         <>
@@ -37,7 +39,7 @@ function ItemListItem ({ item }) {
                     <Typography>{item.name}</Typography>
                 </Box>
                 <Box>
-                    <IconButton aria-label="edit"> 
+                    <IconButton aria-label="edit"  onClick={() => setOpenUpdateItem(true)}> 
                         <Edit sx={{ color: "black" }} />
                     </IconButton>
                     <IconButton aria-label="delete">
@@ -46,6 +48,7 @@ function ItemListItem ({ item }) {
                 </Box>
             </Box> 
             {openItemInfo && <ItemInfoPopUp open={openItemInfo} setOpen={setOpenItemInfo} item={item} />}
+            {openUpdateItem && <UpdateItemPopUp open={openUpdateItem} setOpen={setOpenUpdateItem} categoryId={categoryId} item={item} />}
         </>
     )
 }
