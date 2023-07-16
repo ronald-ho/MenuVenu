@@ -32,7 +32,7 @@ function DeleteCategoryPopUp ({ open, setOpen, category, setCategories }) {
                 open={open}
                 onClose={handleClose}
             >
-                <DialogTitle>{"Delete Category"}</DialogTitle>
+                <DialogTitle>Delete Category</DialogTitle>
                 <DialogContent>
                     Are you sure you want to delete the {category.name} category?
                 </DialogContent>

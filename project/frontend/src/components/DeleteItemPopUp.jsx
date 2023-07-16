@@ -29,7 +29,7 @@ function DeleteItemPopUp ({ open, setOpen, categoryId, item }) {
                 open={open}
                 onClose={handleClose}
             >
-                <DialogTitle>"Delete Item"</DialogTitle>
+                <DialogTitle>Delete Item</DialogTitle>
                 <DialogContent>Are you sure you want to delete the {item.name} item?</DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>
