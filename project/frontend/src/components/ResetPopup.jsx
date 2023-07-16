@@ -55,7 +55,7 @@ function ResetPopup({ open, setOpen }) {
         }
         const body = {
             new_password: password,
-            reset_code: code
+            email: email
         }
         const data = await apiCall("auth/reset/password/confirm", "POST", body);
         if (data.status === 400) {
