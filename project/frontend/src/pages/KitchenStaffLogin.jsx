@@ -19,7 +19,7 @@ function KitchenStaffLogin () {
 
         const data = await apiCall("auth/login/staff/kitchen", "POST", body);
 
-        if (data.message === "Staff login successful") {
+        if (data.message === "Kitchen staff login successful") {
             navigate("/kitchen");
         } else {
             setShowAlert(data.message);
