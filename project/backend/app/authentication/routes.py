@@ -4,10 +4,9 @@ from flask import jsonify, request, Blueprint
 
 # Local imports
 from .. import app
-from .services import CustomerService, ResetService
+from .services import CustomerService, ResetService, StaffService, ManagerService
 
 auth = Blueprint('auth', __name__)
-
 
 @auth.route('/register', methods=['POST'])
 def register_customer():
@@ -27,14 +26,14 @@ def login_customer():
 def login_staff():
     data = data_logger(request)
 
-    return CustomerService.login_customer(data)
+    return StaffService.login_staff(data)
 
 
 @auth.route('/login/manager', methods=['POST'])
 def login_manager():
     data = data_logger(request)
 
-    return CustomerService.login_customer(data)
+    return ManagerService.login_manager(data)
 
 
 @auth.route('/logout', methods=['POST'])

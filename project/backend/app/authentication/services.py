@@ -109,8 +109,10 @@ class StaffService:
     def login_staff(data):
         password = data['password']
 
+        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+
         # Check if password is correct
-        if password != Restaurants.staff_password:
+        if not Restaurants.check_staff_password(restaurant, password):
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Staff login successful'})
@@ -121,8 +123,10 @@ class ManagerService:
     def login_manager(data):
         password = data['password']
 
+        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+
         # Check if password is correct
-        if password != Restaurants.manager_password:
+        if not Restaurants.check_manager_password(restaurant, password):
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Manager login successful'})
