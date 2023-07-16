@@ -12,9 +12,11 @@ function ItemListItem ({ categoryId, item }) {
     return (
         <>
             <Box  
+                onClick={() => setOpenItemInfo(true)}
                 sx={{
                     border: 1,
                     borderRadius: "10px",
+                    cursor: "pointer",
                     display: "flex",
                     height: "40px",
                     justifyContent: "space-between",
@@ -32,13 +34,25 @@ function ItemListItem ({ categoryId, item }) {
                     }}
                 >
                     <DragHandle color="secondary" />
-                    <Typography sx={{ "&:hover": { color: "#551b8c", fontWeight: "bold" }, cursor: "pointer" }} onClick={() => setOpenItemInfo(true)}>{item.name}</Typography>
+                    <Typography sx={{ "&:hover": { color: "#551b8c", fontWeight: "bold" }, cursor: "pointer" }} >{item.name}</Typography>
                 </Box>
                 <Box>
-                    <IconButton aria-label="edit"  onClick={() => setOpenUpdateItem(true)}> 
+                    <IconButton 
+                        aria-label="edit"  
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenUpdateItem(true);
+                        }}
+                    > 
                         <Edit sx={{ color: "black" }} />
                     </IconButton>
-                    <IconButton aria-label="delete">
+                    <IconButton 
+                        aria-label="delete"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            // setOpenDeleteItem(true);
+                        }}
+                    >
                         <Delete color="error"/>
                     </IconButton>
                 </Box>
