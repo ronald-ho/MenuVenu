@@ -60,7 +60,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
 
         const data = await apiCall("menu/item", "PUT", updatedItem);
         if (data.status === 200) {
-            navigate(`/managereditmenu/${categoryId}`);
+            // navigate(`/managereditmenu/${categoryId}`);
             handleClose();
             // make feedback alert like assistance?
             console.log("item successfully updated");
