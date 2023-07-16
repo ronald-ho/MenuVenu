@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, Table, TableCell, TableRow, TextField, Typography } from "@mui/material";
+import { Alert, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, Table, TableCell, TableRow, TextField, Typography } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -32,28 +32,34 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        if (parseInt(price) === 0) {
+        if (name === "") {
+            setAlert("Please enter an item name");
+            return;
+        }
+
+        if (!price || parseInt(price) === 0) {
             setAlert("Please enter a valid price");
             return;
         }
 
         const updatedItem = {
+            'id': item.id,
             'category_id': categoryId,
             'name': name,
             'price': price,
-            'image': imageData,
+            'image': imageData === '' ? null : imageData,
             // 'filename' : imageFilename,
-            'description': description,
-            'calories': calories,
-            'points_to_redeem': pointsToRedeem,
-            'points_earned': pointsEarned,
+            'description': description === '' ? null : description,
+            'calories': calories === '' ? null : calories,
+            'points_to_redeem': pointsToRedeem === '' ? null : pointsToRedeem,
+            'points_earned': pointsEarned === '' ? null : pointsEarned,
             'ingredients': itemIngredients
         };
 
         console.log(updatedItem);
 
         const data = await apiCall("menu/item", "PUT", updatedItem);
-        if (data.item) {
+        if (data.status === 200) {
             navigate(`/managereditmenu/${categoryId}`);
             handleClose();
             // make feedback alert like assistance?
@@ -150,7 +156,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
                             <TableCell sx={inputCellStyle}>
                                 <input 
                                     // fix this
-                                    value={image} 
+                                    value={item.image} 
                                     onChange={(e) => handleImageInput(e)}
                                     type="file" 
                                     accept="image/jpeg, image/png, image/jpg"
@@ -161,6 +167,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
                             <TableCell sx={labelCellStyle}><Typography>Description</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     multiline 
                                     size="small" 
@@ -173,6 +180,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
                             <TableCell sx={labelCellStyle}><Typography>Energy</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    value={calories}
                                     type="number"
                                     onChange={(e) => setCalories(e.target.value)}
                                     size="small" 
@@ -186,6 +194,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
                             <TableCell sx={labelCellStyle}><Typography>Redeem using</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    value={pointsToRedeem}
                                     type="number"
                                     onChange={(e) => setPointsToRedeem(e.target.value)}
                                     size="small" 
@@ -199,6 +208,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
                             <TableCell sx={labelCellStyle}><Typography>Buy to earn</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 <TextField 
+                                    value={pointsEarned}
                                     type="number"
                                     onChange={(e) => setPointsEarned(e.target.value)}
                                     size="small" 
@@ -212,7 +222,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
                             <TableCell sx={labelCellStyle}><Typography>Dietary tags</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
                                 {allIngredients.map((ingredient, index) => {
-                                    itemIngredients.includes(ingredient) ? (
+                                    return itemIngredients.includes(ingredient) ? (
                                         <FormControlLabel 
                                             key={index}
                                             onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
@@ -226,7 +236,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
                                             control={<Checkbox />} 
                                             label={ingredient} 
                                         />
-                                    )
+                                    );
                                 })}
                             </TableCell>
                         </TableRow>
@@ -235,7 +245,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item }) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>
-                    <Button type="submit" variant="contained" color="success">Add</Button>
+                    <Button type="submit" variant="contained" color="success">Update</Button>
                 </DialogActions>
                 </form>
             </Dialog>

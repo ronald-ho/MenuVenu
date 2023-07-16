@@ -24,8 +24,6 @@ function ItemListItem ({ categoryId, item }) {
                     padding: "0",
                     width: "43vw"
                 }}
-
-                onClick={() => setOpenItemInfo(true)}
             >
                 <Box 
                     sx={{
@@ -36,7 +34,7 @@ function ItemListItem ({ categoryId, item }) {
                     }}
                 >
                     <DragHandle color="secondary" />
-                    <Typography>{item.name}</Typography>
+                    <Typography  onClick={() => setOpenItemInfo(true)}>{item.name}</Typography>
                 </Box>
                 <Box>
                     <IconButton aria-label="edit"  onClick={() => setOpenUpdateItem(true)}> 
