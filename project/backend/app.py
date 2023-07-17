@@ -14,23 +14,17 @@ from app.menu import routes
 from app.menu.models import Categories, Ingredients, Items
 
 # Restaurant routes and models
-from app.restaurant.models import Restaurants
+from app.restaurant.services import RestaurantService
+from app.orders.services import TableService
+from app.menu.services import IngredientService
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-        if Restaurants.query.count() == 0:
-
-            new_restaurant = Restaurants(
-                name='MenuVenu',
-                phone='0422222222'
-            )
-
-            new_restaurant.set_manager_password('MenuVenu')
-            new_restaurant.set_staff_password('MenuVenu')
-
-            db.session.add(new_restaurant)
+        RestaurantService.create_default_restaurant()
+        TableService.create_default_tables()
+        IngredientService.create_default_ingredients()
 
         db.session.commit()
         

@@ -113,6 +113,18 @@ class TableService:
 
         return jsonify({'status': HTTPStatus.OK, 'table_list': table_list, 'occupied_list': occupied_table_list})
 
+    @staticmethod
+    def create_default_tables():
+        table_count = DiningTables.query.count()
+
+        if table_count < 10:
+            for i in range(table_count + 1, 11):
+                table = DiningTables(
+                    number=i
+                )
+
+                db.session.add(table)
+
 
 class OrderService:
 
