@@ -3,6 +3,7 @@ import { Box, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow
 import AssistReqTableButton from "../components/AssistReqTableButton";
 import ConfirmAssistPopUp from "../components/ConfirmAssistPopUp";
 import { apiCall } from "../helpers/helpers";
+import WaitstaffOrderRow from "../components/WaitstaffOrderRow";
 
 function WaitStaff () {
     // ORDER ITEM READY 
@@ -10,17 +11,18 @@ function WaitStaff () {
     // 2. If waitstaff clicks table in Table no. column, pop up appears confirming whether food served or not
     // 3. If no, do nothing. If yes, send API call to show item was served. Remove item from list
        
-    const [tables, setTables] = React.useState([]);
+    const [tablesToAssist, setTablesToAssist] = React.useState([]);
+    const [orderItemsToServe, setOrderItemsToServe] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
-    const [confirmTable, setConfirmTable] = React.useState();
+    const [confirmTableAssist, setConfirmTableAssist] = React.useState();
 
     React.useEffect(() => {
-        const fetchTablesNeedAssist = async () => {
+        const getTablesNeedAssist = async () => {
             const data = await apiCall("orders/get_assist", "GET", {});
             console.log(data);
             if (data.assistance_list) {
-                setTables(data.assistance_list);
-                console.log(tables);
+                setTablesToAssist(data.assistance_list);
+                console.log(data.assistance_list);
             }
             else {
                 console.log("Failed to fetch tables req assistance");
@@ -28,51 +30,84 @@ function WaitStaff () {
         };
 
         // Check updates every 5 seconds -> can adjust if suitable
-        const interval1 = setInterval(fetchTablesNeedAssist, 5000);
+        const interval1 = setInterval(getTablesNeedAssist, 5000);
 
         return () => clearInterval(interval1);
-    }, [tables]);
+    }, [tablesToAssist]);
+
+    React.useEffect(() => {    
+        const getOrdersToServe = async () => {
+            const data = await apiCall("orders/get_serve_list", "GET", {});
+            console.log(data);
+            if (data.serve_list) {
+                setOrderItemsToServe(data.serve_list);
+                console.log(data.serve_list);
+            }
+            else {
+                console.log("Failed to fetch orders");
+            }
+        };
+
+        // Check updates every 5 seconds -> can adjust if suitable
+        const interval2 = setInterval(getOrdersToServe, 5000);
+
+        return () => clearInterval(interval2);
+    }, [orderItemsToServe]);
+
 
     return (
         <>
-            <Table sx={{ margin: 'auto', maxWidth: 700 }}>
-                <TableHead sx={{ border: 1, borderTop: 0 }}>
-                    <TableRow>
-                        <TableCell sx={{ borderRight: 1, borderBottom: 1 }}><b>ORDER ITEM READY</b></TableCell>
-                        <TableCell sx={{ borderBottom: 1 }}><b>TABLE NO.</b></TableCell>
-                    </TableRow>
-                </TableHead> 
-            </Table>
-            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
+            <Box sx={{border: "1px solid black", borderRadius: "15px", height: "81vh", margin: "10px auto", padding: "10px", width: "70vw"}}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell><b>ORDER ITEM READY</b></TableCell>
+                            <TableCell><b>TABLE #</b></TableCell>
+                            <TableCell><b>CONFIRM SERVE?</b></TableCell>
+                        </TableRow>
+                    </TableHead> 
+                    <TableBody>
+                        {orderItemsToServe.length === 0 ? (
+                            orderItemsToServe.map((orderItem) => 
+                                <WaitstaffOrderRow key={orderItem.ordered_item_id} orderItem={orderItem} />
+                            )
+                        ) : (
+                            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
+                        )}
+                    </TableBody>
+                </Table>
+            </Box>
             <Box
                 sx={{
                     border: 1,
-                    borderTop: 0,
+                    borderRadius: "15px 0 0 15px",
+                    borderRight: 0,
                     fontSize: '15px',
                     position: 'absolute',
+                    margin: '10px 0 0 0',
                     textAlign: 'center',
                     top: '81.6px',
                     right: 0,
                     width: '140px',
-                    height: '85vh',
+                    height: '84vh',
                 }}
             >
                 <Typography sx={{ fontWeight: 'bold', padding: '15px 10px' }}>
                     ASSISTANCE REQUIRED AT
                 </Typography>
                 <Box sx={{ height: '74vh'}}>
-                    {tables.length === 0 ? (
+                    {tablesToAssist.length === 0 ? (
                         <Box>
                             <Typography sx={{ margin: "0 0 35px 0" }}>Waiting for tables</Typography>
                             <CircularProgress />
                         </Box> 
                     ) : (
-                        tables.map((table) => (
+                        tablesToAssist.map((table) => (
                             <AssistReqTableButton 
                                 key={table} 
                                 handleClick={() => {
                                     setShowConfirmAssist(true);
-                                    setConfirmTable(table);
+                                    setConfirmTableAssist(table);
                                 }}
                                 tableNo={table}
                             >
@@ -81,7 +116,7 @@ function WaitStaff () {
                     )}
                 </Box>
             </Box>
-            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTables={setTables}/>}
+            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTableAssist} setTablesToAssist={setTablesToAssist}/>}
         </>
     );
 }
