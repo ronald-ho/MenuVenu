@@ -61,7 +61,6 @@ class TableService:
         if redeem:
             order.total_amount = order.total_amount * 0.9
             customer.points -= 100
-            
 
         order.paid = True
         table.occupied = False
@@ -186,7 +185,7 @@ class OrderService:
 
     @staticmethod
     def get_ordered_items(data):
-        table_id = data['table_id']
+        table_id = data['table']
 
         # get current order associated with table
         order = Orders.query.filter_by(paid=False).filter_by(table=table_id).first()
