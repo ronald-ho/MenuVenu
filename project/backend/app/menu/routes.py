@@ -1,7 +1,7 @@
 from flask import request, Blueprint
 
 from .models import Items, Categories
-from .services import ItemService, CategoryService, MenuService
+from .services import ItemService, CategoryService, MenuService, IngredientService
 from .. import app
 
 menu = Blueprint('menu', __name__)
@@ -88,7 +88,7 @@ def update_category_details():
 def get_item_ingredients():
     app.logger.info("Getting item ingredients from database")
 
-    return MenuService.get_all_ingredients()
+    return IngredientService.get_all_ingredients()
 
 
 def data_logger(request):

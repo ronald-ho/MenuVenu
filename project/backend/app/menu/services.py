@@ -15,7 +15,7 @@ class ItemService:
     @staticmethod
     def create_new_item(data):
 
-        item_name = data['name']
+        item_name = data['name'].capitalize()
         ingredients = data['ingredients']
 
         item = Items.query.filter_by(name=item_name).first()
@@ -40,6 +40,7 @@ class ItemService:
         db.session.commit()
 
         for ingredient in ingredients:
+            ingredient = ingredient.capitalize()
             ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
             if not ingredient_entity:
                 ingredient_entity = Ingredients(name=ingredient)
@@ -121,7 +122,7 @@ class CategoryService:
     @staticmethod
     def create_new_category(data):
 
-        category_name = data['name']
+        category_name = data['name'].capitalize()
 
         category = Categories.query.filter_by(name=category_name).first()
         if category:
@@ -171,11 +172,30 @@ class CategoryService:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
         items = category.items
-        
+
         # Order items by position key
         items_list = sorted([item.to_dict() for item in items], key=lambda x: x['position'])
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Items found', 'items': items_list})
+
+
+class IngredientService:
+    @staticmethod
+    def create_default_ingredients():
+        ingredient_list = ['Beef', 'Chicken', 'Pork', 'Lamb', 'Seafood', 'Nuts', 'Dairy', 'Spicy', 'Gluten']
+
+        for ingredient in ingredient_list:
+            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
+            if not ingredient_entity:
+                ingredient_entity = Ingredients(name=ingredient)
+                db.session.add(ingredient_entity)
+
+    @staticmethod
+    def get_all_ingredients():
+        ingredients = Ingredients.query.all()
+        ingredients_list = [ingredient.name for ingredient in ingredients]
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Ingredients found', 'ingredients': ingredients_list})
 
 
 class MenuService:
@@ -219,13 +239,6 @@ class MenuService:
         db.session.commit()
 
         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} deleted successfully'})
-
-    @staticmethod
-    def get_all_ingredients():
-        ingredients = Ingredients.query.all()
-        ingredients_list = [ingredient.name for ingredient in ingredients]
-
-        return jsonify({'status': HTTPStatus.OK, 'message': 'Ingredients found', 'ingredients': ingredients_list})
 
     @staticmethod
     def get_next_position(entity):
