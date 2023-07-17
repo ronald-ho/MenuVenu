@@ -1,3 +1,5 @@
+import base64
+import mimetypes
 from dataclasses import dataclass
 
 from .. import db
@@ -43,11 +45,17 @@ class Items(db.Model):
     ingredients = db.relationship('Ingredients', secondary='item_ingredient', back_populates='items')
 
     def to_dict(self):
+        image_path = self.image
+        with open(image_path, "rb") as image_file:
+            encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+
+        mime_type = mimetypes.guess_type(image_path)[0]
+
         return {
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'image': self.image,
+            'image': f'data:{mime_type};base64,{encoded_image}',
             'price': self.price,
             'category_id': self.category,
             'calories': self.calories,
