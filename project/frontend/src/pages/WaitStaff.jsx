@@ -9,11 +9,6 @@ function WaitStaff () {
     // 1. Poll for new items to be served and show in table
     // 2. If waitstaff clicks table in Table no. column, pop up appears confirming whether food served or not
     // 3. If no, do nothing. If yes, send API call to show item was served. Remove item from list
-
-    // ASSISTANCE REQUIRED
-    // 1. Poll for tables needing assistance and show in the column
-    // 2. If waitstaff clicks table in column, pop up appears confirming whether assisted or not
-    // 3. If no, do nothing. If yes, send API call to show table has been assisted. Remove table from the column
        
     const [tables, setTables] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
@@ -74,13 +69,12 @@ function WaitStaff () {
                                 setConfirmTable(table);
                             }}
                             tableNo={table}
-                            setTables={setTables}
                         >
                         </AssistReqTableButton>
                     ))}
                 </Box>
             </Box>
-            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTableNo={setConfirmTable}/>}
+            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTables={setTables}/>}
         </>
     );
 }
