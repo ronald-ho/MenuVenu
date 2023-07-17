@@ -1,6 +1,11 @@
+import base64
+import hashlib
+import logging
+import os
 from http import HTTPStatus
 
 from flask import jsonify
+from werkzeug.utils import secure_filename
 
 from .models import Items, Categories, Ingredients
 from .. import db
@@ -10,17 +15,19 @@ class ItemService:
     @staticmethod
     def create_new_item(data):
 
-        item_name = data['name']
+        item_name = data['name'].capitalize()
         ingredients = data['ingredients']
 
         item = Items.query.filter_by(name=item_name).first()
         if item:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
 
+        image_path = ItemService.decode_image(item_name, data['image'])
+
         new_item = Items(
             name=item_name,
             description=data['description'],
-            image=data['image'],
+            image=image_path,
             price=data['price'],
             category=data['category_id'],
             calories=data['calories'],
@@ -33,6 +40,7 @@ class ItemService:
         db.session.commit()
 
         for ingredient in ingredients:
+            ingredient = ingredient.capitalize()
             ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
             if not ingredient_entity:
                 ingredient_entity = Ingredients(name=ingredient)
@@ -59,9 +67,11 @@ class ItemService:
         if name_check and name_check.id != item.id:
             return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Item name already exists'})
 
+        image_path = ItemService.decode_image(item.name, data['image'])
+
         item.name = data["name"]
         item.description = data["description"]
-        item.image = data["image"]
+        item.image = image_path
         item.price = data["price"]
         item.category = data["category_id"]
         item.calories = data["calories"]
@@ -81,12 +91,38 @@ class ItemService:
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
 
+    @staticmethod
+    def decode_image(item_name, image_data):
+        image_format, image_string = image_data.split(';base64,')
+        ext = image_format.split('/')[-1]
+
+        decoded_image = base64.b64decode(image_string)
+        dir_path = os.path.dirname(__file__)
+        image_directory = os.path.join(dir_path, 'images')
+        image_path = os.path.join(image_directory, secure_filename(f"{item_name}.{ext}"))
+
+        # if image already exists, compare the two images
+        if os.path.isfile(image_path):
+            new_image_hash = hashlib.sha256(decoded_image).hexdigest()
+            with open(image_path, 'rb') as f:
+                existing_image = f.read()
+                existing_image_hash = hashlib.sha256(existing_image).hexdigest()
+
+            # if the two images are the same, return the existing image path
+            if existing_image_hash == new_image_hash:
+                return image_path
+
+        with open(image_path, 'wb') as f:
+            f.write(decoded_image)
+
+        return image_path
+
 
 class CategoryService:
     @staticmethod
     def create_new_category(data):
 
-        category_name = data['name']
+        category_name = data['name'].capitalize()
 
         category = Categories.query.filter_by(name=category_name).first()
         if category:
@@ -136,11 +172,30 @@ class CategoryService:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Category not found'})
 
         items = category.items
-        
+
         # Order items by position key
         items_list = sorted([item.to_dict() for item in items], key=lambda x: x['position'])
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Items found', 'items': items_list})
+
+
+class IngredientService:
+    @staticmethod
+    def create_default_ingredients():
+        ingredient_list = ['Beef', 'Chicken', 'Pork', 'Lamb', 'Seafood', 'Nuts', 'Dairy', 'Spicy', 'Gluten']
+
+        for ingredient in ingredient_list:
+            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
+            if not ingredient_entity:
+                ingredient_entity = Ingredients(name=ingredient)
+                db.session.add(ingredient_entity)
+
+    @staticmethod
+    def get_all_ingredients():
+        ingredients = Ingredients.query.all()
+        ingredients_list = [ingredient.name for ingredient in ingredients]
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Ingredients found', 'ingredients': ingredients_list})
 
 
 class MenuService:
@@ -184,13 +239,6 @@ class MenuService:
         db.session.commit()
 
         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} deleted successfully'})
-
-    @staticmethod
-    def get_all_ingredients():
-        ingredients = Ingredients.query.all()
-        ingredients_list = [ingredient.name for ingredient in ingredients]
-
-        return jsonify({'status': HTTPStatus.OK, 'message': 'Ingredients found', 'ingredients': ingredients_list})
 
     @staticmethod
     def get_next_position(entity):

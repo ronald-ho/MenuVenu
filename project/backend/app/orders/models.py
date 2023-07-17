@@ -17,7 +17,9 @@ class DiningTables(db.Model):
     def to_dict(self):
         return {
             'table_id': self.id,
-            'table_number': self.number
+            'table_number': self.number,
+            'assistance': self.assistance,
+            'occupied': self.occupied
         }
 
 

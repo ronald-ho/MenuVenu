@@ -61,7 +61,6 @@ class TableService:
         if redeem:
             order.total_amount = order.total_amount * 0.9
             customer.points -= 100
-            
 
         order.paid = True
         table.occupied = False
@@ -112,6 +111,18 @@ class TableService:
         occupied_table_list = [table.number for table in occupied_tables]
 
         return jsonify({'status': HTTPStatus.OK, 'table_list': table_list, 'occupied_list': occupied_table_list})
+
+    @staticmethod
+    def create_default_tables():
+        table_count = DiningTables.query.count()
+
+        if table_count < 10:
+            for i in range(table_count + 1, 11):
+                table = DiningTables(
+                    number=i
+                )
+
+                db.session.add(table)
 
 
 class OrderService:
@@ -174,7 +185,7 @@ class OrderService:
 
     @staticmethod
     def get_ordered_items(data):
-        table_id = data['table_id']
+        table_id = data['table']
 
         # get current order associated with table
         order = Orders.query.filter_by(paid=False).filter_by(table=table_id).first()
