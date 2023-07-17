@@ -15,24 +15,6 @@ function WaitStaff () {
     // 2. If waitstaff clicks table in column, pop up appears confirming whether assisted or not
     // 3. If no, do nothing. If yes, send API call to show table has been assisted. Remove table from the column
        
-    TablesReqAssistPolling();
-
-    return (
-        <>
-            <Table sx={{ margin: 'auto', maxWidth: 700 }}>
-                <TableHead sx={{ border: 1, borderTop: 0 }}>
-                    <TableRow>
-                        <TableCell sx={{ borderRight: 1, borderBottom: 1 }}><b>ORDER ITEM READY</b></TableCell>
-                        <TableCell sx={{ borderBottom: 1 }}><b>TABLE NO.</b></TableCell>
-                    </TableRow>
-                </TableHead> 
-            </Table>
-            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
-        </>
-    );
-}
-
-export const TablesReqAssistPolling = () => {
     const [tableData, setTableData] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
     const [confirmTable, setConfirmTable] = React.useState();
@@ -44,7 +26,7 @@ export const TablesReqAssistPolling = () => {
             console.log(data);
             if (data.assistance_list) {
                 setTableData(data.assistance_list);
-                console.log(tableData.length)
+                console.log(tableData)
             }
             else {
                 console.log("Failed to fetch tables req assistance");
@@ -59,6 +41,15 @@ export const TablesReqAssistPolling = () => {
 
     return (
         <>
+            <Table sx={{ margin: 'auto', maxWidth: 700 }}>
+                <TableHead sx={{ border: 1, borderTop: 0 }}>
+                    <TableRow>
+                        <TableCell sx={{ borderRight: 1, borderBottom: 1 }}><b>ORDER ITEM READY</b></TableCell>
+                        <TableCell sx={{ borderBottom: 1 }}><b>TABLE NO.</b></TableCell>
+                    </TableRow>
+                </TableHead> 
+            </Table>
+            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
             <Box
                 sx={{
                     border: 1,
@@ -76,23 +67,22 @@ export const TablesReqAssistPolling = () => {
                     ASSISTANCE REQUIRED AT
                 </Typography>
                 <Box sx={{ height: '74vh', overflow: 'auto' }}>
-                    {tableData.length !== 0 && tableData.map((table) => (
-                            <AssistReqTableButton 
-                                key={table.table_id} 
-                                handleClick={() => {
-                                    setShowConfirmAssist(true);
-                                    setConfirmTable(table.table_number);
-                                }}
-                                tableNo={table.table_number}
-                            >
-                            </AssistReqTableButton>
-                        ))
-                    }
+                    {tableData && tableData.map((table) => (
+                        <AssistReqTableButton 
+                            key={table} 
+                            handleClick={() => {
+                                setShowConfirmAssist(true);
+                                setConfirmTable(table);
+                            }}
+                            tableNo={table}
+                        >
+                        </AssistReqTableButton>
+                    ))}
                 </Box>
             </Box>
             {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTableNo={setConfirmTable}/>}
         </>
     );
-};
+}
 
 export default WaitStaff;

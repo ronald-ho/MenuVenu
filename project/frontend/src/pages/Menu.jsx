@@ -19,6 +19,7 @@ function Menu () {
     const table = localStorage.getItem("mvtable"); 
 
     async function handleCallStaff () {
+        console.log(table);
         const data = await apiCall('orders/req_assist', 'POST', { 'table_number': table });
         console.log(data);
         if (data.message === 'Assistance requested') {

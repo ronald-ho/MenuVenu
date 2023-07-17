@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import React from "react";
-import { TablesReqAssistPolling } from "../pages/WaitStaff";
 import { apiCall } from "../helpers/helpers";
 
 function ConfirmAssistPopUp ({ open, setOpen, tableNo, setTableNo }) {
