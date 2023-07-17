@@ -15,18 +15,17 @@ function WaitStaff () {
     // 2. If waitstaff clicks table in column, pop up appears confirming whether assisted or not
     // 3. If no, do nothing. If yes, send API call to show table has been assisted. Remove table from the column
        
-    const [tableData, setTableData] = React.useState([]);
+    const [tables, setTables] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
     const [confirmTable, setConfirmTable] = React.useState();
 
     React.useEffect(() => {
-        const fetchTableData = async () => {
-            // Make API call to fetch tables requiring assistance
+        const fetchTablesNeedAssist = async () => {
             const data = await apiCall("orders/get_assist", "GET", {});
             console.log(data);
             if (data.assistance_list) {
-                setTableData(data.assistance_list);
-                console.log(tableData)
+                setTables(data.assistance_list);
+                console.log(tables);
             }
             else {
                 console.log("Failed to fetch tables req assistance");
@@ -34,7 +33,7 @@ function WaitStaff () {
         };
 
         // Check updates every 5 seconds -> can adjust if suitable
-        const interval1 = setInterval(fetchTableData, 5000);
+        const interval1 = setInterval(fetchTablesNeedAssist, 5000);
 
         return () => clearInterval(interval1);
     }, []);
@@ -67,7 +66,7 @@ function WaitStaff () {
                     ASSISTANCE REQUIRED AT
                 </Typography>
                 <Box sx={{ height: '74vh', overflow: 'auto' }}>
-                    {tableData && tableData.map((table) => (
+                    {tables && tables.map((table) => (
                         <AssistReqTableButton 
                             key={table} 
                             handleClick={() => {
@@ -75,6 +74,7 @@ function WaitStaff () {
                                 setConfirmTable(table);
                             }}
                             tableNo={table}
+                            setTables={setTables}
                         >
                         </AssistReqTableButton>
                     ))}
