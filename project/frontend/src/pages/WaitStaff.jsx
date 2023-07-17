@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import AssistReqTableButton from "../components/AssistReqTableButton";
 import ConfirmAssistPopUp from "../components/ConfirmAssistPopUp";
 import { apiCall } from "../helpers/helpers";
@@ -9,24 +9,18 @@ function WaitStaff () {
     // 1. Poll for new items to be served and show in table
     // 2. If waitstaff clicks table in Table no. column, pop up appears confirming whether food served or not
     // 3. If no, do nothing. If yes, send API call to show item was served. Remove item from list
-
-    // ASSISTANCE REQUIRED
-    // 1. Poll for tables needing assistance and show in the column
-    // 2. If waitstaff clicks table in column, pop up appears confirming whether assisted or not
-    // 3. If no, do nothing. If yes, send API call to show table has been assisted. Remove table from the column
        
-    const [tableData, setTableData] = React.useState([]);
+    const [tables, setTables] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
     const [confirmTable, setConfirmTable] = React.useState();
 
     React.useEffect(() => {
-        const fetchTableData = async () => {
-            // Make API call to fetch tables requiring assistance
+        const fetchTablesNeedAssist = async () => {
             const data = await apiCall("orders/get_assist", "GET", {});
             console.log(data);
             if (data.assistance_list) {
-                setTableData(data.assistance_list);
-                console.log(tableData)
+                setTables(data.assistance_list);
+                console.log(tables);
             }
             else {
                 console.log("Failed to fetch tables req assistance");
@@ -34,10 +28,10 @@ function WaitStaff () {
         };
 
         // Check updates every 5 seconds -> can adjust if suitable
-        const interval1 = setInterval(fetchTableData, 5000);
+        const interval1 = setInterval(fetchTablesNeedAssist, 5000);
 
         return () => clearInterval(interval1);
-    }, []);
+    }, [tables]);
 
     return (
         <>
@@ -66,21 +60,28 @@ function WaitStaff () {
                 <Typography sx={{ fontWeight: 'bold', padding: '15px 10px' }}>
                     ASSISTANCE REQUIRED AT
                 </Typography>
-                <Box sx={{ height: '74vh', overflow: 'auto' }}>
-                    {tableData && tableData.map((table) => (
-                        <AssistReqTableButton 
-                            key={table} 
-                            handleClick={() => {
-                                setShowConfirmAssist(true);
-                                setConfirmTable(table);
-                            }}
-                            tableNo={table}
-                        >
-                        </AssistReqTableButton>
-                    ))}
+                <Box sx={{ height: '74vh'}}>
+                    {tables.length === 0 ? (
+                        <Box>
+                            <Typography sx={{ margin: "0 0 35px 0" }}>Waiting for tables</Typography>
+                            <CircularProgress />
+                        </Box> 
+                    ) : (
+                        tables.map((table) => (
+                            <AssistReqTableButton 
+                                key={table} 
+                                handleClick={() => {
+                                    setShowConfirmAssist(true);
+                                    setConfirmTable(table);
+                                }}
+                                tableNo={table}
+                            >
+                            </AssistReqTableButton>
+                        )) 
+                    )}
                 </Box>
             </Box>
-            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTableNo={setConfirmTable}/>}
+            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTables={setTables}/>}
         </>
     );
 }
