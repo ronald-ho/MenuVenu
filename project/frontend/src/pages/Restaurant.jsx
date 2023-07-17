@@ -9,12 +9,14 @@ function Restaurant () {
         <>
         <div style={{textAlign: 'center'}}>
             <Typography>I am a...</Typography>
+        </div>
+        <div style={{textAlign: 'center', marginTop: '30px'}}>
             <Box sx={{ display: 'inline-flex', justifyContent: 'center', gap: '30px' }}>
-                <Button component={Link} to="/customerselect" variant="contained" size="large" sx={{width: "200px", color: "white"}}>
-                    <FaceIcon sx={{mr: 2, fontSize: 30}} />
+                <Button component={Link} to="/customerselect" variant="contained" size="large" sx={{width: '300px'}}>
+                    <FaceIcon sx={{mr: 1, fontSize: 30}} />
                     <Typography>Customer</Typography>
                 </Button>
-                <Button component={Link} to="/staffselect" variant="contained" size="large" sx={{width: "200px", color: "white"}}>
+                <Button component={Link} to="/staffselect" variant="contained" size="large" sx={{width: '300px'}}>
                     <SoupKitchenIcon sx={{mr: 1, fontSize: 30}} />
                     <Typography>Staff Member</Typography>
                 </Button>
