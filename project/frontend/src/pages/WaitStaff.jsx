@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import AssistReqTableButton from "../components/AssistReqTableButton";
 import ConfirmAssistPopUp from "../components/ConfirmAssistPopUp";
 import { apiCall } from "../helpers/helpers";
@@ -31,7 +31,7 @@ function WaitStaff () {
         const interval1 = setInterval(fetchTablesNeedAssist, 5000);
 
         return () => clearInterval(interval1);
-    }, []);
+    }, [tables]);
 
     return (
         <>
@@ -60,18 +60,25 @@ function WaitStaff () {
                 <Typography sx={{ fontWeight: 'bold', padding: '15px 10px' }}>
                     ASSISTANCE REQUIRED AT
                 </Typography>
-                <Box sx={{ height: '74vh', overflow: 'auto' }}>
-                    {tables && tables.map((table) => (
-                        <AssistReqTableButton 
-                            key={table} 
-                            handleClick={() => {
-                                setShowConfirmAssist(true);
-                                setConfirmTable(table);
-                            }}
-                            tableNo={table}
-                        >
-                        </AssistReqTableButton>
-                    ))}
+                <Box sx={{ height: '74vh'}}>
+                    {tables.length === 0 ? (
+                        <Box>
+                            <Typography sx={{ margin: "0 0 35px 0" }}>Waiting for tables</Typography>
+                            <CircularProgress />
+                        </Box> 
+                    ) : (
+                        tables.map((table) => (
+                            <AssistReqTableButton 
+                                key={table} 
+                                handleClick={() => {
+                                    setShowConfirmAssist(true);
+                                    setConfirmTable(table);
+                                }}
+                                tableNo={table}
+                            >
+                            </AssistReqTableButton>
+                        )) 
+                    )}
                 </Box>
             </Box>
             {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTables={setTables}/>}
