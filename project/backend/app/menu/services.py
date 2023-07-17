@@ -1,6 +1,11 @@
+import base64
+import hashlib
+import logging
+import os
 from http import HTTPStatus
 
 from flask import jsonify
+from werkzeug.utils import secure_filename
 
 from .models import Items, Categories, Ingredients
 from .. import db
@@ -17,10 +22,12 @@ class ItemService:
         if item:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
 
+        image_path = ItemService.decode_image(item_name, data['image'])
+
         new_item = Items(
             name=item_name,
             description=data['description'],
-            image=data['image'],
+            image=image_path,
             price=data['price'],
             category=data['category_id'],
             calories=data['calories'],
@@ -59,9 +66,11 @@ class ItemService:
         if name_check and name_check.id != item.id:
             return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Item name already exists'})
 
+        image_path = ItemService.decode_image(item.name, data['image'])
+
         item.name = data["name"]
         item.description = data["description"]
-        item.image = data["image"]
+        item.image = image_path
         item.price = data["price"]
         item.category = data["category_id"]
         item.calories = data["calories"]
@@ -80,6 +89,32 @@ class ItemService:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Item found', 'item': item.to_dict()})
+
+    @staticmethod
+    def decode_image(item_name, image_data):
+        image_format, image_string = image_data.split(';base64,')
+        ext = image_format.split('/')[-1]
+
+        decoded_image = base64.b64decode(image_string)
+        dir_path = os.path.dirname(__file__)
+        image_directory = os.path.join(dir_path, 'images')
+        image_path = os.path.join(image_directory, secure_filename(f"{item_name}.{ext}"))
+
+        # if image already exists, compare the two images
+        if os.path.isfile(image_path):
+            new_image_hash = hashlib.sha256(decoded_image).hexdigest()
+            with open(image_path, 'rb') as f:
+                existing_image = f.read()
+                existing_image_hash = hashlib.sha256(existing_image).hexdigest()
+
+            # if the two images are the same, return the existing image path
+            if existing_image_hash == new_image_hash:
+                return image_path
+
+        with open(image_path, 'wb') as f:
+            f.write(decoded_image)
+
+        return image_path
 
 
 class CategoryService:
