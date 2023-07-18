@@ -16,6 +16,9 @@ class AssistService:
         table_number = data['table_number']
         table = DiningTables.query.filter_by(number=table_number).first()
 
+        if not table:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
+
         if table.assistance:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Assistance already requested'})
         else:
@@ -27,6 +30,9 @@ class AssistService:
     def finish_assist(data):
         table_number = data['table_number']
         table = DiningTables.query.filter_by(number=table_number).first()
+
+        if not table:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
 
         if not table.assistance:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table did not need assistance'})
@@ -52,15 +58,27 @@ class TableService:
         redeem = data['redeem']
 
         table = DiningTables.query.filter_by(number=table_number).first()
+
+        if not table:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
+
         order = Orders.query.filter_by(paid=False).filter_by(table=table.number).first()
         customer = Customers.query.filter_by(id=customer_id).first()
 
         if not order:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
 
+        #if they redeem, apply discount and remove points
         if redeem:
             order.total_amount = order.total_amount * 0.9
             customer.points -= 100
+
+        #customers earn 1 point per dollar
+        order.points_earned += int(order.total_amount)
+
+        #add points if they are a member
+        if customer:
+            customer.points += order.points_earned
 
         order.paid = True
         table.occupied = False
@@ -73,6 +91,10 @@ class TableService:
         table_number = data['table_number']
 
         table = DiningTables.query.filter_by(number=table_number).first()
+
+        if not table:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
+
         order = Orders.query.filter_by(paid=False).filter_by(table=table.number).first()
 
         if not order:
@@ -86,12 +108,16 @@ class TableService:
 
         table = DiningTables.query.filter_by(number=table_number).first()
 
+        if not table:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
+
         # creates a new order for table if it was not occupied yet
         if not table.occupied:
             new_order = Orders(
                 table=table.number,
                 order_date=datetime.now(),
                 total_amount=0,
+                points_earned=0,
                 paid=False
             )
 
@@ -138,26 +164,27 @@ class OrderService:
         order = Orders.query.filter_by(paid=False).filter_by(table=table_id).first()
         customer = Customers.query.filter_by(id=customer_id).first()
 
-        # add cost of item to order total if customer did not redeem points and add any points earnable
-        #==========================================================#
-        #===== FIX THIS LATER, NEED TO ACCOMMODATE FOR GUESTS =====#
-        #==========================================================#
-        if customer:
-            if not redeem:
-                order.total_amount = order.total_amount + item.price
-                customer.points += item.points_earned
+        if not item:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item does not exist'})
+        
+        if not order:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
 
-            # reduce points from customer total if customer did redeem points and has enough points (customers cannot
-            # earn points if using points purchase)
+        # add cost of item to order total if customer did not redeem points and add any points earnable
+        if not redeem:
+            order.total_amount += item.price
+            order.points_earned += item.points_earned
+
+        # reduce points from customer total if customer did redeem points and has enough points (customers cannot
+        # earn points if using points purchase)
+        else:
+            if customer.points > item.points_to_redeem:
+                customer.points -= item.points_to_redeem
             else:
-                if customer.points > item.points_to_redeem:
-                    customer.points -= item.points_to_redeem
-                else:
-                    return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
+                return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
 
         new_ordered_item = OrderedItems(
             order=order.id,
-            customer=data['customer_id'],
             order_time=datetime.now(),
             item=item.id
         )
@@ -173,7 +200,7 @@ class OrderService:
 
         ordered_item = OrderedItems.query.filter_by(id=ordered_item_id).first()
 
-        if ordered_item.prepared:
+        if not ordered_item or ordered_item.prepared:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Ordered item not in kitchen list'})
         else:
             ordered_item.prepared = True
@@ -216,7 +243,7 @@ class OrderService:
 
         ordered_item = OrderedItems.query.filter_by(id=ordered_item_id).first()
 
-        if ordered_item.served:
+        if not ordered_item or ordered_item.served:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Served item not in serve list'})
         else:
             ordered_item.served = True
