@@ -2,12 +2,18 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import React from "react";
 import { apiCall } from "../helpers/helpers";
 
-function ConfirmServePopUp ({ open, setOpen, orderItem }) {
+function ConfirmServePopUp ({ open, setOpen, orderItem, setOrderItemsToServe }) {
     async function handleConfirm() {
         const data = await apiCall('/orders/waitstaff/served', "POST", { 'ordered_item_id' : orderItem.ordered_item_id });
         console.log(data);
         if (data.status === 200) {
-            handleClose();
+            const response = await apiCall("/orders/get_serve_list", "GET", {});
+            console.log(data);
+            if (response.serve_list) {
+                setOrderItemsToServe(response.serve_list);
+                console.log(response.serve_list);
+                handleClose();
+            }   
         }
         else {
             console.log("Failed to serve");

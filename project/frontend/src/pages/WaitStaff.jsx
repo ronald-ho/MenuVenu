@@ -13,7 +13,7 @@ function WaitStaff () {
 
     React.useEffect(() => {
         const getTablesNeedAssist = async () => {
-            const data = await apiCall("orders/get_assist", "GET", {});
+            const data = await apiCall("/orders/get_assist", "GET", {});
             console.log(data);
             if (data.assistance_list) {
                 setTablesToAssist(data.assistance_list);
@@ -31,7 +31,7 @@ function WaitStaff () {
 
     React.useEffect(() => {    
         const getOrdersToServe = async () => {
-            const data = await apiCall("orders/get_serve_list", "GET", {});
+            const data = await apiCall("/orders/get_serve_list", "GET", {});
             console.log(data);
             if (data.serve_list) {
                 setOrderItemsToServe(data.serve_list);
@@ -46,7 +46,6 @@ function WaitStaff () {
 
         return () => clearInterval(interval2);
     }, [orderItemsToServe]);
-
 
     return (
         <>
@@ -71,10 +70,16 @@ function WaitStaff () {
                         </TableHead> 
                         <TableBody>
                             {orderItemsToServe.length === 0 ? (
-                                <Typography sx={{textAlign: 'center'}}>Waiting for orders to serve</Typography>
+                                <TableRow>
+                                    <TableCell sx={{ border: 0 }}></TableCell>
+                                    <TableCell sx={{ border: 0 }}>
+                                        <Typography sx={{margin: 'auto', textAlign: 'center'}}>Waiting for orders to serve</Typography>
+                                    </TableCell> 
+                                    <TableCell sx={{ border: 0 }}></TableCell>
+                                </TableRow>
                             ) : (
                                 orderItemsToServe.map((orderItem) => 
-                                    <WaitstaffOrderRow key={orderItem.ordered_item_id} orderItem={orderItem} />
+                                    <WaitstaffOrderRow key={orderItem.ordered_item_id} orderItem={orderItem} setOrderItemsToServe={setOrderItemsToServe}/>
                                 )
                             )}
                         </TableBody>

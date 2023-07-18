@@ -4,7 +4,7 @@ import { Button, TableCell, TableRow } from '@mui/material';
 import { Check } from '@mui/icons-material';
 import ConfirmServePopUp from './ConfirmServePopUp';
 
-function WaitstaffOrderRow ({ orderItem }) {
+function WaitstaffOrderRow ({ orderItem, setOrderItemsToServe }) {
     const [openConfirmServe, setOpenConfirmServe] = React.useState(false);
 
     return (
@@ -16,7 +16,7 @@ function WaitstaffOrderRow ({ orderItem }) {
                     <Button variant='text' onClick={() => setOpenConfirmServe(true)}>SERVE ITEM<Check/></Button>
                 </TableCell>
             </TableRow>
-            {openConfirmServe && <ConfirmServePopUp open={openConfirmServe} setOpen={setOpenConfirmServe} orderItem={orderItem} />}
+            {openConfirmServe && <ConfirmServePopUp open={openConfirmServe} setOpen={setOpenConfirmServe} orderItem={orderItem} setOrderItemsToServe={setOrderItemsToServe} />}
         </>
     );
 }
