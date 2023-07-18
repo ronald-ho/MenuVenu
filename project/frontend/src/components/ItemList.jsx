@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import ItemListItem from "./ItemListItem";
 import { get_items } from "../helpers/loaderfunctions";
 import AddItemPopUp from "./AddItemPopUp";
+import { DragDropContext, Draggable } from "react-beautiful-dnd";
 
 function ItemList() {
     const params = useParams();
@@ -21,11 +22,43 @@ function ItemList() {
         getItems();
     }, [params]);
 
+    async function newposition(result) {
+        if (!result.destination) {
+            return;
+        }
+        const newitems = Array.from(items);
+        const [draggeditem] = newitems.splice(result.source.index, 1);
+        const body = {
+            "item_id": draggeditem.item_id,
+            "new_position": result.destination.index+1
+        }
+        const result1 = await apiCall("menu/item/position", "PUT", body);
+        if (result1.status != 200) {
+            console.log("bruh");
+        }
+        const result2 = await get_items(params);
+        if (result2.status != 200) {
+            console.log("wtf");
+        } else {
+            setItems(result2);
+        }
+    }
+ 
     return (
         <>
-            <Box sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
-                {items.map((item) => <ItemListItem key={item.item_id} categoryId={params.categoryid} item={item} />)}
-            </Box>
+            <DragDropContext onDragEnd={newposition}>
+            <Droppable droppableId="items">
+                {(provided) => (<Box {...provided.droppableProps} ref={provided.innerRef} sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
+                    {items.map((item, index) => 
+                    <Draggable key={item.item_id} draggableId={item.item_id.toString()} index={index}>
+                        {(provided) => <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <ItemListItem categoryId={params.categoryid} item={item} />
+                        </div>}
+                    </Draggable>)}
+                    {provided.placeholder}
+                </Box>)}
+            </Droppable>
+            </DragDropContext>
             <Box sx={{borderTop: 1}}>
                 <Button 
                     onClick={() => {
