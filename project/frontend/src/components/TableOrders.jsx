@@ -18,7 +18,7 @@ function TableOrders({ trigger }) {
     }, [trigger]);
 
     return (
-        <Box sx={{border: "1px solid black", padding: "5px", margin: "5px"}}>
+        <Box sx={{border: "1px solid black", padding: "10px", margin: "5px", overflow: "auto", borderRadius: "10px"}}>
             <Typography variant="h3">Table {table}</Typography>
             <Table>
                 <TableHead>

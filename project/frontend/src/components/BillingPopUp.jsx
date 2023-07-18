@@ -63,7 +63,7 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
                     {customerId !== null && 
                         <>
                             <DialogContentText>You have earned {pointsearned} MV points.</DialogContentText>
-                            <DialogContentText>Your new balance will be {curpoints} MV points.</DialogContentText>
+                            <DialogContentText>Your new balance will be {curpoints+pointsearned} MV points.</DialogContentText>
                         </>
                     }
                     <DialogContentText>Please proceed to the front counter.</DialogContentText>
