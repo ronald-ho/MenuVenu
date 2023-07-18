@@ -139,17 +139,21 @@ class OrderService:
         customer = Customers.query.filter_by(id=customer_id).first()
 
         # add cost of item to order total if customer did not redeem points and add any points earnable
-        if not redeem:
-            order.total_amount = order.total_amount + item.price
-            customer.points += item.points_earned
+        #==========================================================#
+        #===== FIX THIS LATER, NEED TO ACCOMMODATE FOR GUESTS =====#
+        #==========================================================#
+        if customer:
+            if not redeem:
+                order.total_amount = order.total_amount + item.price
+                customer.points += item.points_earned
 
-        # reduce points from customer total if customer did redeem points and has enough points (customers cannot
-        # earn points if using points purchase)
-        else:
-            if customer.points > item.points_to_redeem:
-                customer.points -= item.points_to_redeem
+            # reduce points from customer total if customer did redeem points and has enough points (customers cannot
+            # earn points if using points purchase)
             else:
-                return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
+                if customer.points > item.points_to_redeem:
+                    customer.points -= item.points_to_redeem
+                else:
+                    return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
 
         new_ordered_item = OrderedItems(
             order=order.id,

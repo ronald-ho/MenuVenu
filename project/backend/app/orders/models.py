@@ -47,10 +47,13 @@ class OrderedItems(db.Model):
     customer_details = db.relationship('Customers', backref='ordered_items')
 
     def to_dict(self):
+        customer_name = self.customer_details.full_name if self.customer_details else None
+        order_time = self.order_time.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
         return {
             'ordered_item_id': self.id,
             'table_number': self.order_details.table,
-            'order_time': self.order_time,
-            'customer_name': self.customer_details.full_name,
+            'order_time': order_time,
+            'customer_name': customer_name,
             'item_name': self.item_details.name,
         }
