@@ -29,6 +29,7 @@ class Orders(db.Model):
     table = db.Column(db.Integer, db.ForeignKey(DiningTables.id))
     order_date = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     total_amount = db.Column(db.Float, nullable=False)
+    points_earned = db.column(db.Integer, nullable = False)
     paid = db.Column(db.Boolean, default=False)
 
 
@@ -37,26 +38,19 @@ class OrderedItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order = db.Column(db.Integer, db.ForeignKey(Orders.id))
     order_time = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
-    customer = db.Column(db.Integer, db.ForeignKey(Customers.id))
     item = db.Column(db.Integer, db.ForeignKey(Items.id))
     prepared = db.Column(db.Boolean, default=False)
     served = db.Column(db.Boolean, default=False)
 
     order_details = db.relationship('Orders', backref='ordered_items')
     item_details = db.relationship('Items', backref='ordered_items')
-    customer_details = db.relationship('Customers', backref='ordered_items')
 
     def to_dict(self):
-        #==========================================================#
-        #===== FIX THIS LATER, NEED TO ACCOMMODATE FOR GUESTS =====#
-        #==========================================================#
-        customer_name = self.customer_details.full_name if self.customer_details else None
         order_time = self.order_time.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-        
+
         return {
             'ordered_item_id': self.id,
             'table_number': self.order_details.table,
             'order_time': order_time,
-            'customer_name': customer_name,
             'item_name': self.item_details.name,
         }
