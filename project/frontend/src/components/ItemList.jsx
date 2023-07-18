@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 import ItemListItem from "./ItemListItem";
 import { get_items } from "../helpers/loaderfunctions";
 import AddItemPopUp from "./AddItemPopUp";
-import { DragDropContext, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { apiCall } from "../helpers/helpers";
 
 function ItemList() {
     const params = useParams();
@@ -29,7 +30,7 @@ function ItemList() {
         const newitems = Array.from(items);
         const [draggeditem] = newitems.splice(result.source.index, 1);
         const body = {
-            "item_id": draggeditem.item_id,
+            "id": draggeditem.id,
             "new_position": result.destination.index+1
         }
         const result1 = await apiCall("menu/item/position", "PUT", body);
@@ -50,7 +51,7 @@ function ItemList() {
             <Droppable droppableId="items">
                 {(provided) => (<Box {...provided.droppableProps} ref={provided.innerRef} sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
                     {items.map((item, index) => 
-                    <Draggable key={item.item_id} draggableId={item.item_id.toString()} index={index}>
+                    <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                         {(provided) => <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                             <ItemListItem categoryId={params.categoryid} item={item} />
                         </div>}
