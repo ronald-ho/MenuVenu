@@ -1,8 +1,9 @@
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import React from "react";
 
-function ItemInfoPopUp ({ open, setOpen, item}) {
+function ItemInfoPopUp ({ open, setOpen, item }) {
     const ingredients = item.ingredients;
+    console.log(ingredients);
     const handleClose = () => {
         setOpen(false);
     };

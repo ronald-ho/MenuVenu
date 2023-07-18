@@ -13,7 +13,15 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
     const [calories, setCalories] = React.useState(item.calories);
     const [pointsToRedeem, setPointsToRedeem] = React.useState(item.points_to_redeem);
     const [pointsEarned, setPointsEarned] = React.useState(item.points_earned);
-    let itemIngredients = item.ingredients;
+    const [itemIngredients, setItemIngredients] = React.useState(item.ingredients);
+    
+    // const initialChecked = {};
+    // for (const i of allIngredients) {
+    //     checked.i = itemIngredients.includes(i) ? true : false;
+    // }
+
+    // const [checked, setChecked] = React.useState(initialChecked);
+
     const [alert, setAlert] = React.useState('');
     
     async function handleSubmit(e) {
@@ -29,6 +37,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
             return;
         }
 
+        console.log(itemIngredients);
         const updatedItem = {
             'id': item.id,
             'category_id': categoryId,
@@ -76,10 +85,13 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
 
     function handleCheckIngredient (ingredientState, ingredientName) {
         if (ingredientState) {
-            itemIngredients.push(ingredientName);
+            const newIngredients = [...itemIngredients];
+            newIngredients.push(ingredientName);
+            setItemIngredients(newIngredients);
         }
         else {
-            itemIngredients = itemIngredients.filter(i => i !== ingredientName);
+            const newIngredients = itemIngredients.filter(i => i !== ingredientName);
+            setItemIngredients(newIngredients);
         } 
     }
 
@@ -211,23 +223,14 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                             <TableRow>
                                 <TableCell sx={labelCellStyle}><Typography>Dietary tags</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
-                                    {allIngredients.map((ingredient, index) => {
-                                        return itemIngredients.includes(ingredient) ? (
-                                            <FormControlLabel 
-                                                key={index}
-                                                onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
-                                                control={<Checkbox defaultChecked />} 
-                                                label={ingredient} 
-                                            />
-                                        ) : (
-                                            <FormControlLabel 
-                                                key={index}
-                                                onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
-                                                control={<Checkbox />} 
-                                                label={ingredient} 
-                                            />
-                                        );
-                                    })}
+                                    {allIngredients.map((ingredient, index) => (
+                                        <FormControlLabel 
+                                            key={index}
+                                            onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
+                                            control={<Checkbox checked={itemIngredients.includes(ingredient)}/>} 
+                                            label={ingredient} 
+                                        />                         
+                                    ))}
                                 </TableCell>
                             </TableRow>
                         </TableBody>
