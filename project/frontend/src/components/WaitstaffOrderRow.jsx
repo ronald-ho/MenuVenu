@@ -1,6 +1,7 @@
 import React from 'react';
 import { apiCall } from '../helpers/helpers';
-import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Button, TableCell, TableRow } from '@mui/material';
+import { Check } from '@mui/icons-material';
 
 function WaitstaffOrderRow ( {orderItem} ) {
     function handleConfirmServe () {
@@ -8,13 +9,13 @@ function WaitstaffOrderRow ( {orderItem} ) {
     }
 
     return (
-        <>
+        <TableRow>
             <TableCell>{orderItem.item_name}</TableCell>
             <TableCell>{orderItem.table_number}</TableCell>
             <TableCell>
-                <Button variant='text' onClick={handleConfirmServe}>YES</Button>
+                <Button variant='text' onClick={handleConfirmServe}>YES<Check/></Button>
             </TableCell>
-        </>
+        </TableRow>
     );
 }
 

@@ -1,16 +1,11 @@
 import React from "react";
-import { Box, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import AssistReqTableButton from "../components/AssistReqTableButton";
 import ConfirmAssistPopUp from "../components/ConfirmAssistPopUp";
 import { apiCall } from "../helpers/helpers";
 import WaitstaffOrderRow from "../components/WaitstaffOrderRow";
 
 function WaitStaff () {
-    // ORDER ITEM READY 
-    // 1. Poll for new items to be served and show in table
-    // 2. If waitstaff clicks table in Table no. column, pop up appears confirming whether food served or not
-    // 3. If no, do nothing. If yes, send API call to show item was served. Remove item from list
-       
     const [tablesToAssist, setTablesToAssist] = React.useState([]);
     const [orderItemsToServe, setOrderItemsToServe] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
@@ -29,7 +24,6 @@ function WaitStaff () {
             }
         };
 
-        // Check updates every 5 seconds -> can adjust if suitable
         const interval1 = setInterval(getTablesNeedAssist, 5000);
 
         return () => clearInterval(interval1);
@@ -48,7 +42,6 @@ function WaitStaff () {
             }
         };
 
-        // Check updates every 5 seconds -> can adjust if suitable
         const interval2 = setInterval(getOrdersToServe, 5000);
 
         return () => clearInterval(interval2);
@@ -57,25 +50,36 @@ function WaitStaff () {
 
     return (
         <>
-            <Box sx={{border: "1px solid black", borderRadius: "15px", margin: "10px auto", padding: "10px", width: "70vw"}}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell><b>ORDER ITEM READY</b></TableCell>
-                            <TableCell><b>TABLE #</b></TableCell>
-                            <TableCell><b>CONFIRM SERVE?</b></TableCell>
-                        </TableRow>
-                    </TableHead> 
-                    <TableBody>
-                        {orderItemsToServe.length === 0 ? (
-                            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
-                        ) : (
-                            orderItemsToServe.map((orderItem) => 
-                                <WaitstaffOrderRow key={orderItem.ordered_item_id} orderItem={orderItem} />
-                            )
-                        )}
-                    </TableBody>
-                </Table>
+            <Box 
+                sx={{
+                    border: "1px solid black", 
+                    borderRadius: "15px", 
+                    height: "80vh", 
+                    margin: "10px auto", 
+                    padding: "10px", 
+                    width: "70vw"
+                }}
+            >
+                <TableContainer sx={{ height: "81vh", overflow: "auto"}}>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><b>ORDER ITEM READY</b></TableCell>
+                                <TableCell><b>TABLE #</b></TableCell>
+                                <TableCell><b>CONFIRM SERVE?</b></TableCell>
+                            </TableRow>
+                        </TableHead> 
+                        <TableBody>
+                            {orderItemsToServe.length === 0 ? (
+                                <Typography sx={{textAlign: 'center'}}>Waiting for orders to serve</Typography>
+                            ) : (
+                                orderItemsToServe.map((orderItem) => 
+                                    <WaitstaffOrderRow key={orderItem.ordered_item_id} orderItem={orderItem} />
+                                )
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
             <Box
                 sx={{
@@ -89,7 +93,7 @@ function WaitStaff () {
                     top: '81.6px',
                     right: 0,
                     width: '140px',
-                    height: '84vh',
+                    height: '83vh'
                 }}
             >
                 <Typography sx={{ fontWeight: 'bold', padding: '15px 10px' }}>
