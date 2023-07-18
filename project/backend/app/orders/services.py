@@ -70,8 +70,11 @@ class TableService:
 
         #if they redeem, apply discount and remove points
         if redeem:
-            order.total_amount = order.total_amount * 0.9
-            customer.points -= 100
+            if customer.points >= 100:
+                order.total_amount = order.total_amount * 0.9
+                customer.points -= 100
+            else:
+                return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
 
         #customers earn 1 point per dollar
         order.points_earned += int(order.total_amount)
@@ -170,17 +173,17 @@ class OrderService:
         if not order:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
 
-        # add cost of item to order total if customer did not redeem points and add any points earnable
-        
+        # add cost of item to order total if customer did not redeem points and add any points earnable  
         if not redeem:
             order.total_amount += item.price
-            order.points_earned += item.points_earned
+
+            if item.points_earned:
+                order.points_earned += item.points_earned
 
         # reduce points from customer total if customer did redeem points and has enough points (customers cannot
         # earn points if using points purchase)
-     
         else:
-            if customer.points > item.points_to_redeem:
+            if customer.points >= item.points_to_redeem:
                 customer.points -= item.points_to_redeem
             else:
                 return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
