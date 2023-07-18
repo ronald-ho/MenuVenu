@@ -36,7 +36,7 @@ function ItemListItem ({ categoryId, item }) {
                     }}
                 >
                     <DragHandle color="secondary" />
-                    <Typography sx={{ "&:hover": { color: "#551b8c", fontWeight: "bold" }, cursor: "pointer" }} >{item.name}</Typography>
+                    <Typography sx={{ "&:hover": { color: "#551b8c", fontWeight: "bold" }, cursor: "pointer" }}>{item.name}</Typography>
                 </Box>
                 <Box>
                     <IconButton 

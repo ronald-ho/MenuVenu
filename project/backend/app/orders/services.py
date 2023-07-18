@@ -162,7 +162,7 @@ class OrderService:
 
         item = Items.query.filter_by(name=item_name).first()
         order = Orders.query.filter_by(paid=False).filter_by(table=table_id).first()
-        customer = Customers.query.filter_by(id=customer_id).first()
+        customer = Customers.query.filter_by(id=customer_id).first() 
 
         if not item:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item does not exist'})
@@ -171,12 +171,14 @@ class OrderService:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
 
         # add cost of item to order total if customer did not redeem points and add any points earnable
+        
         if not redeem:
             order.total_amount += item.price
             order.points_earned += item.points_earned
 
         # reduce points from customer total if customer did redeem points and has enough points (customers cannot
         # earn points if using points purchase)
+     
         else:
             if customer.points > item.points_to_redeem:
                 customer.points -= item.points_to_redeem
