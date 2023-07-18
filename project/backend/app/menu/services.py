@@ -22,7 +22,10 @@ class ItemService:
         if item:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item already exists'})
 
-        image_path = ItemService.decode_image(item_name, data['image'])
+        if data['image'] is not None:
+            image_path = ItemService.decode_image(item_name, data['image'])
+        else:
+            image_path = None
 
         new_item = Items(
             name=item_name,
@@ -67,7 +70,10 @@ class ItemService:
         if name_check and name_check.id != item.id:
             return jsonify({'status': HTTPStatus.CONFLICT, 'message': 'Item name already exists'})
 
-        image_path = ItemService.decode_image(item.name, data['image'])
+        if data['image'] is not None:
+            image_path = ItemService.decode_image(item.name, data['image'])
+        else:
+            image_path = None
 
         item.name = data["name"]
         item.description = data["description"]
