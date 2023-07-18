@@ -66,7 +66,7 @@ function WaitStaff () {
                             <TableRow>
                                 <TableCell><b>ORDER ITEM READY</b></TableCell>
                                 <TableCell><b>TABLE #</b></TableCell>
-                                <TableCell><b>CONFIRM SERVE?</b></TableCell>
+                                <TableCell><b>READY TO SERVE?</b></TableCell>
                             </TableRow>
                         </TableHead> 
                         <TableBody>

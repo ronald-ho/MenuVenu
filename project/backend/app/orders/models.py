@@ -29,7 +29,7 @@ class Orders(db.Model):
     table = db.Column(db.Integer, db.ForeignKey(DiningTables.id))
     order_date = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     total_amount = db.Column(db.Float, nullable=False)
-    points_earned = db.column(db.Integer, nullable = False)
+    points_earned = db.Column(db.Integer, nullable=False)
     paid = db.Column(db.Boolean, default=False)
 
 
