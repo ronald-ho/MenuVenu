@@ -6,13 +6,16 @@ import React from "react";
 function BillingPopUp ({ open, setOpen, tableNo }) {
     const navigate = useNavigate();
     const [bill, setBill] = React.useState(0);
-    const [customerId, setCustomerId] = React.useState('');
+    const [curpoints, setCurpoints] = React.useState(0);
+    const [pointsearned, setPointsearned] = React.useState(0);
+
+    const customerId = localStorage.getItem("mvuser");
 
     async function handleConfirm() {
         // Once finish dining and paid, "log out"
         const body = {
             table_number: tableNo,
-            customer_id: localStorage.getItem("mvuser"),
+            customer_id: customerId,
             redeem: false
         }
         const data = await apiCall("orders/paybill", "POST", body);
@@ -34,13 +37,16 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
             if (data.bill) {
                 console.log("Bill amount received");
                 setBill(data.bill);
+                setPointsearned(data.points_earned);
             } 
             else {
                 console.log("Failed to get bill amount");
             }
+            if (customerId) {
+                const cust = await apiCall("auth/customer/" + customerId, "GET", {});
+                setCurpoints(cust.customer_info.points);
+            }
         }
-
-        setCustomerId(localStorage.getItem("mvuser"));
         // setBill(10);
         getBill();
       }, []); 
@@ -56,8 +62,8 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
                     <DialogContentText>Your total bill is ${bill}.</DialogContentText>
                     {customerId !== null && 
                         <>
-                            <DialogContentText>You have earned 0 MV points.</DialogContentText>
-                            <DialogContentText>Your new balance will be 0 MV points.</DialogContentText>
+                            <DialogContentText>You have earned {pointsearned} MV points.</DialogContentText>
+                            <DialogContentText>Your new balance will be {curpoints} MV points.</DialogContentText>
                         </>
                     }
                     <DialogContentText>Please proceed to the front counter.</DialogContentText>

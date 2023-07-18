@@ -6,7 +6,7 @@ function ViewItems() {
     const items = useLoaderData();
 
     return (
-        <div style={{textAlign: 'center', display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+        <div style={{textAlign: 'center', display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", alignContent: "flex-start"}}>
             {items.map((item) => <ItemPreview key={item.item_id} item={item} />)}
         </div>
     )
