@@ -15,7 +15,7 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
             customer_id: localStorage.getItem("mvuser"),
             redeem: false
         }
-        const data = await apiCall("orders/paybill", "POST", body);
+        const data = await apiCall("orders/pay_bill", "POST", body);
         if (data.status !== 200) {
             console.log("hey this doesnt work btw");
         }
@@ -30,7 +30,7 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
 
     React.useEffect(() => {
         async function getBill() {
-            const data = await apiCall("orders/getbill", "POST", { 'table_number': tableNo });
+            const data = await apiCall("orders/get_bill", "POST", { 'table_number': tableNo });
             if (data.bill) {
                 console.log("Bill amount received");
                 setBill(data.bill);
