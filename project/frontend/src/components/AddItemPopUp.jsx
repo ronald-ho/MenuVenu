@@ -9,6 +9,7 @@ import {
     FormControlLabel,
     InputAdornment,
     Table,
+    TableBody,
     TableCell,
     TableRow,
     TextField,
@@ -133,6 +134,8 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                 <form onSubmit={(e) => handleSubmit(e)}>
                 <DialogContent>
                     <Table>
+                        <TableBody>
+                        </TableBody>
                         <TableRow>
                             <TableCell sx={labelCellStyle}><Typography>Name*</Typography></TableCell>
                             <TableCell sx={inputCellStyle}>
