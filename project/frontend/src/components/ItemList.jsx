@@ -38,11 +38,7 @@ function ItemList() {
             console.log("bruh");
         }
         const result2 = await get_items(params);
-        if (result2.status != 200) {
-            console.log("wtf");
-        } else {
-            setItems(result2);
-        }
+        setItems(result2);
     }
  
     return (
