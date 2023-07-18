@@ -30,12 +30,15 @@ function KitchenOrders() {
                 </TableHead>
                 <TableBody>
                     {orders.map((ordered_item) => <TableRow>
-                        <TableCell>{ordered_item.name}</TableCell>
+                        <TableCell>{ordered_item.item_name}</TableCell>
                         <TableCell>{ordered_item.table_number}</TableCell>
-                        <TableCell></TableCell>
+                        <TableCell>{ordered_item.order_time}</TableCell>
                         <TableCell>
                             <Button variant='text' onClick={async () => {
-                                const data = await apiCall("orders/kitchen/prepared", "POST", ordered_item);
+                                const body = {
+                                    'ordered_item_id': ordered_item.ordered_item_id
+                                }
+                                const data = await apiCall("orders/kitchen/prepared", "POST", body);
                                 if (data.status !== 200) {
                                     console.log("OH NO");
                                 }

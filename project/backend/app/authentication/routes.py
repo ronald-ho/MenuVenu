@@ -8,6 +8,7 @@ from .services import CustomerService, ResetService, StaffService, ManagerServic
 
 auth = Blueprint('auth', __name__)
 
+
 @auth.route('/register', methods=['POST'])
 def register_customer():
     data = data_logger(request)
@@ -27,6 +28,7 @@ def login_kitchen_staff():
     data = data_logger(request)
 
     return StaffService.login_kitchen_staff(data)
+
 
 @auth.route('/login/staff', methods=['POST'])
 def login_staff():
@@ -88,6 +90,7 @@ def find_customer(customer_id):
     app.logger.info(f"Received find user request: {customer_id}")
 
     return CustomerService.get_customer_details(customer_id)
+
 
 def data_logger(request):
     data = request.get_json()
