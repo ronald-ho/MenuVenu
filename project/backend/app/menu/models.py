@@ -45,17 +45,20 @@ class Items(db.Model):
     ingredients = db.relationship('Ingredients', secondary='item_ingredient', back_populates='items')
 
     def to_dict(self):
-        image_path = self.image
-        with open(image_path, "rb") as image_file:
-            encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+        image_data = None
+        if self.image:
+            with open(self.image, "rb") as image_file:
+                encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
 
-        mime_type = mimetypes.guess_type(image_path)[0]
+            mime_type = mimetypes.guess_type(self.image)[0]
+
+            image_data = f'data:{mime_type};base64,{encoded_image}'
 
         return {
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'image': f'data:{mime_type};base64,{encoded_image}',
+            'image': image_data,
             'price': self.price,
             'category_id': self.category,
             'calories': self.calories,
