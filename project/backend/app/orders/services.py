@@ -143,7 +143,8 @@ class OrderService:
             order.total_amount = order.total_amount + item.price
             customer.points += item.points_earned
 
-        # reduce points from customer total if customer did redeem points and has enough points (customers cannot earn points if using points purchase)
+        # reduce points from customer total if customer did redeem points and has enough points (customers cannot
+        # earn points if using points purchase)
         else:
             if customer.points > item.points_to_redeem:
                 customer.points -= item.points_to_redeem

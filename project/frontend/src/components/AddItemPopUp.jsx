@@ -1,7 +1,22 @@
-import { Alert, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, Table, TableCell, TableRow, TextField, Typography } from "@mui/material";
-import { apiCall } from "../helpers/helpers";
+import {
+    Alert,
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControlLabel,
+    InputAdornment,
+    Table,
+    TableCell,
+    TableRow,
+    TextField,
+    Typography
+} from "@mui/material";
+import {apiCall} from "../helpers/helpers";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function AddItemPopUp ({ open, setOpen, categoryId }) {
     const  navigate = useNavigate();
