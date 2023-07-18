@@ -6,10 +6,9 @@ import { useNavigate } from "react-router-dom";
 function AddItemPopUp ({ open, setOpen, categoryId }) {
     const  navigate = useNavigate();
 
-    const [name, setName] = React.useState('');
+    const [name, setName] = React.useState(null);
     const [price, setPrice] = React.useState(null);
     const [imageData, setImageData] = React.useState(null);
-    const [imageFilename, setImageFilename] = React.useState([]);
     const [description, setDescription] = React.useState(null);
     const [calories, setCalories] = React.useState(null);
     const [pointsToRedeem, setPointsToRedeem] = React.useState(null);
@@ -47,7 +46,6 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
             'name': name,
             'price': price,
             'image': imageData,
-            // 'filename' : imageFilename,
             'description': description,
             'calories': calories,
             'points_to_redeem': pointsToRedeem,
@@ -82,7 +80,6 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                 const imageData = e.target.result;
                 console.log(imageData);
                 setImageData(imageData);
-                // setImageFilename(file.name);
             }
             reader.readAsDataURL(file);
         } 
