@@ -57,7 +57,7 @@ function WaitStaff () {
 
     return (
         <>
-            <Box sx={{border: "1px solid black", borderRadius: "15px", height: "81vh", margin: "10px auto", padding: "10px", width: "70vw"}}>
+            <Box sx={{border: "1px solid black", borderRadius: "15px", margin: "10px auto", padding: "10px", width: "70vw"}}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -68,11 +68,11 @@ function WaitStaff () {
                     </TableHead> 
                     <TableBody>
                         {orderItemsToServe.length === 0 ? (
+                            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
+                        ) : (
                             orderItemsToServe.map((orderItem) => 
                                 <WaitstaffOrderRow key={orderItem.ordered_item_id} orderItem={orderItem} />
                             )
-                        ) : (
-                            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
                         )}
                     </TableBody>
                 </Table>

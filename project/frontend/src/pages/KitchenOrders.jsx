@@ -4,6 +4,7 @@ import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow } from '@
 
 function KitchenOrders() {
     const [orders, setOrders] = React.useState([]);
+    const [currDatetime, setCurrDatetime] = React.useState(null);
 
     const getOrders = async () => {
         const data = await apiCall("orders/get_order_list", "GET", {});
@@ -11,10 +12,31 @@ function KitchenOrders() {
         setOrders(data.order_list);
     }
 
-    React.useEffect(() => {
-        const interval = setInterval(getOrders, 5000);
+    const calculateTimeSinceOrdered = (orderTime) => {
+        const orderedDate = new Date(orderTime);
+        const diffInMS = Math.abs(currDatetime.getTime() - orderedDate.getTime());
+        const hours = Math.floor(diffInMS / (1000 * 60 * 60));
+        const mins = Math.floor((diffInMS % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diffInMS % (1000 * 60)) / 1000);
+        const paddedHours = hours.toString().padStart(2, '0');
+        const paddedMins = mins.toString().padStart(2, '0');
+        const paddedSecs = secs.toString().padStart(2, '0');
 
-        return () => clearInterval(interval);
+        return `${paddedHours}:${paddedMins}:${paddedSecs}`;
+    }
+
+    const updateCurrTime = () => {
+        setCurrDatetime(new Date());
+    }
+
+    React.useEffect(() => {
+        const interval1 = setInterval(getOrders, 5000);
+        const interval2 = setInterval(updateCurrTime, 1000);
+
+        return () => {
+            clearInterval(interval1);
+            clearInterval(interval2);
+        }
     }, []);
 
     return (
@@ -24,24 +46,18 @@ function KitchenOrders() {
                     <TableRow>
                         <TableCell>Order item request</TableCell>
                         <TableCell>Table #</TableCell>
-                        <TableCell>Time since order (MM:SS)</TableCell>
+                        <TableCell>Time since order (HH:MM:SS)</TableCell>
                         <TableCell>Ready?</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {orders.map((ordered_item) => {
-                        const orderedDate = new Date(ordered_item.order_time);
-                        const currDatetime = new Date();
-                        const diffInMS = Math.abs(currDatetime.getTime() - orderedDate.getTime());
-                        const mins = Math.floor((diffInMS % (1000 * 60 * 60)) / (1000 * 60));
-                        const secs = Math.floor((diffInMS % (1000 * 60)) / 1000);
-                        const paddedMins = mins.toString().padStart(2, '0');
-                        const paddedSecs = secs.toString().padStart(2, '0');
+                        const timeSinceOrdered = calculateTimeSinceOrdered(ordered_item.order_time);
                         return (
                             <TableRow>
                                 <TableCell>{ordered_item.item_name}</TableCell>
                                 <TableCell>{ordered_item.table_number}</TableCell>
-                                <TableCell>{paddedMins}:{paddedSecs}</TableCell>
+                                <TableCell>{timeSinceOrdered}</TableCell>
                                 <TableCell>
                                     <Button variant='text' onClick={async () => {
                                         const body = {
