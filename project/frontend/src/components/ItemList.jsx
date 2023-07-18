@@ -30,7 +30,7 @@ function ItemList() {
         const newitems = Array.from(items);
         const [draggeditem] = newitems.splice(result.source.index, 1);
         const body = {
-            "id": draggeditem.id,
+            "item_id": draggeditem.id,
             "new_position": result.destination.index+1
         }
         const result1 = await apiCall("menu/item/position", "PUT", body);
