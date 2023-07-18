@@ -12,9 +12,22 @@ function ItemList() {
     const params = useParams();
     console.log(params);
 
+    const [allIngredients, setAllIngredients] = React.useState([]);
     const [items, setItems] = React.useState([]);
     const [openAddItem, setOpenAddItem] = React.useState(false);
     
+    React.useEffect(() => {
+        const getAllIngredients = async () => {
+            const data = await apiCall("menu/ingredients", "GET", {});
+            if (data.ingredients) {
+                console.log(data.ingredients);
+                setAllIngredients(data.ingredients);
+            }
+        }
+
+        getAllIngredients();
+    }, []);
+
     React.useEffect(() => {
         const getItems = async () => {
             const activeCategoryItems = await get_items(params);
@@ -49,7 +62,7 @@ function ItemList() {
                     {items.map((item, index) => 
                     <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                         {(provided) => <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <ItemListItem categoryId={params.categoryid} item={item} />
+                            <ItemListItem categoryId={params.categoryid} item={item} allIngredients={allIngredients} />
                         </div>}
                     </Draggable>)}
                     {provided.placeholder}
@@ -68,7 +81,7 @@ function ItemList() {
                     <Add /> New Menu Item
                 </Button>
             </Box>
-            {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem} categoryId={params.categoryid} />}
+            {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem} categoryId={params.categoryid} allIngredients={allIngredients} />}
         </>
     )
 }

@@ -19,7 +19,7 @@ import {apiCall} from "../helpers/helpers";
 import React from "react";
 import {useNavigate} from "react-router-dom";
 
-function AddItemPopUp ({ open, setOpen, categoryId }) {
+function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
     const  navigate = useNavigate();
 
     const [name, setName] = React.useState(null);
@@ -30,19 +30,7 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
     const [pointsToRedeem, setPointsToRedeem] = React.useState(null);
     const [pointsEarned, setPointsEarned] = React.useState(null);
     const [alert, setAlert] = React.useState('');
-    const [allIngredients, setAllIngredients] = React.useState([]);
     let itemIngredients = [];
-
-    React.useEffect(() => {
-        const getAllIngredients = async () => {
-            const data = await apiCall("menu/ingredients", "GET", {});
-            if (data.message === 200) {
-                setAllIngredients(data.ingredients);
-            }
-        }
-        
-        getAllIngredients();
-    }, []);
     
     async function handleSubmit(e) {
         e.preventDefault();
@@ -134,109 +122,109 @@ function AddItemPopUp ({ open, setOpen, categoryId }) {
                 <form onSubmit={(e) => handleSubmit(e)}>
                 <DialogContent>
                     <Table>
-                        <TableBody>
-                        </TableBody>
-                        <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Name*</Typography></TableCell>
-                            <TableCell sx={inputCellStyle}>
-                                <TextField 
-                                    onChange={(e) => setName(e.target.value)}
-                                    size="small" 
-                                    sx={{ width: '254px'}} 
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Price*</Typography></TableCell>
-                            <TableCell sx={inputCellStyle}>
-                                <TextField 
-                                    type="number"
-                                    inputProps={{
-                                        step: 0.01
-                                    }}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    size="small" 
-                                    InputProps={{
-                                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                    }}
-                                    sx={{ width: '254px'}} 
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Image</Typography></TableCell>
-                            <TableCell sx={inputCellStyle}>
-                                <input 
-                                    onChange={(e) => handleImageInput(e)}
-                                    type="file" 
-                                    accept="image/jpeg, image/png, image/jpg"
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Description</Typography></TableCell>
-                            <TableCell sx={inputCellStyle}>
-                                <TextField 
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    multiline 
-                                    size="small" 
-                                    rows={4} 
-                                    sx={{ width: '254px'}} 
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Energy</Typography></TableCell>
-                            <TableCell sx={inputCellStyle}>
-                                <TextField 
-                                    type="number"
-                                    onChange={(e) => setCalories(e.target.value)}
-                                    size="small" 
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">calories</InputAdornment>,
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Redeem using</Typography></TableCell>
-                            <TableCell sx={inputCellStyle}>
-                                <TextField 
-                                    type="number"
-                                    onChange={(e) => setPointsToRedeem(e.target.value)}
-                                    size="small" 
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Buy to earn</Typography></TableCell>
-                            <TableCell sx={inputCellStyle}>
-                                <TextField 
-                                    type="number"
-                                    onChange={(e) => setPointsEarned(e.target.value)}
-                                    size="small" 
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
-                                    }}
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell sx={labelCellStyle}><Typography>Dietary tags</Typography></TableCell>
-                            <TableCell sx={inputCellStyle}>
-                                {allIngredients.map((ingredient, index) => (
-                                    <FormControlLabel 
-                                        key={index}
-                                        onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
-                                        control={<Checkbox />} 
-                                        label={ingredient} 
+                        <TableBody>                 
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Name*</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <TextField 
+                                        onChange={(e) => setName(e.target.value)}
+                                        size="small" 
+                                        sx={{ width: '254px'}} 
                                     />
-                                ))}
-                            </TableCell>
-                        </TableRow>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Price*</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <TextField 
+                                        type="number"
+                                        inputProps={{
+                                            step: 0.01
+                                        }}
+                                        onChange={(e) => setPrice(e.target.value)}
+                                        size="small" 
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                        }}
+                                        sx={{ width: '254px'}} 
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Image</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <input 
+                                        onChange={(e) => handleImageInput(e)}
+                                        type="file" 
+                                        accept="image/jpeg, image/png, image/jpg"
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Description</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <TextField 
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        multiline 
+                                        size="small" 
+                                        rows={4} 
+                                        sx={{ width: '254px'}} 
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Energy</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <TextField 
+                                        type="number"
+                                        onChange={(e) => setCalories(e.target.value)}
+                                        size="small" 
+                                        InputProps={{
+                                            endAdornment: <InputAdornment position="end">calories</InputAdornment>,
+                                        }}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Redeem using</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <TextField 
+                                        type="number"
+                                        onChange={(e) => setPointsToRedeem(e.target.value)}
+                                        size="small" 
+                                        InputProps={{
+                                            endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
+                                        }}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Buy to earn</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <TextField 
+                                        type="number"
+                                        onChange={(e) => setPointsEarned(e.target.value)}
+                                        size="small" 
+                                        InputProps={{
+                                            endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
+                                        }}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Dietary tags</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    {allIngredients.map((ingredient, index) => (
+                                        <FormControlLabel 
+                                            key={index}
+                                            onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
+                                            control={<Checkbox />} 
+                                            label={ingredient} 
+                                        />
+                                    ))}
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
                     </Table>
                     {alert && <Alert severity="error" aria-label='errorAlert'>{alert}</Alert>}
                 </DialogContent>
