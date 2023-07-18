@@ -1,6 +1,5 @@
 import base64
 import hashlib
-import logging
 import os
 from http import HTTPStatus
 
