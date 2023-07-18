@@ -72,8 +72,11 @@ function WaitStaff () {
                             {orderItemsToServe.length === 0 ? (
                                 <TableRow>
                                     <TableCell sx={{ border: 0 }}></TableCell>
-                                    <TableCell sx={{ border: 0 }}>
-                                        <Typography sx={{margin: 'auto', textAlign: 'center'}}>Waiting for orders to serve</Typography>
+                                    <TableCell sx={{ border: 0, textAlign: 'center'}}>
+                                        <Typography sx={{ margin: '0 auto 35px auto' }}>
+                                            Waiting for orders to serve
+                                        </Typography>
+                                        <CircularProgress />
                                     </TableCell> 
                                     <TableCell sx={{ border: 0 }}></TableCell>
                                 </TableRow>
