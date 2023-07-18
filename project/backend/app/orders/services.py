@@ -103,7 +103,7 @@ class TableService:
         if not order:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
 
-        return jsonify({'status': HTTPStatus.OK, 'bill': order.total_amount})
+        return jsonify({'status': HTTPStatus.OK, 'bill': order.total_amount, 'points_earned': order.points_earned + int(order.total_amount)})
 
     @staticmethod
     def select_table(data):
