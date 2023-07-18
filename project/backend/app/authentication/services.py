@@ -93,9 +93,7 @@ class CustomerService:
         return jsonify({'status': HTTPStatus.OK, 'message': 'User updated'})
 
     @staticmethod
-    def get_customer_details(data):
-        customer_id = data['customer_id']
-
+    def get_customer_details(customer_id):
         customer = Customers.query.get(customer_id)
 
         if not customer:
