@@ -1,23 +1,30 @@
 import React from "react";
-import { Typography, Box } from "@mui/material";
-import { Link } from "react-router-dom";
+import {Box, Button, Typography} from "@mui/material";
+import {Link} from "react-router-dom";
+import FaceIcon from "@mui/icons-material/Face";
+import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 function StaffSelect () {
-    const boxcss = { display: 'inline-block', width: '20%', padding: '10px', border: '1px black solid', margin: '10px', height: '50px', verticalAlign: 'top' }
 
     return (
         <>
-            <div style={{textAlign: 'center', marginTop: '60px'}}>
-                <Box component={Link} to={'/waitstafflogin'} sx={boxcss}>
+        <div style={{textAlign: 'center', marginTop: '60px'}}>
+            <Box sx={{ display: 'inline-flex', justifyContent: 'center', gap: '30px' }}>
+                <Button component={Link} to="/waitstafflogin" variant="contained" size="large" sx={{width: '300px'}}>
+                    <FaceIcon sx={{mr: 1, fontSize: 30}} />
                     <Typography>Wait Staff</Typography>
-                </Box>
-                <Box component={Link} to={'/kitchenstafflogin'} sx={boxcss}>
-                    <Typography>Kitchen Staff</Typography>    
-                </Box>
-                <Box component={Link} to={'/managerlogin'} sx={boxcss}>
-                    <Typography>Manager</Typography>    
-                </Box>
-            </div>
+                </Button>
+                <Button component={Link} to="/kitchenstafflogin" variant="contained" size="large" sx={{width: '300px'}}>
+                    <SoupKitchenIcon sx={{mr: 1, fontSize: 30}} />
+                    <Typography>Kitchen Staff</Typography>
+                </Button>
+                <Button component={Link} to="/managerlogin" variant="contained" size="large" sx={{width: '300px'}}>
+                    <ManageAccountsIcon sx={{mr: 1, fontSize: 30}} />
+                    <Typography>Manager</Typography>
+                </Button>
+            </Box>
+        </div>
         </>
     )
 }
