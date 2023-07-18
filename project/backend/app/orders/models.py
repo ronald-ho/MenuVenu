@@ -51,11 +51,12 @@ class OrderedItems(db.Model):
         #===== FIX THIS LATER, NEED TO ACCOMMODATE FOR GUESTS =====#
         #==========================================================#
         customer_name = self.customer_details.full_name if self.customer_details else None
+        order_time = self.order_time.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         
         return {
             'ordered_item_id': self.id,
             'table_number': self.order_details.table,
-            'order_time': self.order_time,
+            'order_time': order_time,
             'customer_name': customer_name,
             'item_name': self.item_details.name,
         }

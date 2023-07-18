@@ -24,28 +24,39 @@ function KitchenOrders() {
                     <TableRow>
                         <TableCell>Order item request</TableCell>
                         <TableCell>Table #</TableCell>
-                        <TableCell>Time since order</TableCell>
+                        <TableCell>Time since order (MM:SS)</TableCell>
                         <TableCell>Ready?</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {orders.map((ordered_item) => <TableRow>
-                        <TableCell>{ordered_item.item_name}</TableCell>
-                        <TableCell>{ordered_item.table_number}</TableCell>
-                        <TableCell>{ordered_item.order_time}</TableCell>
-                        <TableCell>
-                            <Button variant='text' onClick={async () => {
-                                const body = {
-                                    'ordered_item_id': ordered_item.ordered_item_id
-                                }
-                                const data = await apiCall("orders/kitchen/prepared", "POST", body);
-                                if (data.status !== 200) {
-                                    console.log("OH NO");
-                                }
-                                await getOrders();
-                            }}>YES</Button>
-                        </TableCell>
-                    </TableRow>)}
+                    {orders.map((ordered_item) => {
+                        const orderedDate = new Date(ordered_item.order_time);
+                        const currDatetime = new Date();
+                        const diffInMS = Math.abs(currDatetime.getTime() - orderedDate.getTime());
+                        const mins = Math.floor((diffInMS % (1000 * 60 * 60)) / (1000 * 60));
+                        const secs = Math.floor((diffInMS % (1000 * 60)) / 1000);
+                        const paddedMins = mins.toString().padStart(2, '0');
+                        const paddedSecs = secs.toString().padStart(2, '0');
+                        return (
+                            <TableRow>
+                                <TableCell>{ordered_item.item_name}</TableCell>
+                                <TableCell>{ordered_item.table_number}</TableCell>
+                                <TableCell>{paddedMins}:{paddedSecs}</TableCell>
+                                <TableCell>
+                                    <Button variant='text' onClick={async () => {
+                                        const body = {
+                                            'ordered_item_id': ordered_item.ordered_item_id
+                                        }
+                                        const data = await apiCall("orders/kitchen/prepared", "POST", body);
+                                        if (data.status !== 200) {
+                                            console.log("OH NO");
+                                        }
+                                        await getOrders();
+                                    }}>YES</Button>
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
                 </TableBody>
             </Table>
         </Box>
