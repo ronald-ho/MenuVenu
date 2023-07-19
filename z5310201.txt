@@ -27,11 +27,28 @@ Some more stuff
 --> User update profile checks
 
 Week 5:
-Finialised iteration 1, worked on backend for smth forgot
-more database for iteration 2, started menuj manager
+Finialised iteration 1, worked on backend for manager login
+Added dummy values to manager log in to test the front end
+Tested front end for call staff
+Added restaurant, diningtables and order tables.
+Tested the codebase with database to make sure values fill in
+more database for iteration 2, started models.py for manager and menu
+briefly coded for routes.py in menu
+
 
 Week 6:
 add category and add item 
 testing those stuff with postman
-added implementation for relationship contains and bleongs to
+added implementation for relationship contains and belongs to
 waiting for front end to get ingredients working for proper testing
+Changed relation to use sql functionality
+
+Week 7: 
+Changed routes and naming conventions for existing variables
+Discussed need to add columns to diningtables and order to keep track of temp field incase of a system restart
+Debug frontend issue with update category and update item
+Linted routes models and service.py for auth, menu, order and restaurant
+Made docstrings for auth, models.py (awaiting feedback to add more)
+
+
+Week 8:
