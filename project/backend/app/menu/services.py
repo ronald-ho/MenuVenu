@@ -61,6 +61,7 @@ class ItemService:
 
     @staticmethod
     def update_item_details(data):
+        
         item = Items.query.filter_by(id=data["id"]).first()
         if not item:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
@@ -82,6 +83,15 @@ class ItemService:
         item.calories = data["calories"]
         item.points_to_redeem = data["points_to_redeem"]
         item.points_earned = data["points_earned"]
+
+        ingredients = data['ingredients']
+        selected_ingredients = []
+
+        for ingredient in ingredients:
+            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
+            selected_ingredients.append(ingredient_entity)
+
+        item.ingredients = selected_ingredients
 
         db.session.commit()
 

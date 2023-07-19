@@ -191,7 +191,8 @@ class OrderService:
         new_ordered_item = OrderedItems(
             order=order.id,
             order_time=datetime.now(),
-            item=item.id
+            item=item.id,
+            redeemed=redeem
         )
 
         db.session.add(new_ordered_item)
@@ -238,7 +239,9 @@ class OrderService:
         # for each ordered item, get the relevant menu item
         for ordered_item in ordered_item_list:
             item = Items.query.filter_by(id=ordered_item.item).first()
-            item_list.append(item.to_dict())
+            item_dict = item.to_dict()
+            item_dict['redeemed'] = ordered_item.redeemed
+            item_list.append(item_dict)
 
         return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})
 

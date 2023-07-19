@@ -7,9 +7,7 @@ import CategoryListItem from "../components/CategoryListItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { apiCall } from "../helpers/helpers";
 
-
 function ManagerEditMenu () {
-
     const [categories, setCategories] = React.useState(useLoaderData());
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
 
@@ -24,11 +22,11 @@ function ManagerEditMenu () {
             "new_position": result.destination.index+1
         }
         const result1 = await apiCall("menu/category/position", "PUT", body);
-        if (result1.status != 200) {
+        if (result1.status !== 200) {
             console.log("bruh");
         }
         const result2 = await apiCall("menu/categories", "GET", {});
-        if (result2.status != 200) {
+        if (result2.status !== 200) {
             console.log("wtf");
         } else {
             setCategories(result2.categories);

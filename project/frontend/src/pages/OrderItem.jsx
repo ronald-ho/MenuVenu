@@ -46,7 +46,7 @@ function OrderItem() {
                 <Button onClick={() => {setOrdercount(ordercount => ordercount+1)}}>+</Button>
             </div>
             <br />
-            {item_info.points && <Button onClick={() => {sendOrder(true)}}>Redeem with points</Button>}
+            {item_info.points_to_redeem > 0 && <Button onClick={() => {sendOrder(true)}}>Redeem with points</Button>}
             <Button onClick={() => {sendOrder(false)}}>Add to order</Button>
             {alert && <Alert severity="error">Not enough points</Alert>}
         </Box>
