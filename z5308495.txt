@@ -29,3 +29,8 @@ Week 7
 Flex week in week 6 so not too much progress
 Started on order item, kitchen preparation. Now need to test against database and frontend.
 Discussed about implementation of chatbot and may use OpenAI.
+
+Week 8
+Coded discount and reward systems, including debugging and testing.
+Did more research on ways to implement chatbot. Use of APIs, methods of bot training and tokenisation.
+Watching Andrej Karpathy's video "Let's Build GPT" for ideas on how to start and what methods we can use
