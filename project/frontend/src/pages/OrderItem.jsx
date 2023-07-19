@@ -34,9 +34,10 @@ function OrderItem() {
             <div style={{display: "inline-block"}}>
                 <Typography variant="h4">{item_info.name}</Typography>
                 <img src={item_info.image}  style={{maxWidth: "100px", maxHeight: "100px"}}/>
+                <Typography>${item_info.price}</Typography>
+                {item_info.points_to_redeem && <Typography>{item_info.points_to_redeem} MV points</Typography>}
             </div>
             <div style={{display: "inline-block"}}>
-                <Typography>${item_info.price}</Typography>
                 <Typography>{item_info.description}</Typography>
             </div>
             <br />

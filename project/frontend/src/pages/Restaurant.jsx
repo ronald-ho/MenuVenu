@@ -6,12 +6,9 @@ import FaceIcon from '@mui/icons-material/Face';
 
 function Restaurant () {
     return (
-        <>
-        <div style={{textAlign: 'center'}}>
+        <Box sx={{ textAlign: 'center', mt: 2 }}>
             <Typography>I am a...</Typography>
-        </div>
-        <div style={{textAlign: 'center', marginTop: '30px'}}>
-            <Box sx={{ display: 'inline-flex', justifyContent: 'center', gap: '30px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: '30px', mt: 3 }}>
                 <Button component={Link} to="/customerselect" variant="contained" size="large" sx={{width: '300px'}}>
                     <FaceIcon sx={{mr: 1, fontSize: 30}} />
                     <Typography>Customer</Typography>
@@ -21,9 +18,8 @@ function Restaurant () {
                     <Typography>Staff Member</Typography>
                 </Button>
             </Box>
-        </div>
-        </>
-    )
+        </Box>
+    );
 }
 
 export default Restaurant;

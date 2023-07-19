@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Typography, Button, TextField } from "@mui/material";
+import {Alert, Typography, Button, TextField, Box} from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { apiCall } from "../helpers/helpers";
 
@@ -32,8 +32,10 @@ function DeleteAccount() {
             <Typography>Please enter your password and confirm deletion of your account</Typography>
             <TextField sx={{margin: '10px'}} id="confirm-password" value={password} type="password" label="Password" onChange={(e) => setPassword(e.target.value)} />
             <br />
-            <Button variant="contained" component={Link} to={"/updateaccount"}>No, keep my profile</Button>
-            <Button variant="contained" onClick={acceptdelete}>Yes, delete my account</Button>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: 'fit-content', margin: 'auto', gap: '30px' }}>
+                <Button variant="contained" component={Link} to={"/updateaccount"}>No, keep my profile</Button>
+                <Button variant="contained" onClick={acceptdelete}>Yes, delete my account</Button>
+            </Box>
             {error && <Alert severity="error" aria-label='errorAlert' sx={{ margin: 'auto', width: '300px' }}>{error}</Alert>}
         </div>
         </>
