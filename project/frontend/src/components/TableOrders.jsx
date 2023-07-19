@@ -18,7 +18,7 @@ function TableOrders({ trigger }) {
     }, [trigger]);
 
     return (
-        <Box sx={{border: "1px solid black", padding: "5px", margin: "5px"}}>
+        <Box sx={{border: "1px solid black", padding: "10px", margin: "5px", overflow: "auto", borderRadius: "10px"}}>
             <Typography variant="h3">Table {table}</Typography>
             <Table>
                 <TableHead>
@@ -29,11 +29,13 @@ function TableOrders({ trigger }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {orders.map((ordered_item) => <TableRow>
-                        <TableCell>{ordered_item.name}</TableCell>
-                        <TableCell>{ordered_item.calories}</TableCell>
-                        <TableCell>{ordered_item.price}</TableCell>
-                    </TableRow>)}
+                    {orders.map((ordered_item) => (
+                        <TableRow key={ordered_item.id}>
+                            <TableCell>{ordered_item.name}</TableCell>
+                            <TableCell>{ordered_item.calories}</TableCell>
+                            <TableCell>{ordered_item.redeemed ? ordered_item.points_to_redeem + " MV Points": "$" + ordered_item.price}</TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
         </Box>

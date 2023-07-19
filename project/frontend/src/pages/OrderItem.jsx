@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { useLoaderData, useOutletContext } from "react-router-dom";
 import { apiCall } from "../helpers/helpers";
@@ -7,6 +7,7 @@ function OrderItem() {
     const updatevalue = useOutletContext();
     const item_info = useLoaderData();
     const [ordercount, setOrdercount] = React.useState(1);
+    const [alert, setAlert] = React.useState(false);
 
     async function sendOrder(points) {
         const body = {
@@ -18,8 +19,9 @@ function OrderItem() {
         let i = 0;
         while (i < ordercount) {
             const response = await apiCall("orders/order_item", "POST", body);
-            if (response) {
-                console.log("bueno");
+            if (response.status === 400) {
+                setAlert(true);
+                break;
             }
             i++;
         }
@@ -44,8 +46,9 @@ function OrderItem() {
                 <Button onClick={() => {setOrdercount(ordercount => ordercount+1)}}>+</Button>
             </div>
             <br />
-            {item_info.points && <Button onClick={() => {sendOrder(true)}}>Redeem with points</Button>}
+            {item_info.points_to_redeem > 0 && <Button onClick={() => {sendOrder(true)}}>Redeem with points</Button>}
             <Button onClick={() => {sendOrder(false)}}>Add to order</Button>
+            {alert && <Alert severity="error">Not enough points</Alert>}
         </Box>
     )
 }

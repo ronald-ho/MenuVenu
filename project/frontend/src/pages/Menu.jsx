@@ -34,7 +34,7 @@ function Menu () {
 
     return (
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <Box sx={{border: "1px solid black", margin: "10px", padding: "10px", textAlign: "center"}}>
+            <Box sx={{border: "1px solid black", margin: "10px", padding: "10px", textAlign: "center", borderRadius: "10px"}}>
                 {categories.map((category) => <CategoryButton key={category.category_id} category={category}/>)}
             </Box>
             <Outlet context={setUpdatetable}/>

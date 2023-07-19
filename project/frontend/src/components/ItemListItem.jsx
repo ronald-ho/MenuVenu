@@ -5,8 +5,7 @@ import ItemInfoPopUp from "./ItemInfoPopUp";
 import UpdateItemPopUp from "./UpdateItemPopUp";
 import DeleteItemPopUp from "./DeleteItemPopUp";
 
-function ItemListItem ({ categoryId, item }) {
-    // Make DragHandle clickable
+function ItemListItem ({ categoryId, item, allIngredients }) {
     const [openItemInfo, setOpenItemInfo] = React.useState(false);
     const [openUpdateItem, setOpenUpdateItem] = React.useState(false);
     const [openDeleteItem, setOpenDeleteItem] = React.useState(false);
@@ -36,7 +35,7 @@ function ItemListItem ({ categoryId, item }) {
                     }}
                 >
                     <DragHandle color="secondary" />
-                    <Typography sx={{ "&:hover": { color: "#551b8c", fontWeight: "bold" }, cursor: "pointer" }} >{item.name}</Typography>
+                    <Typography sx={{ "&:hover": { color: "#551b8c", fontWeight: "bold" }, cursor: "pointer" }}>{item.name}</Typography>
                 </Box>
                 <Box>
                     <IconButton 
@@ -60,7 +59,15 @@ function ItemListItem ({ categoryId, item }) {
                 </Box>
             </Box> 
             {openItemInfo && <ItemInfoPopUp open={openItemInfo} setOpen={setOpenItemInfo} item={item} />}
-            {openUpdateItem && <UpdateItemPopUp open={openUpdateItem} setOpen={setOpenUpdateItem} categoryId={categoryId} item={item} />}
+            {openUpdateItem && 
+                <UpdateItemPopUp 
+                    open={openUpdateItem} 
+                    setOpen={setOpenUpdateItem} 
+                    categoryId={categoryId} 
+                    item={item} 
+                    allIngredients={allIngredients} 
+                />
+            }
             {openDeleteItem && <DeleteItemPopUp open={openDeleteItem} setOpen={setOpenDeleteItem} categoryId={categoryId} item={item} />}
         </>
     )
