@@ -14,3 +14,6 @@ I started linking the frontend to the backend once the backend API functions wer
 
 Week 5
 Started working on Sprint 2. I designed some of the pages for viewing the menu and ordering items. Routes werent done yet so it was just the appearance for now with no functionality.
+
+Week 7
+I added actual functionality to the pages. The menu can display a list of items from the database and the order page can successfully order an item now. After that I tried improving it by adding the ability to order multiple items at a time and doing some bugfixing
