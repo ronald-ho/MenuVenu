@@ -41,6 +41,7 @@ class OrderedItems(db.Model):
     item = db.Column(db.Integer, db.ForeignKey(Items.id))
     prepared = db.Column(db.Boolean, default=False)
     served = db.Column(db.Boolean, default=False)
+    redeemed = db.Column(db.Boolean, default=False)
 
     order_details = db.relationship('Orders', backref='ordered_items')
     item_details = db.relationship('Items', backref='ordered_items')
@@ -53,4 +54,5 @@ class OrderedItems(db.Model):
             'table_number': self.order_details.table,
             'order_time': order_time,
             'item_name': self.item_details.name,
+            'redeemed': self.redeemed
         }

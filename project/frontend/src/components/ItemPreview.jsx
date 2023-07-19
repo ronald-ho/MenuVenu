@@ -8,6 +8,7 @@ function ItemPreview({ item }) {
             <Typography variant="h3">{item.name}</Typography>
             <img src={item.image} style={{maxWidth: "100px", maxHeight: "100px"}}/>
             <Typography>${item.price}</Typography>
+            {item.points_to_redeem && <Typography>{item.points_to_redeem} MV Points</Typography>}
             {item.calories && <Typography>{item.calories} Cal</Typography>}
             {item.points && <Typography>{item.points} MVPoints</Typography>}
         </Box>
