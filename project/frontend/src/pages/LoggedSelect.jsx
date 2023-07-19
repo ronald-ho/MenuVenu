@@ -1,18 +1,24 @@
 import React from "react";
-import { Typography, Box } from "@mui/material";
+import {Typography, Box, Button} from "@mui/material";
 import { Link } from "react-router-dom";
+import DiningIcon from '@mui/icons-material/Dining';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 function LoggedSelect () {
     return (
-        <div style={{textAlign: "center"}}>
+        <Box sx={{ textAlign: 'center', mt: 2 }}>
             <Typography>I want to...</Typography>
-            <Box component={Link} to={"/tableselect"} sx={{ display: 'inline-block', width: '20%', padding: '10px', border: '1px black solid', margin: '10px' }}>
-                <Typography>Start dining</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: '30px', mt: 3 }}>
+                <Button component={Link} to="/tableselect" variant="contained" size="large" sx={{width: '300px'}}>
+                    <DiningIcon sx={{mr: 1, fontSize: 30}} />
+                    <Typography>Start dining</Typography>
+                </Button>
+                <Button component={Link} to="/updateaccount" variant="contained" size="large" sx={{width: '300px'}}>
+                    <PersonAddIcon sx={{mr: 1, fontSize: 30}} />
+                    <Typography>Update my profile</Typography>
+                </Button>
             </Box>
-            <Box component={Link} to={"/updateaccount"} sx={{ display: 'inline-block', width: '20%', padding: '10px', border: '1px black solid', margin: '10px' }}>
-                <Typography>Update my profile</Typography>
-            </Box>
-        </div>
+        </Box>
     )
 }
 

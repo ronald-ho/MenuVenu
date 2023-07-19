@@ -133,7 +133,7 @@ class TableService:
 
     @staticmethod
     def get_tables():
-        all_tables = DiningTables.query.all()
+        all_tables = DiningTables.query.order_by(DiningTables.number).all()
         occupied_tables = DiningTables.query.filter_by(occupied=True).all()
 
         table_list = [table.to_dict() for table in all_tables]
