@@ -1,90 +1,95 @@
-from http import HTTPStatus
-import logging
+from flask import request
 
-from flask import jsonify, request
-
-from .. import app, db
-from .models import DiningTables, OrderedItems, Orders
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-#list for tables that need assistance
-assistance_flags = []
-
-#list for tables that are occupied
-occupied_flags = []
+from .services import AssistService, TableService, OrderService
+from .. import app
 
 @app.route('/orders/req_assist', methods=['POST'])
 def req_assist():
+    data = data_logger(request)
 
-    data = request.get_json()
-    logger.info(f"Received assistance request: {data}")
+    return AssistService.request_assist(data)
 
-    #get table that needs assistance
-    table = DiningTables.query.filter_by(table_number=data['table_number']).first()
-
-    if table.table_number in assistance_flags:
-        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Assistance already requested'})
-    else:
-        assistance_flags.append(table.table_number)
-        return jsonify({'status': HTTPStatus.OK, 'message': 'Assistance requested'})
 
 @app.route('/orders/finish_assist', methods=['POST'])
 def finish_assist():
-    data = request.get_json()
-    logger.info(f"Received assistance completion: {data}")
+    data = data_logger(request)
 
-    #get table where assistance is completed
-    table = DiningTables.query.filter_by(table_number=data['table_number']).first()
+    return AssistService.finish_assist(data)
 
-    assistance_flags.remove(table.table_number)
-
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Assistance completed'})
 
 @app.route('/orders/get_assist', methods=['GET'])
 def get_assist():
+    return AssistService.get_assist()
 
-    return jsonify({'status': HTTPStatus.OK, 'assistance_list': assistance_flags})
 
-@app.route('/orders/bill', methods=['POST'])
-def bill():
+@app.route('/orders/pay_bill', methods=['POST'])
+def pay_bill():
+    data = data_logger(request)
 
-    data = request.get_json()
-    logger.info(f"Received bill request: {data}")
+    return TableService.pay_bill(data)
 
-    #find order associated with table
-    table = DiningTables.query.filter_by(table_number=data['table_number']).first()
-    order = Orders.query.filter_by(paid = False).filter_by(table_id = table.table_id).first()
 
-    order.paid = True
-    db.session.commit()
-    occupied_flags.remove(table.table_number)
+@app.route('/orders/get_bill', methods=['POST'])
+def get_bill():
+    data = data_logger(request)
 
-    return jsonify({'status': HTTPStatus.OK, 'bill': order.total_amount})
+    return TableService.get_bill(data)
+
 
 @app.route('/orders/select_table', methods=['POST'])
 def select_table():
+    data = data_logger(request)
 
-    data = request.get_json()
-    logger.info(f"Received table selection request: {data}")
-
-    #get table that was selected
-    table = DiningTables.query.filter_by(table_number=data['table_number']).first()
-
-    if table.table_number in occupied_flags:
-        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table is occupied'})
-    else:
-        occupied_flags.append(table.table_number)
-        return jsonify({'status': HTTPStatus.OK, 'message': 'Table selected'})
+    return TableService.select_table(data)
 
 
 @app.route('/orders/get_tables', methods=['GET'])
 def get_tables():
 
-    table_list = DiningTables.query.all()
-    occupied_list = occupied_flags
+    return TableService.get_tables()
 
-    table_list = [table.to_dict() for table in table_list]
 
-    return jsonify({'status': HTTPStatus.OK, 'table_list': table_list, 'occupied_list': occupied_list})
+@app.route('/orders/order_item', methods=['POST'])
+def order_item():
+    data = data_logger(request)
+
+    return OrderService.order_item(data)
+
+
+@app.route('/orders/kitchen/prepared', methods=['POST'])
+def kitchen_prepared():
+    data = data_logger(request)
+
+    return OrderService.kitchen_prepared(data)
+
+
+@app.route('/orders/get_order_list', methods=['GET'])
+def get_order_list():
+
+    return OrderService.get_order_list()
+
+
+@app.route('/orders/get_ordered_items', methods=['POST'])
+def get_ordered_items():
+    data = data_logger(request)
+
+    return OrderService.get_ordered_items(data)
+
+
+@app.route('/orders/waitstaff/served', methods=['POST'])
+def waitstaff_served():
+    data = data_logger(request)
+
+    return OrderService.waitstaff_served(data)
+
+
+@app.route('/orders/get_serve_list', methods=['GET'])
+def get_serve_list():
+
+    return OrderService.get_serve_list()
+
+
+def data_logger(request):
+    data = request.get_json()
+    app.logger.info(f"Received request from frontend: {data}")
+    return data

@@ -1,98 +1,136 @@
 import React from "react";
-import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import AssistReqTableButton from "../components/AssistReqTableButton";
 import ConfirmAssistPopUp from "../components/ConfirmAssistPopUp";
 import { apiCall } from "../helpers/helpers";
+import WaitstaffOrderRow from "../components/WaitstaffOrderRow";
 
 function WaitStaff () {
-    // ORDER ITEM READY 
-    // 1. Poll for new items to be served and show in table
-    // 2. If waitstaff clicks table in Table no. column, pop up appears confirming whether food served or not
-    // 3. If no, do nothing. If yes, send API call to show item was served. Remove item from list
-
-    // ASSISTANCE REQUIRED
-    // 1. Poll for tables needing assistance and show in the column
-    // 2. If waitstaff clicks table in column, pop up appears confirming whether assisted or not
-    // 3. If no, do nothing. If yes, send API call to show table has been assisted. Remove table from the column
-       
-    TablesReqAssistPolling();
-
-    return (
-        <>
-            <Table sx={{ margin: 'auto', maxWidth: 700 }}>
-                <TableHead sx={{ border: 1, borderTop: 0 }}>
-                    <TableRow>
-                        <TableCell sx={{ borderRight: 1, borderBottom: 1 }}><b>ORDER ITEM READY</b></TableCell>
-                        <TableCell sx={{ borderBottom: 1 }}><b>TABLE NO.</b></TableCell>
-                    </TableRow>
-                </TableHead> 
-            </Table>
-            <Typography sx={{textAlign: 'center'}}> No orders ready yet</Typography>
-        </>
-    );
-}
-
-export const TablesReqAssistPolling = () => {
-    const [tableData, setTableData] = React.useState([]);
+    const [tablesToAssist, setTablesToAssist] = React.useState([]);
+    const [orderItemsToServe, setOrderItemsToServe] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
-    const [confirmTable, setConfirmTable] = React.useState();
+    const [confirmTableAssist, setConfirmTableAssist] = React.useState();
 
     React.useEffect(() => {
-        const fetchTableData = async () => {
-            // Make API call to fetch tables requiring assistance
-            const data = await apiCall("orders/get_assist", "GET", {});
+        const getTablesNeedAssist = async () => {
+            const data = await apiCall("/orders/get_assist", "GET", {});
             console.log(data);
             if (data.assistance_list) {
-                setTableData(data.assistance_list);
-                console.log(tableData.length)
+                setTablesToAssist(data.assistance_list);
+                console.log(data.assistance_list);
             }
             else {
                 console.log("Failed to fetch tables req assistance");
             }
         };
 
-        // Check updates every 5 seconds -> can adjust if suitable
-        const interval1 = setInterval(fetchTableData, 5000);
+        const interval1 = setInterval(getTablesNeedAssist, 5000);
 
         return () => clearInterval(interval1);
-    }, []);
+    }, [tablesToAssist]);
+
+    React.useEffect(() => {    
+        const getOrdersToServe = async () => {
+            const data = await apiCall("/orders/get_serve_list", "GET", {});
+            console.log(data);
+            if (data.serve_list) {
+                setOrderItemsToServe(data.serve_list);
+                console.log(data.serve_list);
+            }
+            else {
+                console.log("Failed to fetch orders");
+            }
+        };
+
+        const interval2 = setInterval(getOrdersToServe, 5000);
+
+        return () => clearInterval(interval2);
+    }, [orderItemsToServe]);
 
     return (
         <>
+            <Box 
+                sx={{
+                    border: "1px solid black", 
+                    borderRadius: "15px", 
+                    height: "80vh", 
+                    margin: "10px auto", 
+                    padding: "10px", 
+                    width: "70vw"
+                }}
+            >
+                <TableContainer sx={{ height: "81vh", overflow: "auto"}}>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><b>ORDER ITEM READY</b></TableCell>
+                                <TableCell><b>TABLE #</b></TableCell>
+                                <TableCell><b>READY TO SERVE?</b></TableCell>
+                            </TableRow>
+                        </TableHead> 
+                        <TableBody>
+                            {orderItemsToServe.length === 0 ? (
+                                <TableRow>
+                                    <TableCell sx={{ border: 0 }}></TableCell>
+                                    <TableCell sx={{ border: 0, textAlign: 'center'}}>
+                                        <Typography sx={{ margin: '0 auto 35px auto' }}>
+                                            Waiting for orders to serve
+                                        </Typography>
+                                        <CircularProgress />
+                                    </TableCell> 
+                                    <TableCell sx={{ border: 0 }}></TableCell>
+                                </TableRow>
+                            ) : (
+                                orderItemsToServe.map((orderItem) => 
+                                    <WaitstaffOrderRow key={orderItem.ordered_item_id} orderItem={orderItem} setOrderItemsToServe={setOrderItemsToServe}/>
+                                )
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
             <Box
                 sx={{
                     border: 1,
-                    borderTop: 0,
+                    borderRadius: "15px 0 0 15px",
+                    borderRight: 0,
                     fontSize: '15px',
                     position: 'absolute',
+                    margin: '10px 0 0 0',
                     textAlign: 'center',
                     top: '81.6px',
                     right: 0,
                     width: '140px',
-                    height: '85vh',
+                    height: '83vh'
                 }}
             >
                 <Typography sx={{ fontWeight: 'bold', padding: '15px 10px' }}>
                     ASSISTANCE REQUIRED AT
                 </Typography>
-                <Box sx={{ height: '74vh', overflow: 'auto' }}>
-                    {tableData.length !== 0 && tableData.map((table) => (
+                <Box sx={{ height: '74vh'}}>
+                    {tablesToAssist.length === 0 ? (
+                        <Box>
+                            <Typography sx={{ margin: "0 0 35px 0" }}>Waiting for tables</Typography>
+                            <CircularProgress />
+                        </Box> 
+                    ) : (
+                        tablesToAssist.map((table) => (
                             <AssistReqTableButton 
-                                key={table.table_id} 
+                                key={table} 
                                 handleClick={() => {
                                     setShowConfirmAssist(true);
-                                    setConfirmTable(table.table_number);
+                                    setConfirmTableAssist(table);
                                 }}
-                                tableNo={table.table_number}
+                                tableNo={table}
                             >
                             </AssistReqTableButton>
-                        ))
-                    }
+                        )) 
+                    )}
                 </Box>
             </Box>
-            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTable} setTableNo={setConfirmTable}/>}
+            {showConfirmAssist && <ConfirmAssistPopUp open={showConfirmAssist} setOpen={setShowConfirmAssist} tableNo={confirmTableAssist} setTablesToAssist={setTablesToAssist}/>}
         </>
     );
-};
+}
 
 export default WaitStaff;

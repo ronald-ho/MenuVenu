@@ -1,6 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Alert, Typography, TextField, Button } from "@mui/material";
+import {useNavigate} from "react-router-dom";
+import {Alert, Button, TextField, Typography} from "@mui/material";
+import {apiCall} from "../helpers/helpers";
 
 function WaitStaffLogin () {
     const navigate = useNavigate();
@@ -11,16 +12,18 @@ function WaitStaffLogin () {
 
     async function handleSubmit (event) {
         event.preventDefault();
-        
-        // Implement once password is added in database 
 
-        // if (!password) {
-        //     setShowAlert('Incorrect password');
-        // } else {
-        //     setShowAlert(null);
-        // }
+        const body = {
+            password: password
+        };
 
-        navigate("/waitstaff");
+        const data = await apiCall("auth/login/staff", "POST", body);
+
+        if (data.message === "Staff login successful") {
+            navigate("/waitstaff");
+        } else {
+            setShowAlert(data.message);
+        }
     }
 
     return (

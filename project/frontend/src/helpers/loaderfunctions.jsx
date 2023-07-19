@@ -74,50 +74,38 @@ export async function change_details (request) {
         new_password: data.password
     }
     const response = await apiCall("auth/update", "PUT", body);
-    if (response.status == 400) {
+    if (response.status === 400) {
         return "Email already exists"
     }
     return "Success!";
 }
 
 export const get_categories = async () => {
-    /*api call */
-    const body = [
-        {
-            name: "Drinks",
-            category_id: 1
-        }, {
-            name: "Snacks",
-            category_id: 2
-        }
-    ]
-    return body;
+    const response = await apiCall("menu/categories", "GET", {});
+    console.log(response.categories)
+    if (response.status === 200) {
+        return response.categories;
+    } else {
+        return [];
+    }
 }
 
 export async function get_items(params) {
     console.log(params.categoryid);
-    /*do fetch */
-    const body=[
-        {   
-            item_id: 1,
-            name: "HSP"
-        }, {
-            item_id: 2,
-            name: "Chicken roll"
-        }
-    ]
-    const body2=[
-        {
-            item_id: 3,
-            name: "Seafood bucket"
-        }, {
-            item_id: 4,
-            name: "Fish n chips"
-        }
-    ]
-    if (params.categoryid == 1) {
-        return body;
+    const response = await apiCall("menu/items/" + params.categoryid, "GET", {});
+    if (response.status === 200) {
+        return response.items;
     } else {
-        return body2;
+        return [];
+    }
+}
+
+export async function get_item(params) {
+    console.log(params.itemid);
+    const response = await apiCall("menu/item/details/" + params.itemid, "GET", {});
+    if (response.status === 200) {
+        return response.item;
+    } else {
+        return null;
     }
 }

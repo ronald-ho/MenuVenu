@@ -1,21 +1,27 @@
 import React from "react";
-import { Link } from "react-router-dom";  
-import { Typography, Box } from "@mui/material";
+import {Link} from "react-router-dom";
+import {Box, Button, Typography} from "@mui/material";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import LoginIcon from '@mui/icons-material/Login';
 
 function LogRegGuest () {
-    const boxcss = { display: 'inline-block', width: '20%', padding: '10px', border: '1px black solid', margin: '10px', height: '50px', verticalAlign: 'top' }
-
     return (
         <>
         <div style={{textAlign: 'center', marginTop: '60px'}}>
-            <Box component={Link} to={'/tableselect'} sx={boxcss}>
-                <Typography>Continue as guest</Typography>
-            </Box>
-            <Box component={Link} to={'/register'} sx={boxcss}>
-                <Typography>Register new MenuVenu account</Typography>    
-            </Box>
-            <Box component={Link} to={'/login'} sx={boxcss}>
-                <Typography>Login as MenuVenu member</Typography>    
+            <Box sx={{ display: 'inline-flex', justifyContent: 'center', gap: '30px' }}>
+                <Button component={Link} to="/tableselect" variant="contained" size="large" sx={{width: '300px'}}>
+                    <AccountCircleIcon sx={{mr: 1, fontSize: 30}} />
+                    <Typography>Continue as guest</Typography>
+                </Button>
+                <Button component={Link} to="/register" variant="contained" size="large" sx={{width: '300px'}}>
+                    <HowToRegIcon sx={{mr: 1, fontSize: 30}} />
+                    <Typography>Register new MenuVenu account</Typography>
+                </Button>
+                <Button component={Link} to="/login" variant="contained" size="large" sx={{width: '300px'}}>
+                    <LoginIcon sx={{mr: 1, fontSize: 30}} />
+                    <Typography>Login as MenuVenu member</Typography>
+                </Button>
             </Box>
         </div>
         </>

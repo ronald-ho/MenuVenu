@@ -1,15 +1,21 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import React from "react";
-import { TablesReqAssistPolling } from "../pages/WaitStaff";
 import { apiCall } from "../helpers/helpers";
 
-function ConfirmAssistPopUp ({ open, setOpen, tableNo, setTableNo }) {
+function ConfirmAssistPopUp ({ open, setOpen, tableNo, setTablesToAssist }) {
     async function handleConfirm() {
         const data = await apiCall("orders/finish_assist", "POST", {table_number: tableNo});
         if (data.message === "Assistance completed") {
-            // The polling should have one less table in the data, and rerender
+            const data = await apiCall("orders/get_assist", "GET", {});
+            console.log(data);
+            if (data.assistance_list) {
+                setTablesToAssist(data.assistance_list);
+                handleClose();
+            }
+            else {
+                console.log("Failed to fetch tables req assistance");
+            }
             console.log("table successfully assisted");
-            setTableNo(null);
         } 
         else {
             console.log("failed to fetch tables");

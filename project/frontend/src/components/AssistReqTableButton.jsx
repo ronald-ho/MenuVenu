@@ -14,7 +14,7 @@ function AssistReqTableButton ({ handleClick, tableNo }) {
     };
 
     return (
-        <Button onClick={handleClick} sx={button_css}>Table<br></br>{tableNo}</Button>
+        <Button onClick={handleClick} sx={button_css}>Table<br />{tableNo}</Button>
     )
 }
 
