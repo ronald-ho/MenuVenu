@@ -2,7 +2,7 @@ from datetime import datetime
 from http import HTTPStatus
 
 from flask import jsonify
-
+from sqlalchemy import func
 from .models import DiningTables, Orders, OrderedItems
 from .. import db
 from ..authentication.models import Customers
@@ -163,7 +163,8 @@ class OrderService:
         customer_id = data['customer_id']
         redeem = data['redeem']
 
-        item = Items.query.filter_by(name=item_name).first()
+        
+        item = Items.query.filter(func.lower(Items.name) == item_name.lower()).first()
         order = Orders.query.filter_by(paid=False).filter_by(table=table_id).first()
         customer = Customers.query.filter_by(id=customer_id).first() 
 
