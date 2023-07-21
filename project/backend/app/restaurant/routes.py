@@ -15,11 +15,14 @@ from .. import app
 
 
 # Route to get all items sorted by popularity
-@app.route('/items/popularity', methods=['GET'])
-def all_items_sorted(filter, category_id):
+@app.route('/manager/items/popularity', methods=['GET'])
+def all_items_sorted():
+    data = data_logger(request)
+    fil = data['filter']
+    category_id = data['category_id']
     try:
         # Query the OrderedItems table to get the count of each item and sort by popularity
-        if filter == "popularity":
+        if fil == "popularity":
 
             items_popularity = db.session.query(OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')).\
             group_by(OrderedItems.item).\
@@ -31,7 +34,7 @@ def all_items_sorted(filter, category_id):
             return jsonify(response_data), 200
 
 # NOT TESTED
-        if filter == "gross"    
+        if fil == "gross"    
             items_popularity = db.session.query(
             OrderedItems.item,
             db.func.count(OrderedItems.item).label('popularity'),
@@ -45,7 +48,7 @@ def all_items_sorted(filter, category_id):
 
         return jsonify(response_data), 200
 
-        if filter == "net"    
+        if fil == "net"    
             items_popularity = db.session.query(
             OrderedItems.item,
             db.func.count(OrderedItems.item).label('popularity'),
