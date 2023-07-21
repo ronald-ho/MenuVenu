@@ -4,7 +4,7 @@ from http import HTTPStatus
 from flask import jsonify
 
 from sqlalchemy.sql import func
-
+from builtins import sorted
 from .. import db
 from ..orders.models import OrderedItems
 from ..menu.models import Items
@@ -40,16 +40,23 @@ def all_items_sorted():
 
 # NOT TESTED
         if fil == "gross":    
+            subquery = db.session.query(
+                OrderedItems.item,
+                db.func.count(OrderedItems.item).label('popularity')
+            ).group_by(OrderedItems.item).subquery()
+
             items_popularity = db.session.query(
-            OrderedItems.item,
-            db.func.count(OrderedItems.item).label('popularity'),
-            Items.price.label('price')
-        ).join(Items, Items.id == OrderedItems.item). \
-            group_by(OrderedItems.item).all()
+                subquery.c.item,
+                subquery.c.popularity,
+                Items.price.label('price')
+            ).join(Items, Items.id == subquery.c.item).all()
+
+
 
         # Calculate gross income for each item (popularity * price)
         response_data = [{'item_id': item_id, 'popularity': popularity, 'gross_income': popularity * price}
                          for item_id, popularity, price in items_popularity]
+        response_data = sorted(response_data, key=lambda x: x['gross_income'], reverse = True)
 
         return jsonify(response_data), 200
 
