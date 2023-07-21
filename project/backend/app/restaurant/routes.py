@@ -6,6 +6,7 @@ from flask import jsonify
 from sqlalchemy.sql import func
 
 from .. import db
+from ..orders.models import OrderedItems
 from ..menu.models import Items
 from .. import app
 
@@ -35,7 +36,7 @@ def all_items_sorted(fil, category_id):
             return jsonify(response_data), 200
 
 # NOT TESTED
-        if fil == "gross"    
+        if fil == "gross":    
             items_popularity = db.session.query(
             OrderedItems.item,
             db.func.count(OrderedItems.item).label('popularity'),
@@ -49,11 +50,11 @@ def all_items_sorted(fil, category_id):
 
         return jsonify(response_data), 200
 
-        if fil == "net"    
+        if fil == "net":    
             items_popularity = db.session.query(
             OrderedItems.item,
             db.func.count(OrderedItems.item).label('popularity'),
-            Items.price.label('price')
+            Items.price.label('price'),
             Items.production.label('production')
         ).join(Items, Items.id == OrderedItems.item). \
             group_by(OrderedItems.item).all()

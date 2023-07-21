@@ -14,6 +14,7 @@ from app.menu import routes
 from app.menu.models import Categories, Ingredients, Items
 
 # Restaurant routes and models
+from app.restaurant import routes
 from app.restaurant.services import RestaurantService
 from app.orders.services import TableService
 from app.menu.services import IngredientService
