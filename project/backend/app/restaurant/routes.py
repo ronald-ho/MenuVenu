@@ -61,17 +61,27 @@ def all_items_sorted():
         return jsonify(response_data), 200
 
         if fil == "net":    
-            items_popularity = db.session.query(
-            OrderedItems.item,
-            db.func.count(OrderedItems.item).label('popularity'),
-            Items.price.label('price'),
-            Items.production.label('production')
-        ).join(Items, Items.id == OrderedItems.item). \
-            group_by(OrderedItems.item).all()
+            subquery = db.session.query(
+                OrderedItems.item,
+                db.func.count(OrderedItems.item).label('popularity')
+            ).group_by(OrderedItems.item).subquery()
 
-        # Calculate gross income for each item (popularity * price - production costs)
+            items_popularity = db.session.query(
+                subquery.c.item,
+                subquery.c.popularity,
+                Items.price.label('price')
+            ).join(Items, Items.id == subquery.c.item).all()
+
+            production_subquery = db.session.query(
+                    subquery.c.item,
+                    subquery.c.popularity,
+                    func.coalesce(Items.production, 0).label('production')
+            ).join(Items, Items.id == subquery.c.item).all()
+
+        # Calculate net income for each item (popularity * price - production costs)
         response_data = [{'item_id': item_id, 'popularity': popularity, 'net_income': popularity * (price - production)}
                          for item_id, popularity, price in items_popularity]
+        response_data = sorted(response_data, key=lambda x: x['net_income'], reverse = True)
 
         return jsonify(response_data), 200
 
