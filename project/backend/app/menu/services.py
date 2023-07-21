@@ -31,6 +31,8 @@ class ItemService:
             description=data['description'],
             image=image_path,
             price=data['price'],
+            production=data['production'],
+            net=data['price'] - data['production'],
             category=data['category_id'],
             calories=data['calories'],
             points_to_redeem=data['points_to_redeem'],
