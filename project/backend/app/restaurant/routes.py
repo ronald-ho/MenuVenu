@@ -54,11 +54,11 @@ def all_items_sorted():
 
 
         # Calculate gross income for each item (popularity * price)
-        response_data = [{'item_id': item_id, 'popularity': popularity, 'gross_income': popularity * price}
-                         for item_id, popularity, price in items_popularity]
-        response_data = sorted(response_data, key=lambda x: x['gross_income'], reverse = True)
+            response_data = [{'item_id': item_id, 'popularity': popularity, 'gross_income': popularity * price}
+                            for item_id, popularity, price in items_popularity]
+            response_data = sorted(response_data, key=lambda x: x['gross_income'], reverse = True)
 
-        return jsonify(response_data), 200
+            return jsonify(response_data), 200
 
         if fil == "net":    
             subquery = db.session.query(
@@ -69,17 +69,19 @@ def all_items_sorted():
             items_popularity = db.session.query(
                 subquery.c.item,
                 subquery.c.popularity,
-                Items.production.label('production')
+                Items.net.label('net')
             ).join(Items, Items.id == subquery.c.item).all()
 
 
 
         # Calculate gross income for each item (popularity * price)
-        response_data = [{'item_id': item_id, 'popularity': popularity, 'net_income': popularity * price}
-                         for item_id, popularity, price in items_popularity]
-        response_data = sorted(response_data, key=lambda x: x['net_income'], reverse = True)
+            response_data = [{'item_id': item_id, 'popularity': popularity, 'net_income': popularity * price}
+                            for item_id, popularity, price in items_popularity]
+            response_data = sorted(response_data, key=lambda x: x['net_income'], reverse = True)
 
-        return jsonify(response_data), 200
+            return jsonify(response_data), 200
+        
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Filter not found'})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
