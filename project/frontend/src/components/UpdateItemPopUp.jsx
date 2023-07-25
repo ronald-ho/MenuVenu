@@ -31,6 +31,11 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
             return;
         }
 
+        if (!production || parseInt(production) === 0) {
+            setAlert("Please enter a valid production cost");
+            return;
+        }
+
         console.log(itemIngredients);
         const updatedItem = {
             'id': item.id,

@@ -46,6 +46,12 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
             return;
         }
 
+        
+        if (!production || parseInt(production) === 0) {
+            setAlert("Please enter a valid production cost");
+            return;
+        }
+
         const newItem = {
             'category_id': categoryId,
             'name': name,
@@ -153,7 +159,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell sx={labelCellStyle}><Typography>Production cost</Typography></TableCell>
+                                <TableCell sx={labelCellStyle}><Typography>Production cost*</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         type="number"
