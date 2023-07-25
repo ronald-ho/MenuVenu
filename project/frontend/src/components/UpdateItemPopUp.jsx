@@ -8,19 +8,13 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
 
     const [name, setName] = React.useState(item.name);
     const [price, setPrice] = React.useState(item.price);
+    const [production, setProduction] = React.useState(item.production);
     const [imageData, setImageData] = React.useState(item.image);
     const [description, setDescription] = React.useState(item.description);
     const [calories, setCalories] = React.useState(item.calories);
     const [pointsToRedeem, setPointsToRedeem] = React.useState(item.points_to_redeem);
     const [pointsEarned, setPointsEarned] = React.useState(item.points_earned);
     const [itemIngredients, setItemIngredients] = React.useState(item.ingredients);
-    
-    // const initialChecked = {};
-    // for (const i of allIngredients) {
-    //     checked.i = itemIngredients.includes(i) ? true : false;
-    // }
-
-    // const [checked, setChecked] = React.useState(initialChecked);
 
     const [alert, setAlert] = React.useState('');
     
@@ -43,6 +37,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
             'category_id': categoryId,
             'name': name,
             'price': price,
+            'production': production,
             'image': imageData === '' ? null : imageData,
             'description': description === '' ? null : description,
             'calories': calories === '' ? null : calories,
@@ -141,6 +136,24 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                             step: 0.01
                                         }}
                                         onChange={(e) => setPrice(e.target.value)}
+                                        size="small" 
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                        }}
+                                        sx={{ width: '254px'}} 
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Production cost</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <TextField 
+                                        value={production}
+                                        type="number"
+                                        inputProps={{
+                                            step: 0.01
+                                        }}
+                                        onChange={(e) => setProduction(e.target.value)}
                                         size="small" 
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
