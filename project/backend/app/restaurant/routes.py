@@ -97,33 +97,36 @@ def get_orderlog():
 
         if timespan == 'day':
             start_time = end_time - timedelta(days=1)
-        if timespan == 'week':
+        elif timespan == 'week':
             start_time = end_time - timedelta(days=7)
-        if timespan == 'month':
+        elif timespan == 'month':
             start_time = end_time - timedelta(days=30)
-        if timespan == 'year':
+        elif timespan == 'year':
             start_time = end_time - timedelta(days=365)
-        if timespan == 'all':
+        elif timespan == 'all':
             start_time = datetime.min
+        
+        else:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'invalid range'})
             
-            order_log = db.session.query(
-                Orders.id.label('order_id'),
-                OrderedItems.id.label('ordered_item_id'),
-                Items.id.label('item_id'),
-                Items.name.label('item_name'),
-                case((OrderedItems.redeemed == True, 0),\
-                else_=Items.price).label('item_price'),             
-                OrderedItems.redeemed.label('item_redeemed')
-            )\
-            .join(OrderedItems, Orders.id == OrderedItems.order)\
-            .join(Items, OrderedItems.item == Items.id)\
-            .filter(
-                Orders.order_date >= start_time,
-                Orders.order_date <= end_time,
-                Orders.paid == True,
-            )\
-            .group_by(Orders.id, OrderedItems.id, Items.id, Items.name, Items.price, OrderedItems.redeemed)\
-            .all()
+        order_log = db.session.query(
+            Orders.id.label('order_id'),
+            OrderedItems.id.label('ordered_item_id'),
+            Items.id.label('item_id'),
+            Items.name.label('item_name'),
+            case((OrderedItems.redeemed == True, 0),\
+            else_=Items.price).label('item_price'),             
+            OrderedItems.redeemed.label('item_redeemed')
+        )\
+        .join(OrderedItems, Orders.id == OrderedItems.order)\
+        .join(Items, OrderedItems.item == Items.id)\
+        .filter(
+            Orders.order_date >= start_time,
+            Orders.order_date <= end_time,
+            Orders.paid == True,
+        )\
+        .group_by(Orders.id, OrderedItems.id, Items.id, Items.name, Items.price, OrderedItems.redeemed)\
+        .all()
 
         order_log_list = [
                 {
