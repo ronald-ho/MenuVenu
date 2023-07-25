@@ -69,12 +69,12 @@ function ItemList() {
                 </Box>)}
             </Droppable>
             </DragDropContext>
-            <Box sx={{borderTop: 1}}>
+            <Box sx={{ borderTop: "1px solid #caccce", height: "60px" }}>
                 <Button 
                     onClick={() => {
                         setOpenAddItem(true);
                     }}
-                    sx={{ margin: "10px" }} 
+                    sx={{ margin: "12.5px" }} 
                     color="success" 
                     variant="outlined"
                 >

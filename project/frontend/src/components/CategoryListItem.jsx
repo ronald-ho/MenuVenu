@@ -23,13 +23,13 @@ function CategoryListItem ({ category, setCategories }) {
             }}
             sx={{
                 backgroundColor: "white",
-                border: 1,
+                border: "1px solid #caccce",
                 borderRadius: "10px",
                 display: "flex",
                 gap: 0,
                 height: "40px",
                 justifyContent: "space-between",
-                margin: "5px auto 0 auto",
+                margin: "8px auto 0 auto",
                 padding: "0",
                 width: "23vw"
             }}

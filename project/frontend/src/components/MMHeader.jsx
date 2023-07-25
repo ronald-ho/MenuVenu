@@ -5,9 +5,9 @@ import LogOutButton from './LogOutButton';
 import ProfilePopup from './ProfilePopup';
 
 const StyledHeader = styled.header({
+  backgroundColor: '#7a49a5',
   display: 'flex',
   justifyContent: 'space-between',
-  border: '1px black solid'
 });
 
 function MMHeader ({ mode, setmode }) {
@@ -15,7 +15,7 @@ function MMHeader ({ mode, setmode }) {
 
   return (
     <StyledHeader>
-      <Typography sx={{ fontSize: '40px', padding: '10px 20px' }}>MOGGER MEALS</Typography>
+      <Typography sx={{ color: 'white', fontSize: '40px', fontWeight: 'bold', padding: '10px 20px' }}>MOGGER MEALS</Typography>
       <div>
         {mode === 'customer' && <>
           <LogOutButton setmode={setmode}/>

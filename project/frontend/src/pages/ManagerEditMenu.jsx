@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, useLoaderData } from "react-router-dom";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Add } from '@mui/icons-material';
 import AddCategoryPopUp from "../components/AddCategoryPopUp";
 import CategoryListItem from "../components/CategoryListItem";
@@ -34,21 +34,51 @@ function ManagerEditMenu () {
     }
    
     return (
-        <Box sx={{
-            border: 1,
-            borderRadius: "25px",
-            display: "flex",
-            flexDirection: "row",
-            height: "83vh",
-            margin: "10px auto 0 auto",
-            textAlign: "center",
-            width: "70vw"
-        }}>
-            <Box sx={{ borderRight: 1, width: "25vw" }}>
-                <Box sx={{ borderBottom: 1, padding: "15px 0"}}>CATEGORIES</Box>
+        <Box 
+            sx={{
+                backgroundColor: "white",
+                border: "1px solid #caccce",
+                borderRadius: "15px",
+                display: "flex",
+                flexDirection: "row",
+                height: "83vh",
+                margin: "10px auto",
+                textAlign: "center",
+                width: 3/4
+            }}
+        >
+            <Box 
+                sx={{ 
+                    borderRadius: "15px 0 0 15px", 
+                    borderRight: "1px solid #caccce", 
+                    display: "flex", 
+                    flexDirection: "column", 
+                    width: 1/3 
+                }}
+            >          
+                <Typography 
+                    sx={{ 
+                        borderBottom: "1px solid #caccce", 
+                        borderRadius: "15px 0 0 0", 
+                        color: "#7a49a5", 
+                        fontSize: "25px", 
+                        padding: "12px 0" 
+                    }}
+                >
+                    CATEGORIES
+                </Typography>
                 <DragDropContext onDragEnd={newposition}>
                     <Droppable droppableId="categories">
-                        {(provided) => (<Box {...provided.droppableProps} ref={provided.innerRef} sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
+                        {(provided) => (
+                            <Box 
+                                {...provided.droppableProps} 
+                                ref={provided.innerRef} 
+                                sx={{   
+                                    flex: 1,
+                                    overflow: "auto", 
+                                    padding: "0 0 5px 0",   
+                                }}
+                            >
                             {categories && categories.map((category, index) => (
                                 <Draggable key={category.category_id} draggableId={category.category_id.toString()} index={index}>
                                     {(provided) => (
@@ -64,18 +94,27 @@ function ManagerEditMenu () {
                         </Box>)}
                     </Droppable>
                 </DragDropContext>
-                <Box sx={{ borderTop: 1 }}>
-                    <Button onClick={() => setOpenAddCategory(true)} sx={{ margin: "8px" }} color="success" variant="outlined">
+                <Box sx={{ borderRadius: "0 0 0 15px", borderTop: "1px solid #caccce", height: "60px" }}>
+                    <Button onClick={() => setOpenAddCategory(true)} sx={{ margin: "12.5px" }} color="success" variant="outlined">
                         <Add /> New Category
                     </Button>
                 </Box>
             </Box>
-            <Box sx={{ width: "45vw" }}>
-                <Box sx={{ borderBottom: 1, padding: "15px 0" }}>MENU ITEMS</Box>
+            <Box sx={{ width: 2/3 }}>
+                <Typography 
+                    sx={{ 
+                        borderBottom: "1px solid #caccce", 
+                        borderRadius: "15px 0 0 0", 
+                        color: "#7a49a5", 
+                        fontSize: "25px", 
+                        padding: "12px 0" 
+                    }}
+                >
+                    MENU ITEMS
+                </Typography>
                 <Outlet />
             </Box>
             {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory} setCategories={setCategories} />}
-           
         </Box>
     )
 }
