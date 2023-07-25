@@ -1,0 +1,48 @@
+
+#Insert random stuff into orders
+
+INSERT INTO orders ("table", order_date, total_amount, points_earned, paid)
+SELECT
+    (SELECT id FROM dining_tables ORDER BY RANDOM() LIMIT 1),
+    CURRENT_TIMESTAMP - (FLOOR(RANDOM() * 30) || ' days')::INTERVAL,
+    ROUND((RANDOM() * 50.0 + 10.0)::numeric, 2),
+    0,
+    TRUE;
+
+INSERT INTO ordered_items ("order", order_time, item, prepared, served, redeemed)
+SELECT
+    o.id,
+    o.order_date,
+    (SELECT id FROM items ORDER BY RANDOM() LIMIT 1),
+    True,
+    True,
+    False
+FROM
+    orders o
+LIMIT
+    (SELECT FLOOR(RANDOM() * (SELECT COUNT(*) FROM orders)) + 1);
+
+
+
+UPDATE orders o
+SET total_amount = COALESCE(
+    (SELECT ROUND(SUM(COALESCE(i.price::numeric, 0)), 2)
+    FROM ordered_items oi
+    JOIN items i ON oi.item = i.id
+    WHERE oi.order = o.id),
+    0.0
+);
+
+
+
+
+
+
+# Delete rows
+DELETE FROM orders
+WHERE id NOT IN (
+    SELECT id
+    FROM orders
+    ORDER BY id
+    LIMIT 2
+);
