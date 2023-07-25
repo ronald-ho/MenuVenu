@@ -100,7 +100,7 @@ function ManagerEditMenu () {
                     </Button>
                 </Box>
             </Box>
-            <Box sx={{ width: 2/3 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", width: 2/3 }}>
                 <Typography 
                     sx={{ 
                         borderBottom: "1px solid #caccce", 

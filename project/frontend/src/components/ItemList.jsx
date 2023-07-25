@@ -55,25 +55,23 @@ function ItemList() {
     }
  
     return (
-        <>
+        <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
             <DragDropContext onDragEnd={newposition}>
-            <Droppable droppableId="items">
-                {(provided) => (<Box {...provided.droppableProps} ref={provided.innerRef} sx={{ height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
-                    {items.map((item, index) => 
-                    <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
-                        {(provided) => <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <ItemListItem categoryId={params.categoryid} item={item} allIngredients={allIngredients} />
-                        </div>}
-                    </Draggable>)}
-                    {provided.placeholder}
-                </Box>)}
-            </Droppable>
+                <Droppable droppableId="items">
+                    {(provided) => (<Box {...provided.droppableProps} ref={provided.innerRef} sx={{ flex: 1, height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
+                        {items.map((item, index) => 
+                        <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
+                            {(provided) => <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                <ItemListItem categoryId={params.categoryid} item={item} allIngredients={allIngredients} />
+                            </div>}
+                        </Draggable>)}
+                        {provided.placeholder}
+                    </Box>)}
+                </Droppable>
             </DragDropContext>
             <Box sx={{ borderTop: "1px solid #caccce", height: "60px" }}>
                 <Button 
-                    onClick={() => {
-                        setOpenAddItem(true);
-                    }}
+                    onClick={() => { setOpenAddItem(true) }}
                     sx={{ margin: "12.5px" }} 
                     color="success" 
                     variant="outlined"
@@ -82,7 +80,7 @@ function ItemList() {
                 </Button>
             </Box>
             {openAddItem && <AddItemPopUp open={openAddItem} setOpen={setOpenAddItem} categoryId={params.categoryid} allIngredients={allIngredients} />}
-        </>
+        </Box>
     )
 }
 
