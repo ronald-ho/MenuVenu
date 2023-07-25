@@ -97,9 +97,24 @@ def get_orderlog():
         start_time = end_time - timedelta(days=1)
 
         if timespan == 'day':
-            orders = db.session.query(Orders.id).\
-            filter(Orders.order_date >= start_time, Orders.order_date <= end_time, Orders.paid == True).all()
-            order_by(Orders.id)
+            order_log = db.session.query(
+                Orders.id.label('order_id'),
+                OrderedItems.id.label('ordered_item_id'),
+                Item.id.label('item_id'),
+                Item.name.label('item_name')
+                case([(OrderedItems.redeemed == True, 0)], 
+                else_= Item.price).label('item_price')             
+                OrderedItems.redeemed.label('item_redeemed')
+            )\
+            .join(OrderedItems, Orders.id == OrderedItems.order)\
+            .join(Item, OrderedItems.item == Item.id)\
+            .filter(
+                Orders.order_date >= start_time,
+                Orders.order_date <= end_time,
+                Orders.paid == True,
+            )\
+            .group_by(Orders.id, OrderedItems.id, Item.id, Item.name, Item.price, OrderedItems.redeemed)\
+            .all()
 
             for order in orders:
                 items = db.session.query.filter_by(Ordered_items.order == order[0]).all()
