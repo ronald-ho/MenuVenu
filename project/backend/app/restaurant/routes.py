@@ -92,7 +92,7 @@ def get_orderlog():
     timespan = request.args.get('time')
     total_income = 0
     end_time = datetime.now()
-
+    
     try:
         
 
@@ -155,7 +155,8 @@ def get_orderlog():
 def get_profit():
     timespan = request.args.get('time')
     fil = request.args.get('filter')
-    category_id = request.args.get('category_id')
+    category_id = int(request.args.get('category_id'))
+    end_time = datetime.now()
 
     try:
         
@@ -181,10 +182,11 @@ def get_profit():
             func.count(OrderedItems.item).label('item_popularity'),
             case((OrderedItems.redeemed == True, 0),\
             else_=Items.price).label('item_price'),
-            case([(OrderedItems.redeemed == True, 0 - Items.price)],\
-            else_=Items.net).label('item_net')             
-            OrderedItems.redeemed.label('item_redeemed')
-            Items.category.label('category_id')
+            case((OrderedItems.redeemed == True, 0 - Items.price),\
+            else_=Items.net).label('item_net'),             
+            OrderedItems.redeemed.label('item_redeemed'),
+            Items.category.label('category_id'),
+            OrderedItems.order_time.label('time')
         )\
         .join(OrderedItems, Orders.id == OrderedItems.order)\
         .join(Items, OrderedItems.item == Items.id)\
@@ -198,7 +200,8 @@ def get_profit():
             Items.id,
             Items.name,
             OrderedItems.redeemed,
-            Items.category)\
+            Items.category,
+            OrderedItems.order_time)\
         .all()
 
         order_log_list = [
@@ -211,18 +214,47 @@ def get_profit():
                     'item_price': row.item_price,
                     'item_net': row.item_net,
                     'item_redeemed': row.item_redeemed,
-                    'item_category': row.category_id
+                    'item_category': row.category_id,
+                    'time': row.time
                 }
                 for row in order_log
             ]
 
-        order_log_list = sorted(order_log_list, key = lambda x: x['order_id'])
+        order_log_list = sorted(order_log_list, key = lambda x: x['time'])
 
         if category_id:
             order_log_list = list(filter(lambda item: item.get('item_category') == category_id, order_log_list))
+            
+        per_day = {}
 
+        for order in order_log_list:
+            order_date = order['time'].strftime('%Y-%m-%d')
+            item_gross = order['item_price']
+            item_net = order['item_net']
+            item_popularity = order['item_popularity']
+            
+
+            # If the order_date already exists in the dictionary, add the total_amount to the existing value
+            if order_date in per_day:
+                if fil == 'gross':
+                    per_day[order_date] += item_gross
+                elif fil == 'net':
+                    per_day[order_date] += item_net
+                elif fil == 'popularity':
+                    per_day[order_date] += item_popularity
+            else:
+                # If the order_date is not in the dictionary, initialize it with the total_amount
+                if fil == 'gross':
+                    per_day[order_date] = item_gross
+                elif fil == 'net':
+                    per_day[order_date] = item_net
+                elif fil == 'popularity':
+                    per_day[order_date] = item_popularity
         
-        
+        sorted_per_day = dict(sorted(per_day.items()))
+
+        return jsonify({'status': HTTPStatus.OK, fil: sorted_per_day})
+
         if fil == 'popularity':
             total_pop = sum(row['item_popularity'] for row in order_log_list)
             pop = {timespan: total_pop}
@@ -244,6 +276,8 @@ def get_profit():
         else:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Filter not found'})
 
+    except Exception as e:
+            return jsonify({'error': str(e)}), 500
 '''
         order_log_list = sorted(order_log_list, key = lambda x: x['order_id'])
 
@@ -251,5 +285,4 @@ def get_profit():
 '''
 
 
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    
