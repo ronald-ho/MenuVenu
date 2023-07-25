@@ -89,19 +89,30 @@ def all_items_sorted():
 @app.route('/manager/orderlog', methods=['GET'])
 def get_orderlog():
     timespan = request.args.get('time')
-    
+    total_income = 0
     end_time = datetime.now()
 
     try:
-        start_time = end_time - timedelta(days=1)
+        
 
         if timespan == 'day':
+            start_time = end_time - timedelta(days=1)
+        if timespan == 'week':
+            start_time = end_time - timedelta(days=7)
+        if timespan == 'month':
+            start_time = end_time - timedelta(days=30)
+        if timespan == 'year':
+            start_time = end_time - timedelta(days=365)
+        if timespan == 'all':
+            start_time = datetime.min
+            
             order_log = db.session.query(
                 Orders.id.label('order_id'),
                 OrderedItems.id.label('ordered_item_id'),
                 Items.id.label('item_id'),
                 Items.name.label('item_name'),
-                case((OrderedItems.redeemed == True, 0), else_=Items.price).label('item_price'),             
+                case((OrderedItems.redeemed == True, 0),\
+                else_=Items.price).label('item_price'),             
                 OrderedItems.redeemed.label('item_redeemed')
             )\
             .join(OrderedItems, Orders.id == OrderedItems.order)\
@@ -125,8 +136,10 @@ def get_orderlog():
                 }
                 for row in order_log
             ]
-
-        return jsonify(order_log_list), 200
+        total_income = sum(row['item_price'] for row in order_log_list)
+        total = {timespan: total_income}
+        
+        return jsonify({'status': HTTPStatus.OK, 'orderlog': order_log_list, 'total_income': total})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
