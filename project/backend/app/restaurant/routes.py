@@ -10,6 +10,7 @@ from ..orders.models import OrderedItems, Orders
 from ..menu.models import Items
 from .. import app
 
+
 # Popularity Profit Money Per week/month/year etc
 # Popularity Profit Money Per Category
 # Popularity Profit Money Per Ingredient
@@ -142,7 +143,9 @@ def get_orderlog():
         total_income = sum(row['item_price'] for row in order_log_list)
         total = {timespan: total_income}
         
-        return jsonify({'status': HTTPStatus.OK, 'orderlog': order_log_list, 'total_income': total})
+        order_log_list = sorted(order_log_list, key = lambda x: x['order_id'])
+
+        return jsonify({'status': HTTPStatus.OK, 'orderlog': order_log_list, 'gross_income': total})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
