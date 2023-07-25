@@ -1,6 +1,5 @@
-
-#Insert random stuff into orders
-
+#Generate random orders, random ordered_items, then account for o.total amount must be sum(oi.i.price) 
+--------------------------------------------------------------------------------
 INSERT INTO orders ("table", order_date, total_amount, points_earned, paid)
 SELECT
     (SELECT id FROM dining_tables ORDER BY RANDOM() LIMIT 1),
@@ -33,7 +32,7 @@ SET total_amount = COALESCE(
     0.0
 );
 
-
+------------------------------------------------------------------------------------------
 
 
 
