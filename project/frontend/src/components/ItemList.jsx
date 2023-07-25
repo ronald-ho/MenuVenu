@@ -47,7 +47,7 @@ function ItemList() {
             "new_position": result.destination.index+1
         }
         const result1 = await apiCall("menu/item/position", "PUT", body);
-        if (result1.status != 200) {
+        if (result1.status !== 200) {
             console.log("bruh");
         }
         const result2 = await get_items(params);

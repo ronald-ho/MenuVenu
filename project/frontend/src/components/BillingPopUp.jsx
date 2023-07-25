@@ -47,9 +47,9 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
                 setCurpoints(cust.customer_info.points);
             }
         }
-        // setBill(10);
+        
         getBill();
-      }, []); 
+      }, [tableNo, customerId]); 
 
     return (
         <>
