@@ -101,9 +101,9 @@ def get_orderlog():
                 Orders.id.label('order_id'),
                 OrderedItems.id.label('ordered_item_id'),
                 Item.id.label('item_id'),
-                Item.name.label('item_name')
+                Item.name.label('item_name'),
                 case([(OrderedItems.redeemed == True, 0)], 
-                else_= Item.price).label('item_price')             
+                else_= Item.price).label('item_price'),             
                 OrderedItems.redeemed.label('item_redeemed')
             )\
             .join(OrderedItems, Orders.id == OrderedItems.order)\
