@@ -91,7 +91,7 @@ def get_orderlog():
     timespan = request.args.get('time')
 
     end_time = datetime.now()
-    orderlog = []
+    
 
     try:
         start_time = end_time - timedelta(days=1)
@@ -116,21 +116,7 @@ def get_orderlog():
             .group_by(Orders.id, OrderedItems.id, Item.id, Item.name, Item.price, OrderedItems.redeemed)\
             .all()
 
-            for order in orders:
-                items = db.session.query.filter_by(Ordered_items.order == order[0]).all()
-
-                order_details = []
-                
-                for item in items:
-                    item_details = {
-                        "item_id": item.id,
-                        "item_name": item.name,
-                        "earnings": item
-                        "redeemed": item.redeemed,
-                    }
-
-
-        return jsonify('sus')
+        return jsonify(order_log), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
