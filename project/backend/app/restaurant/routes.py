@@ -259,7 +259,7 @@ def get_profit():
         days = list(sorted_per_day.keys())
         items = list(sorted_per_day.values())
 
-        return jsonify({'status': HTTPStatus.OK, fil: sorted_per_day, 'days': days, 'values': items})
+        return jsonify({'status': HTTPStatus.OK, 'days': days, 'values': items})
 
 
     
