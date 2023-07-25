@@ -158,6 +158,9 @@ def get_profit():
     category_id = int(request.args.get('category_id'))
     end_time = datetime.now()
 
+    if fil not in ['gross', 'net', 'popularity']:
+        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Filter not found'})
+
     try:
         
 
@@ -220,7 +223,7 @@ def get_profit():
                 for row in order_log
             ]
 
-        order_log_list = sorted(order_log_list, key = lambda x: x['time'])
+        
 
         if category_id:
             order_log_list = list(filter(lambda item: item.get('item_category') == category_id, order_log_list))
@@ -250,31 +253,16 @@ def get_profit():
                     per_day[order_date] = item_net
                 elif fil == 'popularity':
                     per_day[order_date] = item_popularity
+                
         
         sorted_per_day = dict(sorted(per_day.items()))
+        days = list(sorted_per_day.keys())
+        items = list(sorted_per_day.values())
 
-        return jsonify({'status': HTTPStatus.OK, fil: sorted_per_day})
+        return jsonify({'status': HTTPStatus.OK, fil: sorted_per_day, 'days': days, 'values': items})
 
-        if fil == 'popularity':
-            total_pop = sum(row['item_popularity'] for row in order_log_list)
-            pop = {timespan: total_pop}
 
-            return jsonify({'status': HTTPStatus.OK, 'popularity': pop})
-
-        elif fil == 'gross': 
-            total_income = sum(row['item_price'] for row in order_log_list)
-            total = {timespan: total_income}  
-            
-            return jsonify({'status': HTTPStatus.OK, 'gross_income': total})
-
-        elif fil == 'net':
-            net_income = sum(row['item_net'] for row in order_log_list)
-            net = {timespan: net_income}
-
-            return jsonify({'status': HTTPStatus.OK, 'net_income': net_income})
-        
-        else:
-            return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Filter not found'})
+    
 
     except Exception as e:
             return jsonify({'error': str(e)}), 500
