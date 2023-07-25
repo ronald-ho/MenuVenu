@@ -36,9 +36,9 @@ def all_items_sorted():
         # Prepare the response data with item_id and popularity
             response_data = [{'item_id': item_id, 'popularity': popularity} for item_id, popularity in items_popularity]
 
-            return jsonify(response_data), 200
+            return jsonify({'status': HTTPStatus.OK, 'popularity_list': response_data})
 
-# NOT TESTED
+
         if fil == "gross":    
             subquery = db.session.query(
                 OrderedItems.item,
@@ -58,7 +58,7 @@ def all_items_sorted():
                             for item_id, popularity, price in items_popularity]
             response_data = sorted(response_data, key=lambda x: x['gross_income'], reverse = True)
 
-            return jsonify(response_data), 200
+            return jsonify({'status': HTTPStatus.OK, 'gross_list': response_data})
 
         if fil == "net":    
             subquery = db.session.query(
@@ -79,22 +79,10 @@ def all_items_sorted():
                             for item_id, popularity, price in items_popularity]
             response_data = sorted(response_data, key=lambda x: x['net_income'], reverse = True)
 
-            return jsonify(response_data), 200
+            return jsonify({'status': HTTPStatus.OK, 'net_list': response_data})
         
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Filter not found'})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Popularity of specific 
-
-@app.route('/manager/statistics/popularity', methods=['GET'])
-def item_popularity(item_id, time_frame, ingre):
-    try:
-        # Query the OrderedItems table to get the count of the given item_id
-        popularity_count = db.session.query(OrderedItems).filter_by(item=item_id).count()
-
-        return jsonify({'item_id': item_id, 'popularity': popularity_count}), 200
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
