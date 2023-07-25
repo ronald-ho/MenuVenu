@@ -24,6 +24,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
 
     const [name, setName] = React.useState(null);
     const [price, setPrice] = React.useState(null);
+    const [production, setProduction] = React.useState(null);
     const [imageData, setImageData] = React.useState(null);
     const [description, setDescription] = React.useState(null);
     const [calories, setCalories] = React.useState(null);
@@ -49,6 +50,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
             'category_id': categoryId,
             'name': name,
             'price': price,
+            'production': production,
             'image': imageData,
             'description': description,
             'calories': calories,
@@ -142,6 +144,23 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                             step: 0.01
                                         }}
                                         onChange={(e) => setPrice(e.target.value)}
+                                        size="small" 
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                        }}
+                                        sx={{ width: '254px'}} 
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={labelCellStyle}><Typography>Production cost</Typography></TableCell>
+                                <TableCell sx={inputCellStyle}>
+                                    <TextField 
+                                        type="number"
+                                        inputProps={{
+                                            step: 0.01
+                                        }}
+                                        onChange={(e) => setProduction(e.target.value)}
                                         size="small" 
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
