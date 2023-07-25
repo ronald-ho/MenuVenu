@@ -62,6 +62,7 @@ function ManagerEditMenu () {
                         borderRadius: "15px 0 0 0", 
                         color: "#7a49a5", 
                         fontSize: "25px", 
+                        fontWeight: 700,
                         padding: "12px 0" 
                     }}
                 >
@@ -107,6 +108,7 @@ function ManagerEditMenu () {
                         borderRadius: "15px 0 0 0", 
                         color: "#7a49a5", 
                         fontSize: "25px", 
+                        fontWeight: 700,
                         padding: "12px 0" 
                     }}
                 >

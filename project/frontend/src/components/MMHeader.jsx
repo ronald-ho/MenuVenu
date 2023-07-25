@@ -15,7 +15,7 @@ function MMHeader ({ mode, setmode }) {
 
   return (
     <StyledHeader>
-      <Typography sx={{ color: 'white', fontSize: '40px', fontWeight: 'bold', padding: '10px 20px' }}>MOGGER MEALS</Typography>
+      <Typography sx={{ color: 'white', fontFamily: "'Libre Franklin', sans-serif", fontSize: '40px', fontWeight: '1000', padding: '10px 20px' }}>MOGGER MEALS</Typography>
       <div>
         {mode === 'customer' && <>
           <LogOutButton setmode={setmode}/>

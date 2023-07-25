@@ -1,5 +1,6 @@
 import React from 'react';
 import {createBrowserRouter, Outlet, RouterProvider} from 'react-router-dom';
+import { createMuiTheme, ThemeProvider } from '@mui/material/styles';
 import './App.css';
 import MMHeader from './components/MMHeader';
 import MVFooter from './components/MVFooter';
@@ -35,6 +36,12 @@ import ManagerLogin from "./pages/ManagerLogin";
 
 function App() {
   const [mode, setMode] = React.useState('');
+
+  const theme = createMuiTheme({
+    typography: {
+      fontFamily: 'Quicksand'
+    }
+  });
 
   function Layout() {
     return (
@@ -135,7 +142,9 @@ function App() {
   }]);
 
   return (
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider> 
   );
 }
 
