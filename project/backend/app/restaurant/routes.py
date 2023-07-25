@@ -2,7 +2,7 @@ from flask import request
 from dataclasses import dataclass
 from http import HTTPStatus
 from flask import jsonify
-
+from datetime import datetime, timedelta
 from sqlalchemy.sql import func
 from builtins import sorted
 from .. import db
@@ -86,3 +86,36 @@ def all_items_sorted():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/manager/orderlog', methods=['GET'])
+def get_orderlog():
+    timespan = request.args.get('time')
+
+    end_time = datetime.now()
+    orderlog = []
+
+    try:
+        start_time = end_time - timedelta(days=1)
+
+        if timespan == 'day':
+            orders = db.session.query(Orders.id).\
+            filter(Orders.order_date >= start_time, Orders.order_date <= end_time, Orders.paid == True).all()
+            order_by(Orders.id)
+
+            for order in orders:
+                items = db.session.query.filter_by(Ordered_items.order == order[0]).all()
+
+                order_details = []
+                
+                for item in items:
+                    item_details = {
+                        "item_id": item.id,
+                        "item_name": item.name,
+                        "earnings": item
+                        "redeemed": item.redeemed,
+                    }
+
+
+        return jsonify('sus')
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
