@@ -3,6 +3,7 @@ from .. import db
 from .models import Restaurants
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class RestaurantService:
     @staticmethod
     def create_default_restaurant():
@@ -18,8 +19,5 @@ class RestaurantService:
             db.session.add(new_restaurant)
 
 
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
 
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
+

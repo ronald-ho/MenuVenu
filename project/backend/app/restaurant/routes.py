@@ -1,13 +1,14 @@
 from flask import request
 from dataclasses import dataclass
 from http import HTTPStatus
-from flask import jsonify
+from flask import jsonify, request, Blueprint
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func, case
 from builtins import sorted
 from .. import db
 from ..orders.models import OrderedItems, Orders
 from ..menu.models import Items
+from .models import Restaurants
 from .. import app
 from .services import RestaurantService
 
@@ -15,6 +16,10 @@ from .services import RestaurantService
 # Popularity Profit Money Per Category
 # Popularity Profit Money Per Ingredient
 
+def data_logger(request):
+    data = request.get_json()
+    app.logger.info(f"Received request from frontend: {data}")
+    return data
 
 
 
@@ -271,28 +276,27 @@ def get_profit():
 
 
 @app.route('/manager/update', methods=['PUT'])
-def update_restaurant(data):
+def update_restaurant():
+    data = data_logger(request)
     restaurant_id = data['restaurant_id']
-    new_name = data['name']
-    new_phone = data['phone']
+    new_name = data['new_name']
+    new_phone = data['new_phone']
     new_staff_password = data['new_staff_password']
     new_manager_password = data['new_manager_password']
 
     restaurant = Restaurants.query.filter_by(id=restaurant_id).first()
 
-    # Check if email already exists
-    if restaurant.name != new_name and Customers.query.filter_by(id=restaurant_id).first():
-        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid id: Bad Request'})
+
 
     # save the new data
     restaurant.name = new_name
     restaurant.phone = new_phone
 
     if new_staff_password:
-        data.set_password(new_staff_password)
-        
+        restaurant.set_staff_password(new_staff_password)
+
     if new_manager_password:
-        data.set_password(new_manager_password)
+        restaurant.set_manager_password(new_manager_password)
 
     db.session.commit()
 
