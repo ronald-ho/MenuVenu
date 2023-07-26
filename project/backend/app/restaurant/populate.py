@@ -1,29 +1,40 @@
-import random
 import datetime
+import random
+
+from sqlalchemy import text
 
 from .. import db
-from ..menu.models import Categories, Ingredients, Items
+from ..authentication.models import Customers
+from ..menu.models import Categories, Items, Ingredients
+from ..menu.services import MenuService, IngredientService
 from ..orders.models import Orders, OrderedItems, DiningTables
+
 
 # Helper functions to generate random data
 def random_menu_item():
     return random.choice(Items.query.all())
 
+
 def random_table():
     return random.choice(DiningTables.query.all())
 
+
 def random_quantity():
     return random.randint(1, 5)
+
 
 def random_order_date():
     end_date = datetime.datetime.now()
     start_date = end_date - datetime.timedelta(days=30)
     return start_date + datetime.timedelta(days=random.randint(0, 30))
 
+
 # Function to generate random full names
 def generate_random_full_name():
-    first_names = ['Ronald', 'Anthony', 'Emily', 'Daniel', 'Ouyang', 'John', 'Jane', 'Mike', 'Emily', 'Robert', 'Sophia', 'Michael', 'Olivia', 'William', 'Ava', 'Jim']
-    last_names = ['Ouyang', 'Ho', 'Huang', 'Tang', 'Lin', 'Valtan', 'Doe', 'Smith', 'Johnson', 'Williams', 'Brown', 'Lee', 'Chen', 'Kim', 'Wang', 'Liu']
+    first_names = ['Ronald', 'Anthony', 'Emily', 'Daniel', 'Ouyang', 'John', 'Jane', 'Mike', 'Emily', 'Robert',
+                   'Sophia', 'Michael', 'Olivia', 'William', 'Ava', 'Jim']
+    last_names = ['Ouyang', 'Ho', 'Huang', 'Tang', 'Lin', 'Valtan', 'Doe', 'Smith', 'Johnson', 'Williams', 'Brown',
+                  'Lee', 'Chen', 'Kim', 'Wang', 'Liu']
     return f"{random.choice(first_names)} {random.choice(last_names)}"
 
 
@@ -31,14 +42,18 @@ def generate_random_full_name():
 def populate_database():
     # Create people
     for i in range(10):
-        new_user = {"email": f"user{i}@gmail.com",
-                    "full_name": generate_random_full_name(),
-                    "password": "test"
-        }
+        new_user = Customers(
+            email=f"user{i}@gmail.com",
+            full_name=generate_random_full_name(),
+            points=0,
+            calories_burnt=0,
+            calories_gained=0
+        )
+
+        new_user.set_password('Test1!')
 
         db.session.add(new_user)
 
-    db.session.commit() 
     # Create categories
     categories_data = [
         {'name': 'Appetizers', 'position': 1},
@@ -49,7 +64,6 @@ def populate_database():
         db.session.add(Categories(**category))
     db.session.commit()
 
-    
     # Create menu items
     menu_items_data = [
         {
@@ -58,9 +72,9 @@ def populate_database():
             "price": 10.99,
             "production": 5.0,
             "category": 1,
-            "calories": (10.99),
-            "points_to_redeem": (10.99),
-            "points_earned": (10.99),
+            "calories": 10.99,
+            "points_to_redeem": 10.99,
+            "points_earned": 10.99,
             "ingredients": ["Beef", "Dairy"]
         },
         {
@@ -69,9 +83,9 @@ def populate_database():
             "price": 12.50,
             "production": 7.0,
             "category": 2,
-            "calories": (12.50),
-            "points_to_redeem": (12.50),
-            "points_earned": (12.50),
+            "calories": 12.50,
+            "points_to_redeem": 12.50,
+            "points_earned": 12.50,
             "ingredients": ["Dairy"]
         },
         {
@@ -80,9 +94,9 @@ def populate_database():
             "price": 8.95,
             "production": 3.0,
             "category": 3,
-            "calories": (8.95),
-            "points_to_redeem": (8.95),
-            "points_earned": (8.95),
+            "calories": 8.95,
+            "points_to_redeem": 8.95,
+            "points_earned": 8.95,
             "ingredients": ["Dairy"]
         },
         {
@@ -91,9 +105,9 @@ def populate_database():
             "price": 18.75,
             "production": 6.0,
             "category": 2,
-            "calories": (18.75),
-            "points_to_redeem": (18.75),
-            "points_earned": (18.75),
+            "calories": 18.75,
+            "points_to_redeem": 18.75,
+            "points_earned": 18.75,
             "ingredients": ["Seafood"]
         },
         {
@@ -102,9 +116,9 @@ def populate_database():
             "price": 14.25,
             "production": 4.0,
             "category": 2,
-            "calories": (14.25),
-            "points_to_redeem": (14.25),
-            "points_earned": (14.25),
+            "calories": 14.25,
+            "points_to_redeem": 14.25,
+            "points_earned": 14.25,
             "ingredients": ["Dairy"]
         },
         {
@@ -113,9 +127,9 @@ def populate_database():
             "price": 5.99,
             "production": 2.0,
             "category": 1,
-            "calories": (5.99),
-            "points_to_redeem": (5.99),
-            "points_earned": (5.99),
+            "calories": 5.99,
+            "points_to_redeem": 5.99,
+            "points_earned": 5.99,
             "ingredients": ["Nuts", "Dairy"]
         },
         {
@@ -124,9 +138,9 @@ def populate_database():
             "price": 9.50,
             "production": 5.0,
             "category": 1,
-            "calories": (9.50),
-            "points_to_redeem": (9.50),
-            "points_earned": (9.50),
+            "calories": 9.50,
+            "points_to_redeem": 9.50,
+            "points_earned": 9.50,
             "ingredients": ["Chicken"]
         },
         {
@@ -135,9 +149,9 @@ def populate_database():
             "price": 7.50,
             "production": 3.0,
             "category": 3,
-            "calories": (7.50),
-            "points_to_redeem": (7.50),
-            "points_earned": (7.50),
+            "calories": 7.50,
+            "points_to_redeem": 7.50,
+            "points_earned": 7.50,
             "ingredients": ["Dairy"]
         },
         {
@@ -146,9 +160,9 @@ def populate_database():
             "price": 12.95,
             "production": 6.0,
             "category": 2,
-            "calories": (12.95),
-            "points_to_redeem": (12.95),
-            "points_earned": (12.95),
+            "calories": 12.95,
+            "points_to_redeem": 12.95,
+            "points_earned": 12.95,
             "ingredients": ["Nuts", "Dairy"]
         },
         {
@@ -157,15 +171,30 @@ def populate_database():
             "price": 8.25,
             "production": 3.0,
             "category": 3,
-            "calories": (8.25),
-            "points_to_redeem": (8.25),
-            "points_earned": (8.25),
+            "calories": 8.25,
+            "points_to_redeem": 8.25,
+            "points_earned": 8.25,
             "ingredients": ["Dairy"]
         },
         # Add 10 more menu items here
     ]
     for item in menu_items_data:
-        db.session.add(Items(**item))
+        new_item = Items(
+            name=item['name'],
+            description=item['description'],
+            price=item['price'],
+            production=item['production'],
+            category=item['category'],
+            calories=item['calories'],
+            points_to_redeem=item['points_to_redeem'],
+            points_earned=item['points_earned'],
+            position=MenuService.get_next_position(Items)
+        )
+        db.session.add(new_item)
+        db.session.commit()
+
+        IngredientService.insert_ingredients(new_item, item['ingredients'])
+
     db.session.commit()
 
     # Generate orders and ordered items for the past 30 days
@@ -197,7 +226,7 @@ def populate_database():
         db.session.commit()
 
     # Update the total amount for orders
-    db.session.execute("""
+    db.session.execute(text("""
         UPDATE orders o
         SET total_amount = COALESCE(
             (SELECT ROUND(SUM(COALESCE(i.price::numeric, 0)), 2)
@@ -206,8 +235,5 @@ def populate_database():
             WHERE oi.order = o.id),
             0.0
         );
-    """)
+    """))
     db.session.commit()
-
-if __name__ == '__main__':
-    populate_database()
