@@ -266,11 +266,6 @@ def get_profit():
 
     except Exception as e:
             return jsonify({'error': str(e)}), 500
-'''
-        order_log_list = sorted(order_log_list, key = lambda x: x['order_id'])
-
-        return jsonify({'status': HTTPStatus.OK, 'orderlog': order_log_list, 'gross_income': total})
-'''
 
 
     
