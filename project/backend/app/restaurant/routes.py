@@ -33,7 +33,7 @@ def add_new_table(table_number):
 def all_items_sorted():
     
     fil = request.args.get('filter')
-    category_id = request.args.get('category_id')
+    category_id = int(request.args.get('category_id'))
 
     try:
         # Query the OrderedItems table to get the count of each item and sort by popularity
@@ -64,8 +64,8 @@ def all_items_sorted():
 
 
         # Calculate gross income for each item (popularity * price)
-            response_data = [{'item_id': item_id, 'popularity': popularity, 'gross_income': popularity * price}
-                            for item_id, popularity, price in items_popularity]
+            response_data = [{'item_id': item_id, 'popularity': popularity, 'gross_income': (popularity or 0) * price}
+                                for item_id, popularity, price in items_popularity]
             response_data = sorted(response_data, key=lambda x: x['gross_income'], reverse = True)
 
             return jsonify({'status': HTTPStatus.OK, 'gross_list': response_data})
@@ -84,9 +84,9 @@ def all_items_sorted():
 
 
 
-        # Calculate gross income for each item (popularity * price)
-            response_data = [{'item_id': item_id, 'popularity': popularity, 'net_income': popularity * price}
-                            for item_id, popularity, price in items_popularity]
+        # Calculate net income for each item (popularity * price)
+            response_data = [{'item_id': item_id, 'popularity': popularity, 'net_income': (popularity or 0) * net}
+                    for item_id, popularity, net in items_popularity]
             response_data = sorted(response_data, key=lambda x: x['net_income'], reverse = True)
 
             return jsonify({'status': HTTPStatus.OK, 'net_list': response_data})
@@ -164,7 +164,8 @@ def get_orderlog():
 def get_profit():
     timespan = request.args.get('time')
     fil = request.args.get('filter')
-    category_id = int(request.args.get('category_id'))
+    if (request.args.get('category_id')):
+        category_id = int(request.args.get('category_id'))
     end_time = datetime.now()
 
     if fil not in ['gross', 'net', 'popularity']:
