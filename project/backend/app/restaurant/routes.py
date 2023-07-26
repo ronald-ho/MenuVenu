@@ -1,23 +1,32 @@
 from flask import request
 from dataclasses import dataclass
 from http import HTTPStatus
-from flask import jsonify
+from flask import jsonify, request, Blueprint
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func, case
 from builtins import sorted
 from .. import db
-from ..orders.models import OrderedItems, Orders
+from ..orders.models import OrderedItems, Orders, DiningTables
 from ..menu.models import Items
+from .models import Restaurants
 from .. import app
-
+from .services import RestaurantService
 
 # Popularity Profit Money Per week/month/year etc
 # Popularity Profit Money Per Category
 # Popularity Profit Money Per Ingredient
 
+def data_logger(request):
+    data = request.get_json()
+    app.logger.info(f"Received request from frontend: {data}")
+    return data
 
 
 
+def add_new_table(table_number):
+    new_table = DiningTables(number=table_number)
+    db.session.add(new_table)
+    db.session.commit()
 
 # Route to get all items sorted by popularity
 @app.route('/manager/items/popularity', methods=['GET'])
@@ -268,4 +277,50 @@ def get_profit():
             return jsonify({'error': str(e)}), 500
 
 
-    
+
+
+@app.route('/manager/update', methods=['PUT'])
+def update_restaurant():
+    data = data_logger(request)
+    restaurant_id = data['restaurant_id']
+    new_name = data['new_name']
+    new_phone = data['new_phone']
+    new_staff_password = data['new_staff_password']
+    new_manager_password = data['new_manager_password']
+    num_table = int(data['num_tables'])
+
+    restaurant = Restaurants.query.filter_by(id=restaurant_id).first()
+
+    # save the new data
+    restaurant.name = new_name
+    restaurant.phone = new_phone
+
+    if new_staff_password:
+        restaurant.set_staff_password(new_staff_password)
+
+    if new_manager_password:
+        restaurant.set_manager_password(new_manager_password)
+
+
+    current_num_tables = DiningTables.query.count()
+
+    # Add or delete tables until it matches num_table
+    if current_num_tables < num_table:
+        # Add new tables
+        for i in range(num_table - current_num_tables):
+            add_new_table(current_num_tables + i + 1)
+    elif current_num_tables > num_table:
+        # Delete extra tables with higher numbers first
+        tables_to_delete = DiningTables.query.order_by(DiningTables.number.desc()).limit(current_num_tables - num_table).all()
+        for table in tables_to_delete:
+            if not Orders.query.filter_by(table=table.id).first():
+                db.session.delete(table)
+                db.session.commit()
+
+    # Update the numbers of the remaining tables to be consecutive
+    for i, table in enumerate(DiningTables.query.order_by(DiningTables.number).all(), start=1):
+        table.number = i
+
+    db.session.commit()
+
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated'})
