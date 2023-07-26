@@ -35,20 +35,34 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
     
     async function handleSubmit(e) {
         e.preventDefault();
-        
-        if (name === "") {
+
+        if (!name) {
             setAlert("Please enter an item name");
             return;
         }
 
-        if (!price || parseInt(price) === 0) {
-            setAlert("Please enter a valid price");
+        if (!price || parseInt(price) <= 0 ) {
+            setAlert("Please enter a price greater than 0");
             return;
         }
 
-        
-        if (!production || parseInt(production) === 0) {
-            setAlert("Please enter a valid production cost");
+        if (!production || parseInt(production) <= 0) {
+            setAlert("Please enter a production cost greater than 0");
+            return;
+        }
+
+        if (calories && parseInt(calories) <= 0 ) {
+            setAlert("Calories must be greater than 0");
+            return;
+        }
+
+        if (pointsToRedeem && parseInt(pointsToRedeem) <= 0) {
+            setAlert("Points to redeem must be greater than 0");
+            return;
+        }
+
+        if (pointsEarned && parseInt(pointsEarned) <= 0) {
+            setAlert("Points earned must be greater than 0");
             return;
         }
 
@@ -57,11 +71,11 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
             'name': name,
             'price': price,
             'production': production,
-            'image': imageData,
-            'description': description,
-            'calories': calories,
-            'points_to_redeem': pointsToRedeem,
-            'points_earned': pointsEarned,
+            'image': imageData === '' ? null : imageData,
+            'description': description === '' ? null : description,
+            'calories': calories === '' ? null : calories,
+            'points_to_redeem': pointsToRedeem === '' ? null : pointsToRedeem,
+            'points_earned': pointsEarned === '' ? null : pointsEarned,
             'ingredients': itemIngredients
         };
 
@@ -135,7 +149,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={labelCellStyle}><Typography>Name*</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) => {
+                                            setName(e.target.value); 
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         sx={{ width: '254px'}} 
                                     />
@@ -149,7 +166,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                         inputProps={{
                                             step: 0.01
                                         }}
-                                        onChange={(e) => setPrice(e.target.value)}
+                                        onChange={(e) => {
+                                            setPrice(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -166,7 +186,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                         inputProps={{
                                             step: 0.01
                                         }}
-                                        onChange={(e) => setProduction(e.target.value)}
+                                        onChange={(e) => {
+                                            setProduction(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -179,7 +202,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={labelCellStyle}><Typography>Image</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
                                     <input 
-                                        onChange={(e) => handleImageInput(e)}
+                                        onChange={(e) => {
+                                            handleImageInput(e);
+                                            setAlert(''); 
+                                        }}
                                         type="file" 
                                         accept="image/jpeg, image/png, image/jpg"
                                     />
@@ -189,7 +215,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={labelCellStyle}><Typography>Description</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
-                                        onChange={(e) => setDescription(e.target.value)}
+                                        onChange={(e) => {
+                                            setDescription(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         multiline 
                                         size="small" 
                                         rows={4} 
@@ -202,7 +231,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         type="number"
-                                        onChange={(e) => setCalories(e.target.value)}
+                                        onChange={(e) => {
+                                            setCalories(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">calories</InputAdornment>,
@@ -215,7 +247,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         type="number"
-                                        onChange={(e) => setPointsToRedeem(e.target.value)}
+                                        onChange={(e) => {
+                                            setPointsToRedeem(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
@@ -228,7 +263,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         type="number"
-                                        onChange={(e) => setPointsEarned(e.target.value)}
+                                        onChange={(e) => {
+                                            setPointsEarned(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
@@ -242,7 +280,10 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                     {allIngredients.map((ingredient, index) => (
                                         <FormControlLabel 
                                             key={index}
-                                            onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
+                                            onChange={(e) => {
+                                                handleCheckIngredient(e.target.checked, ingredient);
+                                                setAlert(''); 
+                                            }}
                                             control={<Checkbox />} 
                                             label={ingredient} 
                                         />

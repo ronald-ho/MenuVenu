@@ -21,18 +21,33 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        if (name === "") {
+        if (!name) {
             setAlert("Please enter an item name");
             return;
         }
 
-        if (!price || parseInt(price) === 0) {
-            setAlert("Please enter a valid price");
+        if (!price || parseInt(price) <= 0 ) {
+            setAlert("Please enter a price greater than 0");
             return;
         }
 
-        if (!production || parseInt(production) === 0) {
-            setAlert("Please enter a valid production cost");
+        if (!production || parseInt(production) <= 0) {
+            setAlert("Please enter a production cost greater than 0");
+            return;
+        }
+
+        if (calories && parseInt(calories) <= 0 ) {
+            setAlert("Calories must be greater than 0");
+            return;
+        }
+
+        if (pointsToRedeem && parseInt(pointsToRedeem) <= 0) {
+            setAlert("Points to redeem must be greater than 0");
+            return;
+        }
+
+        if (pointsEarned && parseInt(pointsEarned) <= 0) {
+            setAlert("Points earned must be greater than 0");
             return;
         }
 
@@ -124,7 +139,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                 <TableCell sx={labelCellStyle}><Typography>Name</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) => {
+                                            setName(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         value={name}
                                         size="small" 
                                         sx={{ width: '254px'}} 
@@ -140,7 +158,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         inputProps={{
                                             step: 0.01
                                         }}
-                                        onChange={(e) => setPrice(e.target.value)}
+                                        onChange={(e) => {
+                                            setPrice(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -158,7 +179,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         inputProps={{
                                             step: 0.01
                                         }}
-                                        onChange={(e) => setProduction(e.target.value)}
+                                        onChange={(e) => {
+                                            setProduction(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -177,7 +201,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                     </>
                                     }
                                     <input 
-                                        onChange={(e) => handleImageInput(e)}
+                                        onChange={(e) => {
+                                            handleImageInput(e);
+                                            setAlert(''); 
+                                        }}
                                         type="file" 
                                         accept="image/jpeg, image/png, image/jpg"
                                     />
@@ -188,7 +215,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
+                                        onChange={(e) => {
+                                            setDescription(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         multiline 
                                         size="small" 
                                         rows={4} 
@@ -202,7 +232,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                     <TextField 
                                         value={calories}
                                         type="number"
-                                        onChange={(e) => setCalories(e.target.value)}
+                                        onChange={(e) => {
+                                            setCalories(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">calories</InputAdornment>,
@@ -216,7 +249,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                     <TextField 
                                         value={pointsToRedeem}
                                         type="number"
-                                        onChange={(e) => setPointsToRedeem(e.target.value)}
+                                        onChange={(e) => {
+                                            setPointsToRedeem(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
@@ -230,7 +266,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                     <TextField 
                                         value={pointsEarned}
                                         type="number"
-                                        onChange={(e) => setPointsEarned(e.target.value)}
+                                        onChange={(e) => {
+                                            setPointsEarned(e.target.value);
+                                            setAlert(''); 
+                                        }}
                                         size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
@@ -244,7 +283,10 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                     {allIngredients.map((ingredient, index) => (
                                         <FormControlLabel 
                                             key={index}
-                                            onChange={(e) => handleCheckIngredient(e.target.checked, ingredient)}
+                                            onChange={(e) => {
+                                                handleCheckIngredient(e.target.checked, ingredient);
+                                                setAlert(''); 
+                                            }}
                                             control={<Checkbox checked={itemIngredients.includes(ingredient)}/>} 
                                             label={ingredient} 
                                         />                         
