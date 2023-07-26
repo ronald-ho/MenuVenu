@@ -43,15 +43,7 @@ class ItemService:
         db.session.add(new_item)
         db.session.commit()
 
-        for ingredient in ingredients:
-            ingredient = ingredient.capitalize()
-            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
-            if not ingredient_entity:
-                ingredient_entity = Ingredients(name=ingredient)
-                db.session.add(ingredient_entity)
-                db.session.commit()
-
-            new_item.ingredients.append(ingredient_entity)
+        IngredientService.insert_ingredients(new_item, ingredients)
 
         db.session.commit()
 
@@ -213,6 +205,18 @@ class IngredientService:
         ingredients_list = [ingredient.name for ingredient in ingredients]
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Ingredients found', 'ingredients': ingredients_list})
+
+    @staticmethod
+    def insert_ingredients(item, ingredient_list):
+        for ingredient in ingredient_list:
+            ingredient = ingredient.capitalize()
+            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
+            if not ingredient_entity:
+                ingredient_entity = Ingredients(name=ingredient)
+                db.session.add(ingredient_entity)
+                db.session.commit()
+
+            item.ingredients.append(ingredient_entity)
 
 
 class MenuService:
