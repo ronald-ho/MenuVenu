@@ -33,7 +33,7 @@ def populate_database():
     for i in range(10):
         new_user = {"email": f"user{i}@gmail.com",
                     "full_name": generate_random_full_name(),
-                    "password": test
+                    "password": "test"
         }
 
         db.session.add(new_user)
@@ -58,9 +58,9 @@ def populate_database():
             "price": 10.99,
             "production": 5.0,
             "category": 1,
-            "calories": generate_random_values(10.99),
-            "points_to_redeem": generate_random_values(10.99),
-            "points_earned": generate_random_values(10.99),
+            "calories": (10.99),
+            "points_to_redeem": (10.99),
+            "points_earned": (10.99),
             "ingredients": ["Beef", "Dairy"]
         },
         {
@@ -69,9 +69,9 @@ def populate_database():
             "price": 12.50,
             "production": 7.0,
             "category": 2,
-            "calories": generate_random_values(12.50),
-            "points_to_redeem": generate_random_values(12.50),
-            "points_earned": generate_random_values(12.50),
+            "calories": (12.50),
+            "points_to_redeem": (12.50),
+            "points_earned": (12.50),
             "ingredients": ["Dairy"]
         },
         {
@@ -80,9 +80,9 @@ def populate_database():
             "price": 8.95,
             "production": 3.0,
             "category": 3,
-            "calories": generate_random_values(8.95),
-            "points_to_redeem": generate_random_values(8.95),
-            "points_earned": generate_random_values(8.95),
+            "calories": (8.95),
+            "points_to_redeem": (8.95),
+            "points_earned": (8.95),
             "ingredients": ["Dairy"]
         },
         {
@@ -91,9 +91,9 @@ def populate_database():
             "price": 18.75,
             "production": 6.0,
             "category": 2,
-            "calories": generate_random_values(18.75),
-            "points_to_redeem": generate_random_values(18.75),
-            "points_earned": generate_random_values(18.75),
+            "calories": (18.75),
+            "points_to_redeem": (18.75),
+            "points_earned": (18.75),
             "ingredients": ["Seafood"]
         },
         {
@@ -102,9 +102,9 @@ def populate_database():
             "price": 14.25,
             "production": 4.0,
             "category": 2,
-            "calories": generate_random_values(14.25),
-            "points_to_redeem": generate_random_values(14.25),
-            "points_earned": generate_random_values(14.25),
+            "calories": (14.25),
+            "points_to_redeem": (14.25),
+            "points_earned": (14.25),
             "ingredients": ["Dairy"]
         },
         {
@@ -113,9 +113,9 @@ def populate_database():
             "price": 5.99,
             "production": 2.0,
             "category": 1,
-            "calories": generate_random_values(5.99),
-            "points_to_redeem": generate_random_values(5.99),
-            "points_earned": generate_random_values(5.99),
+            "calories": (5.99),
+            "points_to_redeem": (5.99),
+            "points_earned": (5.99),
             "ingredients": ["Nuts", "Dairy"]
         },
         {
@@ -124,9 +124,9 @@ def populate_database():
             "price": 9.50,
             "production": 5.0,
             "category": 1,
-            "calories": generate_random_values(9.50),
-            "points_to_redeem": generate_random_values(9.50),
-            "points_earned": generate_random_values(9.50),
+            "calories": (9.50),
+            "points_to_redeem": (9.50),
+            "points_earned": (9.50),
             "ingredients": ["Chicken"]
         },
         {
@@ -135,9 +135,9 @@ def populate_database():
             "price": 7.50,
             "production": 3.0,
             "category": 3,
-            "calories": generate_random_values(7.50),
-            "points_to_redeem": generate_random_values(7.50),
-            "points_earned": generate_random_values(7.50),
+            "calories": (7.50),
+            "points_to_redeem": (7.50),
+            "points_earned": (7.50),
             "ingredients": ["Dairy"]
         },
         {
@@ -146,9 +146,9 @@ def populate_database():
             "price": 12.95,
             "production": 6.0,
             "category": 2,
-            "calories": generate_random_values(12.95),
-            "points_to_redeem": generate_random_values(12.95),
-            "points_earned": generate_random_values(12.95),
+            "calories": (12.95),
+            "points_to_redeem": (12.95),
+            "points_earned": (12.95),
             "ingredients": ["Nuts", "Dairy"]
         },
         {
@@ -157,9 +157,9 @@ def populate_database():
             "price": 8.25,
             "production": 3.0,
             "category": 3,
-            "calories": generate_random_values(8.25),
-            "points_to_redeem": generate_random_values(8.25),
-            "points_earned": generate_random_values(8.25),
+            "calories": (8.25),
+            "points_to_redeem": (8.25),
+            "points_earned": (8.25),
             "ingredients": ["Dairy"]
         },
         # Add 10 more menu items here
