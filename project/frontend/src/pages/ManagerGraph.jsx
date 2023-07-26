@@ -11,8 +11,21 @@ function ManagerGraph() {
     const [period, setPeriod] = React.useState(0);
     const [category, setCategory] = React.useState(0);
 
+    const [statistics, setStatistics] = React.useState(null);
+    const options = {
+        responsive: true
+    }
+
+    const fetchstats = async () => {
+        //apiCall
+    }
+
+    React.useEffect(() => {
+        fetchstats();
+    }, [type, period, category])
+
     return (
-        <Box>
+        <Box sx={{textAlign: "center"}}>
             <Toolbar>
                 <Typography variant="h6">View: </Typography>
                 <TextField select label="Select statistic" value={type} onChange={(e) => {setType(e.target.value)}}>
@@ -33,6 +46,7 @@ function ManagerGraph() {
                     ))}
                 </TextField>
             </Toolbar>
+            {statistics && <Line options={options} data={statistics} />}
         </Box>
     )
 
