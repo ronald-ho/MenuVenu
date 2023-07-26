@@ -9,7 +9,7 @@ from .. import db
 from ..orders.models import OrderedItems, Orders
 from ..menu.models import Items
 from .. import app
-
+from .services import RestaurantService
 
 # Popularity Profit Money Per week/month/year etc
 # Popularity Profit Money Per Category
@@ -268,4 +268,32 @@ def get_profit():
             return jsonify({'error': str(e)}), 500
 
 
-    
+
+
+@app.route('/manager/update', methods=['PUT'])
+def update_restaurant(data):
+    restaurant_id = data['restaurant_id']
+    new_name = data['name']
+    new_phone = data['phone']
+    new_staff_password = data['new_staff_password']
+    new_manager_password = data['new_manager_password']
+
+    restaurant = Restaurants.query.filter_by(id=restaurant_id).first()
+
+    # Check if email already exists
+    if restaurant.name != new_name and Customers.query.filter_by(id=restaurant_id).first():
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Invalid id: Bad Request'})
+
+    # save the new data
+    restaurant.name = new_name
+    restaurant.phone = new_phone
+
+    if new_staff_password:
+        data.set_password(new_staff_password)
+        
+    if new_manager_password:
+        data.set_password(new_manager_password)
+
+    db.session.commit()
+
+    return jsonify({'status': HTTPStatus.OK, 'message': 'User updated'})

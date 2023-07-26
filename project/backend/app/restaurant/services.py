@@ -1,7 +1,7 @@
 from .. import db
 
 from .models import Restaurants
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class RestaurantService:
     @staticmethod
@@ -16,3 +16,10 @@ class RestaurantService:
             new_restaurant.set_staff_password('MenuVenu')
 
             db.session.add(new_restaurant)
+
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
