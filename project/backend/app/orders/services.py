@@ -145,8 +145,8 @@ class TableService:
     def create_default_tables():
         table_count = DiningTables.query.count()
 
-        if table_count < 5:
-            for i in range(table_count + 1, 6):
+        if table_count < 10:
+            for i in range(table_count + 1, 11):
                 table = DiningTables(
                     number=i
                 )
