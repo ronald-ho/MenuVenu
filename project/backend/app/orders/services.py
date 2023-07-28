@@ -117,7 +117,7 @@ class TableService:
         # creates a new order for table if it was not occupied yet
         if not table.occupied:
             new_order = Orders(
-                table=table.number,
+                table=table.id,
                 order_date=datetime.now(),
                 total_amount=0,
                 points_earned=0,
