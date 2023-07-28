@@ -3,6 +3,7 @@ import { Button, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import LogOutButton from './LogOutButton';
 import ProfilePopup from './ProfilePopup';
+import ManagerPopup from './ManagerPopup';
 import { Link, NavLink } from 'react-router-dom';
 
 const StyledHeader = styled.header({
@@ -14,6 +15,7 @@ const StyledHeader = styled.header({
 
 function MMHeader ({ mode, setmode }) {
   const [profile, setProfile] = React.useState(false);
+  const [manager, setManager] = React.useState(false);
 
   return (
     <StyledHeader>
@@ -25,6 +27,8 @@ function MMHeader ({ mode, setmode }) {
           {profile && <ProfilePopup open={profile} setOpen={setProfile}/>}
         </>}
         {mode === 'manager' && <>
+          <Button variant='contained' onClick={() => {setManager(true)}}>Manager</Button>
+          {manager && <ManagerPopup open={manager} setOpen={setManager}/>}
           <NavLink to={'/managergraph'} style={({ isActive }) => {
             return {
               fontWeight: isActive ? "bold" : "",
