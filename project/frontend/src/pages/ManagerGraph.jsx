@@ -10,7 +10,7 @@ function ManagerGraph() {
 
     const [type, setType] = React.useState("popularity");
     const [period, setPeriod] = React.useState("week");
-    const [category, setCategory] = React.useState([0]);
+    const [category, setCategory] = React.useState(["0,Entire Menu"]);
 
     const [statistics, setStatistics] = React.useState(null);
     const options = {
@@ -27,13 +27,14 @@ function ManagerGraph() {
         const datasets = []
         let days = []
         for (let cat in category) {
-            let result = await apiCall("manager/profit_tracker?time=" + period + "&filter=" + type + "&category_id=" + category[cat], "GET", {});
+            let splitted = category[cat].split(",")
+            let result = await apiCall("manager/profit_tracker?time=" + period + "&filter=" + type + "&category_id=" + splitted[0], "GET", {});
             if (result.status != 200) {
                 console.log("OH NOO");
                 return;
             }
             datasets.push({
-                label: "Category " + cat,
+                label: splitted[1],
                 data: result.values,
                 borderColor: randomrgb()
             })
@@ -74,9 +75,9 @@ function ManagerGraph() {
                     onChange: (e) => {setCategory(e.target.value)},
                     multiple: true
                 }}>
-                    <MenuItem value={0}>Entire Menu</MenuItem>
+                    <MenuItem value={"0,Entire Menu"}>Entire Menu</MenuItem>
                     {categories.map((category) => (
-                        <MenuItem key={category.category_id} value={category.category_id}>{category.name}</MenuItem>
+                        <MenuItem key={category.category_id} value={`${category.category_id},${category.name}`}>{category.name}</MenuItem>
                     ))}
                 </TextField>
             </Toolbar>
