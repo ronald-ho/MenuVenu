@@ -41,27 +41,27 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
             return;
         }
 
-        if (!price || parseInt(price) <= 0 ) {
+        if (!price || parseFloat(price) <= 0 ) {
             setAlert("Please enter a price greater than 0");
             return;
         }
 
-        if (!production || parseInt(production) <= 0) {
+        if (!production || parseFloat(production) <= 0) {
             setAlert("Please enter a production cost greater than 0");
             return;
         }
 
-        if (calories && parseInt(calories) <= 0 ) {
+        if (calories && parseFloat(calories) <= 0 ) {
             setAlert("Calories must be greater than 0");
             return;
         }
 
-        if (pointsToRedeem && parseInt(pointsToRedeem) <= 0) {
+        if (pointsToRedeem && parseFloat(pointsToRedeem) <= 0) {
             setAlert("Points to redeem must be greater than 0");
             return;
         }
 
-        if (pointsEarned && parseInt(pointsEarned) <= 0) {
+        if (pointsEarned && parseFloat(pointsEarned) <= 0) {
             setAlert("Points earned must be greater than 0");
             return;
         }
@@ -137,8 +137,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
             <Dialog
                 open={open}
                 onClose={handleClose}
-                fullWidth
-                maxWidth="xs"
+                sx={{ margin: "auto", width: "600px" }}
             >
                 <DialogTitle>Add New Item</DialogTitle>
                 <form onSubmit={(e) => handleSubmit(e)}>
@@ -154,7 +153,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                             setAlert(''); 
                                         }}
                                         size="small" 
-                                        sx={{ width: '254px'}} 
+                                        sx={{ width: '250px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
@@ -174,7 +173,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                         }}
-                                        sx={{ width: '254px'}} 
+                                        sx={{ width: '120px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
@@ -194,7 +193,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                         }}
-                                        sx={{ width: '254px'}} 
+                                        sx={{ width: '120px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
@@ -222,7 +221,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                         multiline 
                                         size="small" 
                                         rows={4} 
-                                        sx={{ width: '254px'}} 
+                                        sx={{ width: '250px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
@@ -231,14 +230,15 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         type="number"
+                                        size="small" 
                                         onChange={(e) => {
                                             setCalories(e.target.value);
                                             setAlert(''); 
                                         }}
-                                        size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">calories</InputAdornment>,
                                         }}
+                                        sx={{ width: '160px'}}
                                     />
                                 </TableCell>
                             </TableRow>
@@ -247,14 +247,15 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         type="number"
+                                        size="small" 
                                         onChange={(e) => {
                                             setPointsToRedeem(e.target.value);
                                             setAlert(''); 
                                         }}
-                                        size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
                                         }}
+                                        sx={{ width: '160px'}}
                                     />
                                 </TableCell>
                             </TableRow>
@@ -263,14 +264,15 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         type="number"
+                                        size="small" 
                                         onChange={(e) => {
                                             setPointsEarned(e.target.value);
                                             setAlert(''); 
                                         }}
-                                        size="small" 
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
                                         }}
+                                        sx={{ width: '160px'}}
                                     />
                                 </TableCell>
                             </TableRow>
