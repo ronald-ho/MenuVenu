@@ -2,7 +2,7 @@ import React from "react";
 import { Chart } from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
 import { useLoaderData } from "react-router-dom";
-import { Box, MenuItem, TextField, Toolbar, Typography } from "@mui/material";
+import { Box, MenuItem, TextField, Toolbar, Typography, AppBar } from "@mui/material";
 
 function ManagerGraph() {
     const categories = useLoaderData();
@@ -26,7 +26,7 @@ function ManagerGraph() {
 
     return (
         <Box sx={{textAlign: "center"}}>
-            <Toolbar>
+            <Toolbar sx={{justifyContent: "space-between", paddingTop: "10px", paddingBottom: "10px"}}>
                 <Typography variant="h6">View: </Typography>
                 <TextField select label="Select statistic" value={type} onChange={(e) => {setType(e.target.value)}}>
                     <MenuItem value={0}>Popularity</MenuItem>
