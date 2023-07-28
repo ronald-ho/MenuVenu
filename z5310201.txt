@@ -52,3 +52,6 @@ Made docstrings for auth, models.py (awaiting feedback to add more)
 
 
 Week 8:
+MOG-101 - 105
+Implemented autopopulate script for database using random data
+Fixed and added fields in menu such as production cost, net cost
