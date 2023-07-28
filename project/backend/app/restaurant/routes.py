@@ -2,7 +2,7 @@ from flask import request
 from dataclasses import dataclass
 from http import HTTPStatus
 from flask import jsonify, request, Blueprint
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from sqlalchemy.sql import func, case
 from builtins import sorted
 from .. import db
@@ -34,7 +34,7 @@ def add_new_table(table_number):
 def all_items_sorted():
     
     fil = request.args.get('filter')
-    category_id = int(request.args.get('category_id'))
+    category_id = request.args.get('category_id')
 
     try:
         # Query the OrderedItems table to get the count of each item and sort by popularity
@@ -354,5 +354,59 @@ def update_restaurant():
 @app.route('/manager/items/statistics', methods=['GET'])
 def item_statistics():
     # Passing in item id
-    id = request.args.get('id')
-    item = Items.query.filter_by(id=id).first()
+    item_id = request.args.get('id')
+    item_query = Items.query.filter_by(id = item_id).first()
+    timespan = request.args.get('time')
+    popularity = 0
+    unique_pop = 0
+    net = 0
+    gross = 0
+    trends = []
+    ranking = 0
+    per_order = 0
+    average_tod = 0
+
+    end_time = datetime.now()
+
+    try:
+        if timespan == 'week':
+            start_time = end_time - timedelta(days=7)
+        elif timespan == 'month':
+            start_time = end_time - timedelta(days=30)
+        elif timespan == 'year':
+            start_time = end_time - timedelta(days=365)
+        elif timespan == 'all':
+            start_time = datetime.min
+        
+        else:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'invalid range'})
+
+        popularity = db.session.query(func.count(OrderedItems.item)).filter(OrderedItems.item == item_id).scalar()
+        unique_pop = db.session.query(func.count(func.distinct(OrderedItems.order))).filter(OrderedItems.item == item_id).scalar()
+        if popularity:
+            if item_query.net:
+                net = popularity * item_query.net
+            gross = popularity * item_query.price
+
+        total_orders = db.session.query(func.count(Orders.id)).scalar()
+        per_order = float(popularity/total_orders)
+
+        items_popularity = db.session.query(OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')).\
+            group_by(OrderedItems.item).\
+            order_by(db.desc('popularity')).all()
+        
+        
+        for row_number, (item, popularity) in enumerate(items_popularity, start=1):
+            if item == item_query.id:
+                ranking = row_number
+                break
+
+        average_time = db.session.query(func.avg(func.extract('epoch', OrderedItems.order_time)).label('average_time')).filter(OrderedItems.item == item_query.id).first()  
+        average_time_seconds = average_time.average_time
+        average_time = time.fromtimestamp(average_time_seconds)
+
+        return jsonify(popularity, unique_pop, net, gross, per_order, ranking, average_time)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+        
