@@ -233,8 +233,6 @@ def get_profit():
                 for row in order_log
             ]
 
-        
-
         if category_id:
             order_log_list = list(filter(lambda item: item.get('item_category') == category_id, order_log_list))
             
@@ -264,7 +262,16 @@ def get_profit():
                 elif fil == 'popularity':
                     per_day[order_date] = item_popularity
                 
-        
+        if timespan != 'all':
+            first_date = start_time
+        else:
+            first_order = Orders.query.order_by(Orders.order_date).first()
+            first_date = first_order.order_date.replace(tzinfo=None)
+        while first_date < end_time:
+            if first_date.strftime('%Y-%m-%d') not in per_day:
+                per_day[first_date.strftime('%Y-%m-%d')] = 0
+            first_date += timedelta(days=1)
+
         sorted_per_day = dict(sorted(per_day.items()))
         days = list(sorted_per_day.keys())
         items = list(sorted_per_day.values())
