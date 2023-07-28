@@ -32,6 +32,7 @@ import ItemList from './components/ItemList';
 import KitchenOrders from './pages/KitchenOrders';
 import KitchenStaffLogin from './pages/KitchenStaffLogin';
 import ManagerLogin from "./pages/ManagerLogin";
+import ManagerGraph from './pages/ManagerGraph';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -129,7 +130,11 @@ function App() {
         element: <KitchenStaffLogin />
       }, {
         path: "/managerlogin",
-        element: <ManagerLogin />
+        element: <ManagerLogin setmode={setMode}/>
+      }, {
+        path: "/managergraph",
+        element: <ManagerGraph />,
+        loader: get_categories
       }
     ]
   }]);
