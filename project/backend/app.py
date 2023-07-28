@@ -13,6 +13,9 @@ from app.orders.models import DiningTables, OrderedItems, Orders
 from app.menu import routes
 from app.menu.models import Categories, Ingredients, Items
 
+# Fitness routes
+from app.fitness import routes
+
 # Restaurant routes and models
 from app.restaurant import routes
 from app.restaurant import populate
