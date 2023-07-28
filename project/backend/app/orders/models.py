@@ -26,7 +26,7 @@ class DiningTables(db.Model):
 @dataclass
 class Orders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    table = db.Column(db.Integer, db.ForeignKey(DiningTables.id))
+    table = db.Column(db.Integer, db.ForeignKey(DiningTables.number))
     order_date = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     total_amount = db.Column(db.Float, nullable=False)
     points_earned = db.Column(db.Integer, nullable=False)

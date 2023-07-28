@@ -306,7 +306,7 @@ def update_restaurant():
     if new_manager_password:
         restaurant.set_manager_password(new_manager_password)
 
-    occupied_list = []
+    
 
     current_num_tables = DiningTables.query.count()
     
@@ -328,12 +328,13 @@ def update_restaurant():
                     order.table = 1
                     db.session.commit()
 
-                if DiningTables.query.filter_by(id = table.id, occupied = False).first():
+            if DiningTables.query.filter_by(id = table.id).first():
+                if not table.occupied:
                     db.session.delete(table)
                     db.session.commit()
+                
                     
-                if DiningTables.query.filter_by(id = table.id, occupied = True).first():
-                    occupied_list.append(table.number)
+                
 
 
     # Update the numbers of the remaining tables to be consecutive
@@ -342,7 +343,12 @@ def update_restaurant():
 
     db.session.commit()
 
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated', 'could not delete tables': occupied_list})
+    current_num_tables = DiningTables.query.count()
+
+    occupied_tables = current_num_tables - num_table
+
+
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated', 'Number of occupied tables that werent deleted': occupied_tables})
 
 
 @app.route('/manager/items/statistics', methods=['GET'])
