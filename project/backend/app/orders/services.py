@@ -107,10 +107,10 @@ class TableService:
 
     @staticmethod
     def select_table(data):
-        table_number = data['table_number']
+        table_number = int(data['table_number'])
 
         table = DiningTables.query.filter_by(number=table_number).first()
-
+        
         if not table:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
 

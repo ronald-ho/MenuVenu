@@ -11,6 +11,7 @@ from ..menu.models import Items
 from .models import Restaurants
 from .. import app
 from .services import RestaurantService
+from sqlalchemy import and_
 
 # Popularity Profit Money Per week/month/year etc
 # Popularity Profit Money Per Category
@@ -288,7 +289,10 @@ def update_restaurant():
     new_phone = data['new_phone']
     new_staff_password = data['new_staff_password']
     new_manager_password = data['new_manager_password']
-    num_table = int(data['num_tables'])
+    if int(data['num_tables']) >= 1:
+        num_table = int(data['num_tables'])
+    else:
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Must have at least 1 table'})
 
     restaurant = Restaurants.query.filter_by(id=restaurant_id).first()
 
@@ -302,9 +306,10 @@ def update_restaurant():
     if new_manager_password:
         restaurant.set_manager_password(new_manager_password)
 
+    occupied_list = []
 
     current_num_tables = DiningTables.query.count()
-
+    
     # Add or delete tables until it matches num_table
     if current_num_tables < num_table:
         # Add new tables
@@ -313,10 +318,23 @@ def update_restaurant():
     elif current_num_tables > num_table:
         # Delete extra tables with higher numbers first
         tables_to_delete = DiningTables.query.order_by(DiningTables.number.desc()).limit(current_num_tables - num_table).all()
+        
         for table in tables_to_delete:
-            if not Orders.query.filter_by(table=table.id).first():
-                db.session.delete(table)
-                db.session.commit()
+            orders_with_unpaid = Orders.query.filter_by(table=table.id, paid=False).all()
+
+            if not orders_with_unpaid:
+                # Update associated orders to set the table_id to -1 (or any other value)
+                for order in Orders.query.filter_by(table=table.id).all():
+                    order.table = 1
+                    db.session.commit()
+
+                if DiningTables.query.filter_by(id = table.id, occupied = False).first():
+                    db.session.delete(table)
+                    db.session.commit()
+                    
+                if DiningTables.query.filter_by(id = table.id, occupied = True).first():
+                    occupied_list.append(table.number)
+
 
     # Update the numbers of the remaining tables to be consecutive
     for i, table in enumerate(DiningTables.query.order_by(DiningTables.number).all(), start=1):
@@ -324,4 +342,11 @@ def update_restaurant():
 
     db.session.commit()
 
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated'})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated', 'could not delete tables': occupied_list})
+
+
+@app.route('/manager/items/statistics', methods=['GET'])
+def item_statistics():
+    # Passing in item id
+    id = request.args.get('id')
+    item = Items.query.filter_by(id=id).first()
