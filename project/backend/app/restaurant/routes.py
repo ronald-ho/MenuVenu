@@ -401,11 +401,15 @@ def item_statistics():
                 ranking = row_number
                 break
 
-        average_time = db.session.query(func.avg(func.extract('epoch', OrderedItems.order_time)).label('average_time')).filter(OrderedItems.item == item_query.id).first()  
-        average_time_seconds = average_time.average_time
-        average_time = time.fromtimestamp(average_time_seconds)
+        average_time = db.session.query(func.avg(func.extract('epoch', OrderedItems.order_time)).label('average_time')).filter(OrderedItems.item == item_query.id).first()
 
-        return jsonify(popularity, unique_pop, net, gross, per_order, ranking, average_time)
+        average_time_seconds = float(average_time.average_time) 
+        average_datetime = datetime.utcfromtimestamp(average_time_seconds)
+
+# Extract the time component (hour and minutes) from the datetime object
+        average_time = average_datetime.time()
+        average_time_str = average_time.strftime('%H:%M:%S')
+        return jsonify(popularity, unique_pop, net, gross, per_order, ranking, average_time_str)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
