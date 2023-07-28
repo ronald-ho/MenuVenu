@@ -137,7 +137,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
             <Dialog
                 open={open}
                 onClose={handleClose}
-                sx={{ margin: "auto", width: "600px" }}
+                sx={{ margin: "auto", width: "560px" }}
             >
                 <DialogTitle>Add New Item</DialogTitle>
                 <form onSubmit={(e) => handleSubmit(e)}>
@@ -153,7 +153,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                             setAlert(''); 
                                         }}
                                         size="small" 
-                                        sx={{ width: '250px'}} 
+                                        sx={{ width: '270px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
@@ -221,7 +221,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                         multiline 
                                         size="small" 
                                         rows={4} 
-                                        sx={{ width: '250px'}} 
+                                        sx={{ width: '270px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
@@ -255,7 +255,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
                                         }}
-                                        sx={{ width: '160px'}}
+                                        sx={{ width: '175px'}}
                                     />
                                 </TableCell>
                             </TableRow>
@@ -272,7 +272,7 @@ function AddItemPopUp ({ open, setOpen, categoryId, allIngredients }) {
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
                                         }}
-                                        sx={{ width: '160px'}}
+                                        sx={{ width: '175px'}}
                                     />
                                 </TableCell>
                             </TableRow>

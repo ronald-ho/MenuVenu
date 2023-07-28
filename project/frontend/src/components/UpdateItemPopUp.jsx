@@ -26,27 +26,27 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
             return;
         }
 
-        if (!price || parseInt(price) <= 0 ) {
+        if (!price || parseFloat(price) <= 0 ) {
             setAlert("Please enter a price greater than 0");
             return;
         }
 
-        if (!production || parseInt(production) <= 0) {
+        if (!production || parseFloat(production) <= 0) {
             setAlert("Please enter a production cost greater than 0");
             return;
         }
 
-        if (calories && parseInt(calories) <= 0 ) {
+        if (calories && parseFloat(calories) <= 0 ) {
             setAlert("Calories must be greater than 0");
             return;
         }
 
-        if (pointsToRedeem && parseInt(pointsToRedeem) <= 0) {
+        if (pointsToRedeem && parseFloat(pointsToRedeem) <= 0) {
             setAlert("Points to redeem must be greater than 0");
             return;
         }
 
-        if (pointsEarned && parseInt(pointsEarned) <= 0) {
+        if (pointsEarned && parseFloat(pointsEarned) <= 0) {
             setAlert("Points earned must be greater than 0");
             return;
         }
@@ -127,8 +127,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
             <Dialog
                 open={open}
                 onClose={handleClose}
-                fullWidth
-                maxWidth="xs"
+                sx={{ margin: "auto", width: "560px" }}
             >
                 <DialogTitle>Update Item</DialogTitle>
                 <form onSubmit={(e) => handleSubmit(e)}>
@@ -136,7 +135,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                     <Table>
                         <TableBody>
                             <TableRow>
-                                <TableCell sx={labelCellStyle}><Typography>Name</Typography></TableCell>
+                                <TableCell sx={labelCellStyle}><Typography>Name*</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         onChange={(e) => {
@@ -145,12 +144,12 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         }}
                                         value={name}
                                         size="small" 
-                                        sx={{ width: '254px'}} 
+                                        sx={{ width: '270px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell sx={labelCellStyle}><Typography>Price</Typography></TableCell>
+                                <TableCell sx={labelCellStyle}><Typography>Price*</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         value={price}
@@ -166,12 +165,12 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                         }}
-                                        sx={{ width: '254px'}} 
+                                        sx={{ width: '120px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell sx={labelCellStyle}><Typography>Production cost</Typography></TableCell>
+                                <TableCell sx={labelCellStyle}><Typography>Production cost*</Typography></TableCell>
                                 <TableCell sx={inputCellStyle}>
                                     <TextField 
                                         value={production}
@@ -187,7 +186,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                         }}
-                                        sx={{ width: '254px'}} 
+                                        sx={{ width: '120px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
@@ -222,7 +221,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         multiline 
                                         size="small" 
                                         rows={4} 
-                                        sx={{ width: '254px'}} 
+                                        sx={{ width: '270px'}} 
                                     />
                                 </TableCell>
                             </TableRow>
@@ -240,6 +239,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">calories</InputAdornment>,
                                         }}
+                                        sx={{ width: '160px'}}
                                     />
                                 </TableCell>
                             </TableRow>
@@ -257,6 +257,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
                                         }}
+                                        sx={{ width: '175px'}}
                                     />
                                 </TableCell>
                             </TableRow>
@@ -274,6 +275,7 @@ function UpdateItemPopUp ({ open, setOpen, categoryId, item, allIngredients }) {
                                         InputProps={{
                                             endAdornment: <InputAdornment position="end">MV points</InputAdornment>,
                                         }}
+                                        sx={{ width: '175px'}}
                                     />
                                 </TableCell>
                             </TableRow>
