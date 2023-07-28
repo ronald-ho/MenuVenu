@@ -27,7 +27,7 @@ function MMHeader ({ mode, setmode }) {
           {profile && <ProfilePopup open={profile} setOpen={setProfile}/>}
         </>}
         {mode === 'manager' && <>
-          <Button variant='contained' onClick={() => {setManager(true)}}>Manager</Button>
+          <Button variant='contained' onClick={() => {setManager(true)}} sx={{marginRight: "10px"}}>Manager</Button>
           {manager && <ManagerPopup open={manager} setOpen={setManager}/>}
           <NavLink to={'/managergraph'} style={({ isActive }) => {
             return {

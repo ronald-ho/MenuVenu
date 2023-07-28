@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import {Alert, Button, TextField, Typography} from "@mui/material";
 import {apiCall} from "../helpers/helpers";
 
-function ManagerLogin ({ setmode }) {
+function ManagerLogin () {
     const navigate = useNavigate();
 
     // Get manager password from database
@@ -20,7 +20,6 @@ function ManagerLogin ({ setmode }) {
         const data = await apiCall("auth/login/manager", "POST", body);
 
         if (data.message === "Manager login successful") {
-            setmode('manager');
             navigate("/managereditmenu");
         } else {
             setShowAlert(data.message);

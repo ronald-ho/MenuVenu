@@ -114,7 +114,7 @@ function App() {
         ]
       }, { 
         path: "/managereditmenu",
-        element: <ManagerEditMenu />,
+        element: <ManagerEditMenu setmode={setMode}/>,
         loader: get_categories,
         children: [
           {
@@ -130,7 +130,7 @@ function App() {
         element: <KitchenStaffLogin />
       }, {
         path: "/managerlogin",
-        element: <ManagerLogin setmode={setMode}/>
+        element: <ManagerLogin/>
       }, {
         path: "/managergraph",
         element: <ManagerGraph />,
