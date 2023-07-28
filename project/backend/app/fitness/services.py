@@ -44,6 +44,7 @@ class FitnessService:
         for hint in response.json()['hints']:
             food = hint['food']
             if food['label'].lower() == food_name.lower() or food['knownAs'].lower() == food_name.lower():
+                print(f"FOOD ID: \n\n\n\n\n{food['foodId']}\n\n\n\n\n")
                 return food['foodId']
 
         return None
@@ -73,19 +74,14 @@ class FitnessService:
         total_nutrients = response.json()['totalNutrients']
 
         food_data = {
-            'calories': response.json()['calories'],
-            'fat_total': total_nutrients['FAT']['quantity'],
-            'fat_saturated': total_nutrients['FASAT']['quantity'],
-            'fat_polyunsaturated': total_nutrients['FAPU']['quantity'],
-            'fat_monounsaturated': total_nutrients['FAMS']['quantity'],
-            'fat_trans': total_nutrients['FATRN']['quantity'],
-            'cholesterol': total_nutrients['CHOLE']['quantity'],
-            'sodium': total_nutrients['NA']['quantity'],
-            'potassium': total_nutrients['K']['quantity'],
-            'carbs_total': total_nutrients['CHOCDF']['quantity'],
-            'dietary_fiber': total_nutrients['FIBTG']['quantity'],
-            'sugar': total_nutrients['SUGAR']['quantity'],
-            'protein': total_nutrients['PROCNT']['quantity']
+            'calories': response.json().get('calories', 0),
+            'fat_total': total_nutrients.get('FAT', {}).get('quantity', 0),
+            'cholesterol': total_nutrients.get('CHOLE', {}).get('quantity', 0),
+            'sodium': total_nutrients.get('NA', {}).get('quantity', 0),
+            'potassium': total_nutrients.get('K', {}).get('quantity', 0),
+            'carbs_total': total_nutrients.get('CHOCDF', {}).get('quantity', 0),
+            'sugar': total_nutrients.get('SUGAR', {}).get('quantity', 0),
+            'protein': total_nutrients.get('PROCNT', {}).get('quantity', 0)
         }
 
         return food_data
@@ -116,10 +112,6 @@ class FitnessService:
                                     "value": {"fpVal": food_data['fat_total']}
                                 },
                                 {
-                                    "key": "fat.saturated",
-                                    "value": {"fpVal": food_data['fat_saturated']}
-                                },
-                                {
                                     "key": "protein",
                                     "value": {"fpVal": food_data['protein']}
                                 },
@@ -140,12 +132,12 @@ class FitnessService:
                                     "value": {"fpVal": food_data['sugar']}
                                 },
                                 {
-                                    "key": "dietary_fiber",
-                                    "value": {"fpVal": food_data['dietary_fiber']}
-                                },
-                                {
                                     "key": "potassium",
                                     "value": {"fpVal": food_data['potassium']}
+                                },
+                                {
+                                    "key": "sodium",
+                                    "value": {"fpVal": food_data['sodium']}
                                 }
                             ]
                         },
