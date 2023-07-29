@@ -39,14 +39,15 @@ def all_items_sorted():
         # Query the OrderedItems table to get the count of each item and sort by popularity
         if fil == "popularity":
 
-            items_popularity = db.session.query(Items.name, OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')).\
+            items_popularity = db.session.query(Items.name, Items.category, OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')).\
             join(Items, Items.id == OrderedItems.item).\
-            group_by(Items.name, OrderedItems.item).\
+            group_by(Items.name, Items.category, OrderedItems.item).\
             order_by(db.desc('popularity')).all()
 
         # Prepare the response data with item_id and popularity
-            response_data = [{'item_id': item_id, 'name': name, 'popularity': popularity} for name, item_id, popularity in items_popularity]
-
+            response_data = [{'item_id': item_id, 'category': category, 'name': name, 'popularity': popularity} for name, category, item_id, popularity in items_popularity]
+            if category_id:
+                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
             return jsonify({'status': HTTPStatus.OK, 'list': response_data})
 
 
@@ -60,14 +61,17 @@ def all_items_sorted():
                 subquery.c.item,
                 subquery.c.popularity,
                 Items.price.label('price'),
-                Items.name.label('name')
+                Items.name.label('name'),
+                Items.category.label('category')
             ).join(Items, Items.id == subquery.c.item).all()
 
 
 
         # Calculate gross income for each item (popularity * price)
-            response_data = [{'item_id': item_id, 'name': name, 'popularity': popularity, 'gross_income': (popularity or 0) * price}
-                                for item_id, popularity, price, name in items_popularity]
+            response_data = [{'item_id': item_id, 'name': name, 'category': category, 'popularity': popularity, 'gross_income': (popularity or 0) * price}
+                                for item_id, popularity, price, name, category in items_popularity]
+            if category_id:
+                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
             response_data = sorted(response_data, key=lambda x: x['gross_income'], reverse = True)
 
             return jsonify({'status': HTTPStatus.OK, 'list': response_data})
@@ -82,14 +86,18 @@ def all_items_sorted():
                 subquery.c.item,
                 subquery.c.popularity,
                 Items.net.label('net'),
-                Items.name.label('name')
+                Items.name.label('name'),
+                Items.category.label('category')
             ).join(Items, Items.id == subquery.c.item).all()
 
 
 
         # Calculate net income for each item (popularity * price)
-            response_data = [{'item_id': item_id, 'name': name, 'popularity': popularity, 'net_income': (popularity or 0) * net}
-                    for item_id, popularity, net, name in items_popularity]
+            response_data = [{'item_id': item_id, 'name': name, 'category': category, 'popularity': popularity, 'net_income': (popularity or 0) * net}
+                    for item_id, popularity, net, name, category in items_popularity]
+            if category_id:
+                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
+
             response_data = sorted(response_data, key=lambda x: x['net_income'], reverse = True)
 
             return jsonify({'status': HTTPStatus.OK, 'list': response_data})

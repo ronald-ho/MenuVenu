@@ -49,6 +49,16 @@ function MMHeader ({ mode, setmode }) {
           }}>
             Order Log
           </NavLink>
+          <NavLink to={'/popularitems'} style={({ isActive }) => {
+            return {
+              fontWeight: isActive ? "bold" : "",
+              textDecoration: "none",
+              color: "inherit",
+              marginRight: "10px"
+            }
+          }}>
+            Popular Items
+          </NavLink>
         </>}
       </div>
     </StyledHeader>
