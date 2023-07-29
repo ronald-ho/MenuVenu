@@ -15,6 +15,7 @@ from app.menu.models import Categories, Ingredients, Items
 
 # Restaurant routes and models
 from app.restaurant import routes
+from app.restaurant import populate
 from app.restaurant.services import RestaurantService
 from app.orders.services import TableService
 from app.menu.services import IngredientService
@@ -27,6 +28,8 @@ if __name__ == '__main__':
         TableService.create_default_tables()
         IngredientService.create_default_ingredients()
 
+        populate.populate_database()
+
         db.session.commit()
         
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
