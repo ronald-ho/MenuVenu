@@ -107,17 +107,17 @@ class TableService:
 
     @staticmethod
     def select_table(data):
-        table_number = data['table_number']
+        table_number = int(data['table_number'])
 
         table = DiningTables.query.filter_by(number=table_number).first()
-
+        
         if not table:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
 
         # creates a new order for table if it was not occupied yet
         if not table.occupied:
             new_order = Orders(
-                table=table.number,
+                table=table.id,
                 order_date=datetime.now(),
                 total_amount=0,
                 points_earned=0,
