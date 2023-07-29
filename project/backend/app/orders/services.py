@@ -7,6 +7,7 @@ from .models import DiningTables, Orders, OrderedItems
 from .. import db
 from ..authentication.models import Customers
 from ..menu.models import Items
+from ..fitness.services import FitnessService
 
 
 class AssistService:
@@ -83,6 +84,9 @@ class TableService:
         if customer:
             customer.points += order.points_earned
 
+        if customer.google_token is not None and customer.google_token_expire > datetime.utcnow():
+            FitnessService.create_and_store_nutrition(customer.google_token, order.order_date, table_number)
+
         order.paid = True
         table.occupied = False
         db.session.commit()
@@ -107,17 +111,17 @@ class TableService:
 
     @staticmethod
     def select_table(data):
-        table_number = data['table_number']
+        table_number = int(data['table_number'])
 
         table = DiningTables.query.filter_by(number=table_number).first()
-
+        
         if not table:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
 
         # creates a new order for table if it was not occupied yet
         if not table.occupied:
             new_order = Orders(
-                table=table.number,
+                table=table.id,
                 order_date=datetime.now(),
                 total_amount=0,
                 points_earned=0,
