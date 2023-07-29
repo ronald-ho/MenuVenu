@@ -34,7 +34,7 @@ def add_new_table(table_number):
 def all_items_sorted():
     
     fil = request.args.get('filter')
-    category_id = request.args.get('category_id')
+    category_id = int(request.args.get('category_id'))
 
     try:
         # Query the OrderedItems table to get the count of each item and sort by popularity
