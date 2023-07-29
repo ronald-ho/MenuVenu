@@ -13,6 +13,9 @@ from app.orders.models import DiningTables, OrderedItems, Orders
 from app.menu import routes
 from app.menu.models import Categories, Ingredients, Items
 
+# Fitness routes
+from app.fitness import routes
+
 # Restaurant routes and models
 from app.restaurant import routes
 from app.restaurant import populate
@@ -32,4 +35,4 @@ if __name__ == '__main__':
 
         db.session.commit()
         
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=True)

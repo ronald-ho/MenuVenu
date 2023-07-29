@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from sqlalchemy.sql import func
 
 from .. import db
-from ..authentication.models import Customers
 from ..menu.models import Items
 
 
