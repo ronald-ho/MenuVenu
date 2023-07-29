@@ -39,6 +39,16 @@ function MMHeader ({ mode, setmode }) {
           }}>
             Performance Graph
           </NavLink>
+          <NavLink to={'/orderlog'} style={({ isActive }) => {
+            return {
+              fontWeight: isActive ? "bold" : "",
+              textDecoration: "none",
+              color: "inherit",
+              marginRight: "10px"
+            }
+          }}>
+            Order Log
+          </NavLink>
         </>}
       </div>
     </StyledHeader>

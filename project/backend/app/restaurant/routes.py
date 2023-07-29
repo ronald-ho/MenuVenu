@@ -150,11 +150,11 @@ def get_orderlog():
                 for row in order_log
             ]
         total_income = sum(row['item_price'] for row in order_log_list)
-        total = {timespan: total_income}
+        #total = {timespan: total_income}
         
         order_log_list = sorted(order_log_list, key = lambda x: x['order_id'])
 
-        return jsonify({'status': HTTPStatus.OK, 'orderlog': order_log_list, 'gross_income': total})
+        return jsonify({'status': HTTPStatus.OK, 'orderlog': order_log_list, 'gross_income': total_income})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

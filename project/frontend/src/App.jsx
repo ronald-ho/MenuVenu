@@ -33,6 +33,7 @@ import KitchenOrders from './pages/KitchenOrders';
 import KitchenStaffLogin from './pages/KitchenStaffLogin';
 import ManagerLogin from "./pages/ManagerLogin";
 import ManagerGraph from './pages/ManagerGraph';
+import OrderLog from './pages/OrderLog';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -135,6 +136,9 @@ function App() {
         path: "/managergraph",
         element: <ManagerGraph />,
         loader: get_categories
+      }, {
+        path: "/orderlog",
+        element: <OrderLog />
       }
     ]
   }]);
