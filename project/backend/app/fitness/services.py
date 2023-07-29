@@ -1,9 +1,11 @@
-import time
+from datetime import datetime
 from datetime import datetime
 from http import HTTPStatus
 
+import pytz
 import requests
 from flask import jsonify
+
 
 class FitnessService:
 
@@ -18,18 +20,21 @@ class FitnessService:
             'Content-Type': 'application/json'
         }
 
-        now = datetime.now()
-        today = datetime(now.year, now.month, now.day)
+        sydney_tz = pytz.timezone('Australia/Sydney')
 
-        current_time = int(time.mktime(now.timetuple()) * 1e3)
-        start_time = int(time.mktime(today.timetuple()) * 1e3)
+        now = datetime.now(sydney_tz)
+        today = datetime(now.year, now.month, now.day, tzinfo=sydney_tz)
+
+        start_time = int(today.timestamp() * 1000)
+        current_time = int(now.timestamp() * 1000)
+
 
         body = {
             'aggregateBy': [{
                 'dataTypeName': 'com.google.calories.expended'
             }],
             'bucketByTime': {
-                'durationMillis': 86400000
+                'durationMillis': current_time - start_time
             },
             'startTimeMillis': start_time,
             'endTimeMillis': current_time

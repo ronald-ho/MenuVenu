@@ -6,6 +6,4 @@ SQLAlchemy
 psycopg2
 flask_cors
 flask_login
-google-auth
-google-auth-oauthlib
-google-auth-httplib2
+pytz

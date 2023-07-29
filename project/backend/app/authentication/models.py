@@ -52,5 +52,5 @@ class Customers(UserMixin, db.Model):
             'points': self.points,
             'calories_burnt': FitnessService.get_expended_calories(self.google_token),
             'calories_gained': self.calories_gained,
-            'google_connected': self.google_token is not None and self.google_token_expire < datetime.utcnow(),
+            'google_connected': self.google_token is not None and self.google_token_expire > datetime.utcnow(),
         }
