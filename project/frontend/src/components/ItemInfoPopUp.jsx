@@ -32,7 +32,8 @@ function ItemInfoPopUp ({ open, setOpen, item }) {
                     </Box>
                     <Box sx={{ width: 5/8 }}>
                         <Box sx={{ height: "150px", textAlign: "right" }}>
-                            <Typography>${item.price.toFixed(2)}</Typography>
+                            <Typography>Price: ${item.price.toFixed(2)}</Typography>
+                            <Typography>Production cost: ${item.production.toFixed(2)}</Typography>
                             {item.points_to_redeem && <Typography>Redeem with {item.points_to_redeem} MV Points</Typography>}
                             {item.points_earned && <Typography>Buy to earn {item.points_earned} MV Points</Typography>}
                         </Box>

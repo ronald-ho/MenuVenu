@@ -41,7 +41,7 @@ class ItemService:
             image=image_path,
             price=data['price'],
             production=data['production'],
-            net=data['price'] - data['production'],
+            net=float(data['price']) - float(data['production']),
             category=data['category_id'],
             calories=calories,
             points_to_redeem=data['points_to_redeem'],
@@ -86,6 +86,9 @@ class ItemService:
         item.calories = data["calories"]
         item.points_to_redeem = data["points_to_redeem"]
         item.points_earned = data["points_earned"]
+
+        item.production=data['production'],
+        item.net=float(data['price']) - float(data['production']),
 
         ingredients = data['ingredients']
         selected_ingredients = []
