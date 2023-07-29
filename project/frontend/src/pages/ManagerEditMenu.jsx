@@ -1,11 +1,12 @@
 import React from "react";
 import { Outlet, useLoaderData } from "react-router-dom";
-import { Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, Typography } from "@mui/material";
 import { Add } from '@mui/icons-material';
 import AddCategoryPopUp from "../components/AddCategoryPopUp";
 import CategoryListItem from "../components/CategoryListItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { apiCall } from "../helpers/helpers";
+import BouncingArrow from "../components/BouncingArrow";
 
 function ManagerEditMenu () {
     const [categories, setCategories] = React.useState(useLoaderData());
@@ -68,33 +69,46 @@ function ManagerEditMenu () {
                 >
                     CATEGORIES
                 </Typography>
-                <DragDropContext onDragEnd={newposition}>
-                    <Droppable droppableId="categories">
-                        {(provided) => (
-                            <Box 
-                                {...provided.droppableProps} 
-                                ref={provided.innerRef} 
-                                sx={{   
-                                    flex: 1,
-                                    overflow: "auto", 
-                                    padding: "0 0 5px 0",   
-                                }}
-                            >
-                            {categories && categories.map((category, index) => (
-                                <Draggable key={category.category_id} draggableId={category.category_id.toString()} index={index}>
-                                    {(provided) => (
-                                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                        <CategoryListItem  
-                                            category={category} 
-                                            setCategories={setCategories} 
-                                        />
-                                    </div>)}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </Box>)}
-                    </Droppable>
-                </DragDropContext>
+                {categories.length === 0 ? (
+                    <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', height: 2/3 }}>
+                            <Box sx={{ display: 'flex', flex: 1 }}>
+                                <Alert severity="info" aria-label='infoAlert' sx={{ flex: 1, margin: 'auto', textAlign: 'left', width: 3/4 }}>
+                                    To get started with building your menu, click the button below to add your first category!
+                                </Alert> 
+                            </Box>
+                            <BouncingArrow />
+                        </Box>
+                    </Box>
+                ) : (
+                    <DragDropContext onDragEnd={newposition}>
+                        <Droppable droppableId="categories">
+                            {(provided) => (
+                                <Box 
+                                    {...provided.droppableProps} 
+                                    ref={provided.innerRef} 
+                                    sx={{   
+                                        flex: 1,
+                                        overflow: "auto", 
+                                        padding: "0 0 5px 0",   
+                                    }}
+                                >
+                                {categories && categories.map((category, index) => (
+                                    <Draggable key={category.category_id} draggableId={category.category_id.toString()} index={index}>
+                                        {(provided) => (
+                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                            <CategoryListItem  
+                                                category={category} 
+                                                setCategories={setCategories} 
+                                            />
+                                        </div>)}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </Box>)}
+                        </Droppable>
+                    </DragDropContext>
+                )}
                 <Box sx={{ borderRadius: "0 0 0 15px", borderTop: "1px solid #caccce", height: "60px" }}>
                     <Button onClick={() => setOpenAddCategory(true)} sx={{ margin: "12.5px" }} color="success" variant="outlined">
                         <Add /> New Category
