@@ -34,6 +34,7 @@ import KitchenStaffLogin from './pages/KitchenStaffLogin';
 import ManagerLogin from "./pages/ManagerLogin";
 import ManagerGraph from './pages/ManagerGraph';
 import OrderLog from './pages/OrderLog';
+import PopularItems from './pages/PopularItems';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -139,6 +140,10 @@ function App() {
       }, {
         path: "/orderlog",
         element: <OrderLog />
+      }, {
+        path: "/popularitems",
+        element: <PopularItems />,
+        loader: get_categories
       }
     ]
   }]);
