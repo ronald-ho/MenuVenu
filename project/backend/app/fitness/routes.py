@@ -1,5 +1,5 @@
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from http import HTTPStatus
 
 import requests
@@ -7,26 +7,23 @@ from flask import jsonify, request
 
 from .services import FitnessService
 from .. import app, db
+from ..authentication.models import Customers
 
 
-@app.route('/fitness/google/auth', methods=['POST'])
-def google_auth():
+@app.route('/fitness/token/store', methods=['POST'])
+def store_token():
     data = data_logger(request)
 
-    code = data['code']
+    token = data['token']
+    customer_id = data['id']
 
-    payload = {
-        'code': code,
-        'client_id': '155679089529-vgjnspusl7a28vt5m4r0jsu2o31rvdhq.apps.googleusercontent.com',
-        'client_secret': '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',
-        'redirect_uri': 'http://localhost:3000/fitness',
-        'grant_type': 'authorization_code'
-    }
+    customer = Customers.query.filter_by(id=customer_id).first()
+    customer.google_token = token
+    customer.google_token_expire = datetime.utcnow() + timedelta(hours=1)
 
-    response = requests.post('https://oauth2.googleapis.com/token', data=payload)
-    token = response.json()['access_token']
+    db.session.commit()
 
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Google Auth successful', 'token': token})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Token stored'})
 
 
 @app.route('/fitness/get_calories', methods=['POST'])

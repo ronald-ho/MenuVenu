@@ -1,10 +1,50 @@
+import time
+from datetime import datetime
 from http import HTTPStatus
 
 import requests
 from flask import jsonify
 
-
 class FitnessService:
+
+    @staticmethod
+    def get_expended_calories(google_token):
+
+        if google_token is None:
+            return 0
+
+        headers = {
+            'Authorization': f'Bearer {google_token}',
+            'Content-Type': 'application/json'
+        }
+
+        now = datetime.now()
+        today = datetime(now.year, now.month, now.day)
+
+        current_time = int(time.mktime(now.timetuple()) * 1e3)
+        start_time = int(time.mktime(today.timetuple()) * 1e3)
+
+        body = {
+            'aggregateBy': [{
+                'dataTypeName': 'com.google.calories.expended'
+            }],
+            'bucketByTime': {
+                'durationMillis': 86400000
+            },
+            'startTimeMillis': start_time,
+            'endTimeMillis': current_time
+        }
+
+        response = requests.post('https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate', headers=headers,
+                                 json=body)
+
+        bucket = response.json()['bucket'][0]['dataset'][0]['point']
+
+        if len(bucket) == 0:
+            return 0
+
+        return round(bucket[0]['value'][0]['fpVal'])
+
     @staticmethod
     def create_new_nutrition_data_source(token):
         headers = {
