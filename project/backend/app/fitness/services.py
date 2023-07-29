@@ -6,78 +6,105 @@ import pytz
 import requests
 from flask import jsonify
 
+from .. import app
 from ..menu.models import Items
 from ..orders.models import Orders, OrderedItems
-
-from .. import app
 
 
 class FitnessService:
 
     @staticmethod
-    def get_expended_calories(google_token):
-
-        if google_token is None:
-            return 0
-
-        headers = {
+    def get_headers(google_token):
+        return {
             'Authorization': f'Bearer {google_token}',
             'Content-Type': 'application/json'
         }
 
+    @staticmethod
+    def get_current_time_in_sydney():
         sydney_tz = pytz.timezone('Australia/Sydney')
 
-        now = datetime.now(sydney_tz)
-        today = datetime(now.year, now.month, now.day, tzinfo=sydney_tz)
+        return datetime.now(sydney_tz)
+
+    @staticmethod
+    def get_start_and_end_time():
+        now = FitnessService.get_current_time_in_sydney()
+        today = datetime(now.year, now.month, now.day, tzinfo=now.tzinfo)
 
         start_time = int(today.timestamp() * 1000)
         current_time = int(now.timestamp() * 1000)
 
-        body = {
-            'aggregateBy': [{
-                'dataTypeName': 'com.google.calories.expended'
-            }],
-            'bucketByTime': {
-                'durationMillis': current_time - start_time
-            },
+        return start_time, current_time
+
+    @staticmethod
+    def get_body(start_time, current_time):
+        return {
+            'aggregateBy': [{'dataTypeName': 'com.google.calories.expended'}],
+            'bucketByTime': {'durationMillis': current_time - start_time},
             'startTimeMillis': start_time,
             'endTimeMillis': current_time
         }
 
-        response = requests.post('https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate', headers=headers,
-                                 json=body)
-
-        bucket = response.json()['bucket'][0]['dataset'][0]['point']
-
-        if len(bucket) == 0:
+    @staticmethod
+    def get_expended_calories(google_token):
+        if google_token is None:
             return 0
 
-        return round(bucket[0]['value'][0]['fpVal'])
+        headers = FitnessService.get_headers(google_token)
+
+        start_time, current_time = FitnessService.get_start_and_end_time()
+
+        body = FitnessService.get_body(start_time, current_time)
+
+        response = requests.post('https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate',
+                                 headers=headers, json=body)
+        bucket = response.json()['bucket'][0]['dataset'][0]['point']
+
+        return 0 if len(bucket) == 0 else round(bucket[0]['value'][0]['fpVal'])
 
     @staticmethod
     def create_and_store_nutrition(google_token, order_date, table_number):
-        from ..orders.services import OrderService
-
         data_stream_id = FitnessService.create_new_nutrition_data_source(google_token)
 
-        order = Orders.query.filter_by(paid=False).filter_by(table=table_number).first()
+        order = FitnessService.get_order(table_number)
 
-        ordered_item_list = OrderedItems.query.filter_by(order=order.id)
+        ordered_items = FitnessService.get_ordered_items_names(order)
 
+        start_time = int(order_date.timestamp() * 1e9)
+        end_time = time.time_ns()
+
+        error_foods, food_info_list = FitnessService.get_food_info_list(ordered_items)
+
+        FitnessService.add_nutrition_data(google_token, start_time, end_time, data_stream_id, food_info_list)
+
+        if len(error_foods) > 0:
+            return jsonify(
+                {'status': HTTPStatus.BAD_REQUEST, 'message': 'Some food items were not automatically added, '
+                                                              'please add them manually', 'foods': error_foods})
+
+        return jsonify({'status': HTTPStatus.OK, 'message': 'Nutrition data added'})
+
+    @staticmethod
+    def get_order(table_number):
+        return Orders.query.filter_by(paid=False).filter_by(table=table_number).first()
+
+    @staticmethod
+    def get_ordered_items_names(order):
         ordered_items = []
+        ordered_item_list = OrderedItems.query.filter_by(order=order.id)
 
         for ordered_item in ordered_item_list:
             item = Items.query.filter_by(id=ordered_item.item).first()
             ordered_items.append(item.name)
 
-        start_time = int(order_date.timestamp() * 1e9)
-        end_time = time.time_ns()
+        return ordered_items
 
+    @staticmethod
+    def get_food_info_list(ordered_items):
         error_foods = []
         food_info_list = []
 
         for food in ordered_items:
-
             food_id_list = FitnessService.parse_food_name(food)
 
             if food_id_list is None:
@@ -92,14 +119,7 @@ class FitnessService:
             else:
                 food_info_list.append((food_nutrition_info, food))
 
-        FitnessService.add_nutrition_data(google_token, start_time, end_time, data_stream_id, food_info_list)
-
-        if len(error_foods) > 0:
-            return jsonify(
-                {'status': HTTPStatus.BAD_REQUEST, 'message': 'Some food items were not automatically added, '
-                                                              'please add them manually', 'foods': error_foods})
-
-        return jsonify({'status': HTTPStatus.OK, 'message': 'Nutrition data added'})
+        return error_foods, food_info_list
 
     @staticmethod
     def create_new_nutrition_data_source(token):
