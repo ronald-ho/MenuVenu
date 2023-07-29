@@ -45,12 +45,14 @@ class Customers(UserMixin, db.Model):
         return check_password_hash(self.password, password)
 
     def to_dict(self):
+        google_connected = self.google_token is not None and self.google_token_expire > datetime.utcnow()
+
         return {
             'customer_id': self.id,
             'email': self.email,
             'full_name': self.full_name,
             'points': self.points,
-            'calories_burnt': FitnessService.get_expended_calories(self.google_token),
+            'calories_burnt': FitnessService.get_expended_calories(self.google_token) if google_connected else 0,
             'calories_gained': self.calories_gained,
-            'google_connected': self.google_token is not None and self.google_token_expire > datetime.utcnow(),
+            'google_connected': google_connected,
         }

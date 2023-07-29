@@ -27,10 +27,10 @@ class ItemService:
         else:
             image_path = None
 
-        food_id = FitnessService.parse_food_name(item_name)
+        food_id_list = FitnessService.parse_food_name(item_name)
 
-        if food_id is not None:
-            nutrition_info = FitnessService.get_food_nutrition_info(food_id)
+        if food_id_list is not None:
+            nutrition_info = FitnessService.get_food_nutrition_info(food_id_list[0])
             calories = nutrition_info['calories']
         else:
             calories = data['calories']

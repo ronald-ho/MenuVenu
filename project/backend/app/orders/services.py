@@ -7,6 +7,7 @@ from .models import DiningTables, Orders, OrderedItems
 from .. import db
 from ..authentication.models import Customers
 from ..menu.models import Items
+from ..fitness.services import FitnessService
 
 
 class AssistService:
@@ -82,6 +83,9 @@ class TableService:
         #add points if they are a member
         if customer:
             customer.points += order.points_earned
+
+        if customer.google_token is not None and customer.google_token_expire > datetime.utcnow():
+            FitnessService.create_and_store_nutrition(customer.google_token, order.order_date, table_number)
 
         order.paid = True
         table.occupied = False
