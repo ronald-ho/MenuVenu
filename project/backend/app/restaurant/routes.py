@@ -355,7 +355,11 @@ def update_restaurant():
 def item_statistics():
     # Passing in item id
     item_id = request.args.get('id')
-    item_query = Items.query.filter_by(id = item_id).first()
+    if Items.query.filter_by(id = item_id).first():
+        item_query = Items.query.filter_by(id = item_id).first()
+    else:
+        return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item does not exist'})
+    
     timespan = request.args.get('time')
     popularity = 0
     unique_pop = 0
@@ -365,7 +369,7 @@ def item_statistics():
     ranking = 0
     per_order = 0
     average_tod = 0
-
+    production = 0
     end_time = datetime.now()
 
     try:
@@ -386,10 +390,13 @@ def item_statistics():
         if popularity:
             if item_query.net:
                 net = popularity * item_query.net
+            if item_query.production:
+                production = popularity * item_query.production
             gross = popularity * item_query.price
 
         total_orders = db.session.query(func.count(Orders.id)).scalar()
         per_order = float(popularity/total_orders)
+    
 
         items_popularity = db.session.query(OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')).\
             group_by(OrderedItems.item).\
@@ -409,7 +416,86 @@ def item_statistics():
 # Extract the time component (hour and minutes) from the datetime object
         average_time = average_datetime.time()
         average_time_str = average_time.strftime('%H:%M:%S')
-        return jsonify(popularity, unique_pop, net, gross, per_order, ranking, average_time_str)
+
+
+        order_log = db.session.query(
+            Orders.id.label('order_id'),
+            OrderedItems.id.label('ordered_item_id'),
+            Items.id.label('item_id'),
+            Items.name.label('item_name'),
+            func.count(OrderedItems.item).label('item_popularity'),
+            case((OrderedItems.redeemed == True, 0), else_=Items.price).label('item_price'),
+            case((OrderedItems.redeemed == True, 0 - Items.price), else_=Items.net).label('item_net'),             
+            OrderedItems.redeemed.label('item_redeemed'),
+            OrderedItems.order_time.label('time')
+        )\
+        .join(OrderedItems, Orders.id == OrderedItems.order)\
+        .join(Items, OrderedItems.item == Items.id)\
+        .filter(
+            Orders.order_date >= start_time,
+            Orders.order_date <= end_time,
+            Orders.paid == True,
+            Items.id == item_id  # EXTRA FILTER
+        )\
+        .group_by(
+            Orders.id,
+            OrderedItems.id,
+            Items.id,
+            Items.name,
+            OrderedItems.redeemed,
+            OrderedItems.order_time
+        )\
+        .all()
+
+        order_log_list = [
+            {
+                'order_id': row.order_id,
+                'ordered_item_id': row.ordered_item_id,
+                'item_id': row.item_id,
+                'item_name': row.item_name,
+                'item_popularity': row.item_popularity,
+                'item_price': row.item_price,
+                'item_net': row.item_net,
+                'item_redeemed': row.item_redeemed,
+                'time': row.time
+            }
+            for row in order_log
+        ]
+
+            
+        per_day = {}
+
+        for order in order_log_list:
+            order_date = order['time'].strftime('%Y-%m-%d')
+            item_popularity = order['item_popularity']
+            
+
+            # If the order_date already exists in the dictionary, add the total_amount to the existing value
+            if order_date in per_day:
+                per_day[order_date] += item_popularity
+            else:
+                # If the order_date is not in the dictionary, initialize it with the total_amount
+                per_day[order_date] = item_popularity
+                
+        if timespan != 'all':
+            first_date = start_time
+        else:
+            first_order = Orders.query.order_by(Orders.order_date).first()
+            first_date = first_order.order_date.replace(tzinfo=None)
+        while first_date < end_time:
+            if first_date.strftime('%Y-%m-%d') not in per_day:
+                per_day[first_date.strftime('%Y-%m-%d')] = 0
+            first_date += timedelta(days=1)
+
+        sorted_per_day = dict(sorted(per_day.items()))
+        days = list(sorted_per_day.keys())
+        popperday = list(sorted_per_day.values())
+
+    
+
+        return jsonify({'popularity': popularity, 'unique_pop': unique_pop, 'net': net, 'gross': gross,\
+                        'production': production, 'per_order': per_order, 'ranking': ranking, 'avg time': average_time_str,\
+                         'days': days, 'popularitybyday': popperday, 'status': HTTPStatus.OK})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
