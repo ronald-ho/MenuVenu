@@ -33,6 +33,10 @@ import ItemList from './components/ItemList';
 import KitchenOrders from './pages/KitchenOrders';
 import KitchenStaffLogin from './pages/KitchenStaffLogin';
 import ManagerLogin from "./pages/ManagerLogin";
+import ManagerGraph from './pages/ManagerGraph';
+import OrderLog from './pages/OrderLog';
+import PopularItems from './pages/PopularItems';
+import ItemStatistics from './pages/ItemStatistics';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -120,7 +124,7 @@ function App() {
         ]
       }, { 
         path: "/managereditmenu",
-        element: <ManagerEditMenu />,
+        element: <ManagerEditMenu setmode={setMode}/>,
         loader: get_categories,
         children: [
           {
@@ -136,7 +140,24 @@ function App() {
         element: <KitchenStaffLogin />
       }, {
         path: "/managerlogin",
-        element: <ManagerLogin />
+        element: <ManagerLogin/>
+      }, {
+        path: "/managergraph",
+        element: <ManagerGraph />,
+        loader: get_categories
+      }, {
+        path: "/orderlog",
+        element: <OrderLog />
+      }, {
+        path: "/popularitems",
+        element: <PopularItems />,
+        loader: get_categories
+      }, {
+        path: "/itemstatistics/:itemid",
+        element: <ItemStatistics />,
+        loader: async ({params}) => {
+          return get_item(params);
+        }
       }
     ]
   }]);

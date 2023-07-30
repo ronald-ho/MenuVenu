@@ -1,27 +1,44 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { apiCall } from "../helpers/helpers";
 import React from "react";
 
-function BillingPopUp ({ open, setOpen, tableNo }) {
+function BillingPopUp ({ open, setOpen, tableNo, bill, currPoints, pointsEarned, newPoints }) {
     const navigate = useNavigate();
-    const [bill, setBill] = React.useState(0);
-    const [curpoints, setCurpoints] = React.useState(0);
-    const [pointsearned, setPointsearned] = React.useState(0);
+    const [hasPaid, setHasPaid] = React.useState(false);
+    const [finalPayment, setFinalPayment] = React.useState(0);
+    const [isUseDiscount, setIsUseDiscount] = React.useState(false);
+    const [newBalance, setNewBalance] = React.useState(newPoints);
+    const [pointsGained, setPointsGained] = React.useState(pointsEarned);
+    const [newBill, setNewBill] = React.useState(0);
 
     const customerId = localStorage.getItem("mvuser");
 
     async function handleConfirm() {
-        // Once finish dining and paid, "log out"
         const body = {
             table_number: tableNo,
             customer_id: customerId,
-            redeem: false
+            redeem: isUseDiscount
         }
         const data = await apiCall("orders/pay_bill", "POST", body);
         if (data.status !== 200) {
             console.log("hey this doesnt work btw");
+        } else {
+            setHasPaid(true);
+            setFinalPayment(data.amount);
         }
+    }
+
+    function handleUseDiscount (isChecked) {
+        setIsUseDiscount(isChecked);
+        const discountPointsEarned = pointsEarned - Math.floor(bill) + Math.floor(bill * 0.9);
+        const discountPointsBalance = currPoints + discountPointsEarned - 100;
+        setNewBill(isChecked ? bill * 0.9 : bill);
+        setNewBalance(isChecked ? discountPointsBalance : newPoints);
+        setPointsGained(isChecked ? discountPointsEarned : pointsEarned);
+    }
+
+    const handleExit = () => {
         localStorage.removeItem("mvuser");
         localStorage.removeItem("mvtable");
         navigate("/customerselect");
@@ -31,49 +48,51 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
         setOpen(false);
     };
 
-    React.useEffect(() => {
-        async function getBill() {
-            const data = await apiCall("orders/get_bill", "POST", { 'table_number': tableNo });
-            if (data.bill) {
-                console.log("Bill amount received");
-                setBill(data.bill);
-                setPointsearned(data.points_earned);
-            } 
-            else {
-                console.log("Failed to get bill amount");
-            }
-            if (customerId) {
-                const cust = await apiCall("auth/customer/" + customerId, "GET", {});
-                setCurpoints(cust.customer_info.points);
-            }
-        }
-        
-        getBill();
-      }, [tableNo, customerId]); 
-
     return (
         <>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-            >
-                <DialogTitle>{"Request Bill"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Your total bill is ${bill}.</DialogContentText>
-                    {customerId !== null && 
-                        <>
-                            <DialogContentText>You have earned {pointsearned} MV points.</DialogContentText>
-                            <DialogContentText>Your new balance will be {curpoints+pointsearned} MV points.</DialogContentText>
-                        </>
-                    }
-                    <DialogContentText>Please proceed to the front counter.</DialogContentText>
-                    <DialogContentText>Have you paid?</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={handleConfirm}>Yes</Button>
-                </DialogActions>
-            </Dialog>
+            {!hasPaid ? (
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <DialogTitle>{"Request Bill"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Your total current bill is ${bill.toFixed(2)}.</DialogContentText>
+                        {customerId && 
+                            <>
+                                <DialogContentText>You currently have {currPoints} MV points.</DialogContentText>
+                                {currPoints >= 100 && 
+                                    <FormControlLabel 
+                                        onChange={(e) => {handleUseDiscount(e.target.checked)}}
+                                        control={<Checkbox />} 
+                                        label="Redeem 100 MV points for a 10% discount?"
+                                    />
+                                }
+                                {isUseDiscount && <DialogContentText>Your new bill is ${newBill.toFixed(2)}.</DialogContentText>} 
+                                <DialogContentText>You will earn {pointsGained} MV points.</DialogContentText>
+                                <DialogContentText>Your new balance will be {newBalance} MV points.</DialogContentText>
+                            </>
+                        }
+                        <DialogContentText>Are you ready to stop dining and pay your bill?</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} variant="contained" color="error">No</Button>
+                        <Button onClick={handleConfirm} variant="contained" color="success">
+                            Yes, pay bill {isUseDiscount && <>using discount</>}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            ) : (
+                <Dialog open={open} onClose={handleExit}>
+                    <DialogTitle>Thank you for dining with us</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Please proceed to the counter and pay ${finalPayment.toFixed(2)}</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleExit} variant="contained">Finish dining</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
         </>
     )
 }
