@@ -15,15 +15,15 @@ function ItemListItem ({ categoryId, item, allIngredients }) {
             <Box  
                 onClick={() => setOpenItemInfo(true)}
                 sx={{
-                    border: 1,
+                    border: "1px solid #caccce",
                     borderRadius: "10px",
                     cursor: "pointer",
                     display: "flex",
                     height: "40px",
                     justifyContent: "space-between",
-                    margin: "5px auto 0 auto",
+                    margin: "8px auto 0 auto",
                     padding: "0",
-                    width: "43vw"
+                    width: "48vw"
                 }}
             >
                 <Box 

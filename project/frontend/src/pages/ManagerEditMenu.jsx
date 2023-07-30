@@ -73,7 +73,7 @@ function ManagerEditMenu () {
                     <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', height: 2/3 }}>
                             <Box sx={{ display: 'flex', flex: 1 }}>
-                                <Alert severity="info" aria-label='infoAlert' sx={{ flex: 1, margin: 'auto', textAlign: 'left', width: 3/4 }}>
+                                <Alert severity="info" aria-label='infoAlert' sx={{ margin: 'auto', textAlign: 'left', width: 3/4 }}>
                                     To get started with building your menu, click the button below to add your first category!
                                 </Alert> 
                             </Box>
@@ -89,8 +89,7 @@ function ManagerEditMenu () {
                                     ref={provided.innerRef} 
                                     sx={{   
                                         flex: 1,
-                                        overflow: "auto", 
-                                        padding: "0 0 5px 0",   
+                                        overflow: "auto"
                                     }}
                                 >
                                 {categories && categories.map((category, index) => (

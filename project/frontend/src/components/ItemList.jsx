@@ -58,7 +58,7 @@ function ItemList() {
         <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
             <DragDropContext onDragEnd={newposition}>
                 <Droppable droppableId="items">
-                    {(provided) => (<Box {...provided.droppableProps} ref={provided.innerRef} sx={{ flex: 1, height: "68vh", padding: "0 0 5px 0", overflow: "auto" }}>
+                    {(provided) => (<Box {...provided.droppableProps} ref={provided.innerRef} sx={{ flex: 1, overflow: "auto" }}>
                         {items.map((item, index) => 
                         <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                             {(provided) => <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
