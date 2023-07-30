@@ -2,6 +2,7 @@ import { Check } from "@mui/icons-material";
 import { Box, Table, MenuItem, TableBody, TableRow, TextField, Typography, TableCell, TableHead } from "@mui/material";
 import React from "react";
 import { apiCall } from "../helpers/helpers";
+import { Link } from "react-router-dom";
 
 function OrderLog() {
     const [timespan, setTimespan] = React.useState("day");
@@ -42,7 +43,7 @@ function OrderLog() {
                 </TableHead>
                 <TableBody>
                     {orders.map((order) => <TableRow>
-                        <TableCell>{order.item_name}</TableCell>
+                        <TableCell component={Link} to={"/itemstatistics/" + order.item_id}>{order.item_name}</TableCell>
                         <TableCell>${order.item_price}</TableCell>
                         <TableCell>{order.order_id}</TableCell>
                         <TableCell>

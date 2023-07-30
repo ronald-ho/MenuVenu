@@ -2,6 +2,7 @@ import { TextField, Box, MenuItem, Table, TableHead, TableRow, TableCell, TableB
 import React from "react";
 import { useLoaderData } from "react-router-dom";
 import { apiCall } from "../helpers/helpers";
+import { Link } from "react-router-dom";
 
 function PopularItems() {
     const categories = useLoaderData();
@@ -18,6 +19,7 @@ function PopularItems() {
     }
 
     React.useEffect(() => {
+        setItems(null);
         getItems();
     }, [category, filter]);
 
@@ -45,9 +47,9 @@ function PopularItems() {
                     </TableHead>
                     <TableBody>
                         {items.map((item) => item.name.toLowerCase().includes(search.toLowerCase()) && <TableRow>
-                            <TableCell>{item.name}</TableCell>
-                            {filter === "gross" && <TableCell>${item.gross_income}</TableCell>}
-                            {filter === "net" && <TableCell>${item.net_income}</TableCell>}
+                            <TableCell component={Link} to={"/itemstatistics/" + item.item_id}>{item.name}</TableCell>
+                            {filter === "gross" && <TableCell>${item.gross_income ? item.gross_income.toFixed(2) : ""}</TableCell>}
+                            {filter === "net" && <TableCell>${item.net_income ? item.net_income.toFixed(2) : ""}</TableCell>}
                             <TableCell>{item.popularity}</TableCell>
                         </TableRow>)}
                     </TableBody>

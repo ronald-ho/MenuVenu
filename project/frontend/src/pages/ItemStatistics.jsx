@@ -44,9 +44,9 @@ function ItemStatistics() {
             {stats && <div style={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", margin: "15px"}}>
                 <Typography>Total popularity over timeframe: {stats.popularity}</Typography>
                 <Typography>Number of unique orders: {stats.unique_pop}</Typography>
-                <Typography>Net profit: ${stats.net}</Typography>
-                <Typography>Gross profit: ${stats.gross}</Typography>
-                <Typography>Total cost of production: ${stats.production}</Typography>
+                <Typography>Net profit: ${stats.net.toFixed(2)}</Typography>
+                <Typography>Gross profit: ${stats.gross.toFixed(2)}</Typography>
+                <Typography>Total cost of production: ${stats.production.toFixed(2)}</Typography>
                 <Typography>Average number in an order: {stats.per_order}</Typography>
                 <Typography>Popularity Rank: {stats.ranking}</Typography>
                 <Typography>Average time ordered: {stats.avgtime}</Typography>
