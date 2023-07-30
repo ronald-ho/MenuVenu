@@ -28,12 +28,11 @@ class FitnessService:
 
         # Get the start and end time of the order in nanoseconds
         start_time = int(order_date.timestamp() * 1e9)
-        end_time = time.time_ns()
 
         # Get the food info list and the list of foods that could not be automatically added
         error_foods, food_info_list = FitnessService.get_food_info_list(ordered_items)
 
-        NutrientService.add_nutrition_data(google_token, start_time, end_time, data_stream_id, food_info_list)
+        NutrientService.add_nutrition_data(google_token, start_time, data_stream_id, food_info_list)
 
         if len(error_foods) > 0:
             return jsonify(
@@ -50,14 +49,8 @@ class FitnessService:
         }
 
     @staticmethod
-    def get_current_time_in_sydney():
-        sydney_tz = pytz.timezone('Australia/Sydney')
-
-        return datetime.now(sydney_tz)
-
-    @staticmethod
     def get_start_and_end_time():
-        now = FitnessService.get_current_time_in_sydney()
+        now = datetime.now(pytz.timezone('Australia/Sydney'))
         today = datetime(now.year, now.month, now.day, tzinfo=now.tzinfo)
 
         start_time = int(today.timestamp() * 1000)
@@ -224,7 +217,7 @@ class NutrientService:
         return None
 
     @staticmethod
-    def add_nutrition_data(token, start_time, end_time, data_source_id, food_info_list):
+    def add_nutrition_data(token, start_time, data_source_id, food_info_list):
         headers = {
             'Authorization': f'Bearer {token}',
             'Content-Type': 'application/json'
@@ -232,10 +225,13 @@ class NutrientService:
 
         nutrient_items = []
 
+        temp_start_time = start_time
+        temp_end_time = time.time_ns()
+
         for food_data, food_name in food_info_list:
             nutrient_items.append({
-                "startTimeNanos": start_time,
-                "endTimeNanos": end_time,
+                "startTimeNanos": temp_start_time,
+                "endTimeNanos": temp_end_time,
                 "dataTypeName": "com.google.nutrition",
                 "value": [
                     {
@@ -283,15 +279,18 @@ class NutrientService:
                 ]
             })
 
+            temp_start_time = temp_end_time
+            temp_end_time = time.time_ns()
+
         body = {
             "minStartTimeNs": start_time,
-            "maxEndTimeNs": end_time,
+            "maxEndTimeNs": temp_start_time,
             "dataSourceId": data_source_id,
             "point": nutrient_items
         }
 
         response = requests.patch(
-            f"https://www.googleapis.com/fitness/v1/users/me/dataSources/raw:com.google.nutrition:155679089529:MenuVenu/datasets/{start_time}-{end_time}",
+            "https://www.googleapis.com/fitness/v1/users/me/dataSources/raw:com.google.nutrition:155679089529:MenuVenu/datasets/1",
             headers=headers, json=body)
 
         if response.status_code == 404:
@@ -299,12 +298,13 @@ class NutrientService:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Error adding nutrition data'})
 
         elif response.status_code == 200:
-            app.logger.info("Nutrition data inputted")
+            app.logger.info(f"Nutrition data inputted")
             return jsonify({'status': HTTPStatus.OK, 'message': 'Food data inputted'})
 
     @staticmethod
     def get_meal_type():
-        current_time = datetime.now()
+        current_time = datetime.now(pytz.timezone('Australia/Sydney'))
+        app.logger.info(f"Current time: {current_time.hour}")
         if 4 <= current_time.hour < 12:
             return 2
         elif 12 <= current_time.hour < 17:
