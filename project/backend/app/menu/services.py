@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 
 from .models import Items, Categories, Ingredients
 from .. import db
+from ..fitness.services import FitnessService
 
 
 class ItemService:
@@ -26,6 +27,17 @@ class ItemService:
         else:
             image_path = None
 
+        food_id_list = FitnessService.parse_food_name(item_name)
+
+        if food_id_list is not None:
+            nutrition_info = FitnessService.get_food_nutrition_info(food_id_list)
+            if nutrition_info is None:
+                calories = data['calories']
+            else:
+                calories = nutrition_info['calories']
+        else:
+            calories = data['calories']
+
         new_item = Items(
             name=item_name,
             description=data['description'],
@@ -34,7 +46,7 @@ class ItemService:
             production=data['production'],
             net=float(data['price']) - float(data['production']),
             category=data['category_id'],
-            calories=data['calories'],
+            calories=calories,
             points_to_redeem=data['points_to_redeem'],
             points_earned=data['points_earned'],
             position=MenuService.get_next_position(Items)
