@@ -14,6 +14,11 @@ function Menu () {
     const [showInfo, setShowInfo] = React.useState(null);
     const [showAlert, setShowAlert] = React.useState(null);
 
+    const [bill, setBill] = React.useState(0);
+    const [currPoints, setCurrPoints] = React.useState(0);
+    const [pointsEarned, setPointsEarned] = React.useState(0);
+    const [newPoints, setNewPoints] = React.useState(0);
+
     // Can get table number from localstorage (saved during table selection) OR
     // Store users under table number in db and API call with useEffect 
     const table = localStorage.getItem("mvtable"); 
@@ -32,6 +37,30 @@ function Menu () {
         }
     }
 
+    async function handleRequestBill() {
+        const customerId = localStorage.getItem("mvuser");
+        const data = await apiCall("orders/get_bill", "POST", { 'table_number': table });
+        if (data.bill) {
+            console.log("Bill amount received");
+            setBill(data.bill);
+            setPointsEarned(data.points_earned);
+
+            if (customerId) {
+                const cust = await apiCall("auth/customer/" + customerId, "GET", {});
+                setCurrPoints(cust.customer_info.points);
+                setNewPoints(data.points_earned + cust.customer_info.points);
+            }
+
+            setOpenBilling(true);
+        } 
+        else {
+            setShowAlert("Cannot request bill, no items in order.");
+            setTimeout(() => setShowAlert(null), 5000);
+        }
+
+        
+    }
+
     return (
         <div style={{display: "flex", justifyContent: "space-between"}}>
             <Box sx={{border: "1px solid black", margin: "10px", padding: "10px", textAlign: "center", borderRadius: "10px"}}>
@@ -41,10 +70,19 @@ function Menu () {
             {/*rename to table order thing*/}
             <TableOrders trigger={updatetable} />
             <Box sx={{ position: 'absolute', bottom: '24px', right: '10px' }}>
-                <Button onClick={() => setOpenBilling(true)} variant="contained" sx={{ marginRight: '10px', width: '140px' }}>Request Bill</Button>
+                <Button onClick={handleRequestBill} variant="contained" sx={{ marginRight: '10px', width: '140px' }}>Request Bill</Button>
                 <Button onClick={handleCallStaff} variant="contained" sx={{ width: '140px' }}>Call Staff</Button>
             </Box>
-            {openBilling && <BillingPopUp open={openBilling} setOpen={setOpenBilling} tableNo={table}/>} 
+            {openBilling && 
+                <BillingPopUp 
+                    open={openBilling} 
+                    setOpen={setOpenBilling} 
+                    tableNo={table}
+                    bill={bill}
+                    currPoints={currPoints} 
+                    pointsEarned={pointsEarned}
+                    newPoints={newPoints}
+                    />} 
             {showInfo && <Alert severity="info" aria-label='infoAlert' sx={{ position: 'fixed', top: '17px', left: '500px', width: '300px' }} >{showInfo}</Alert>}
             {showAlert && <Alert severity="error" aria-label='errorAlert' sx={{ position: 'fixed', top: '17px', left: '500px', width: '300px' }} >{showAlert}</Alert>}
         </div>     
