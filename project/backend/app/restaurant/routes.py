@@ -34,20 +34,22 @@ def add_new_table(table_number):
 def all_items_sorted():
     
     fil = request.args.get('filter')
-    category_id = request.args.get('category_id')
+    category_id = int(request.args.get('category_id'))
 
     try:
         # Query the OrderedItems table to get the count of each item and sort by popularity
         if fil == "popularity":
 
-            items_popularity = db.session.query(OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')).\
-            group_by(OrderedItems.item).\
+            items_popularity = db.session.query(Items.name, Items.category, OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')).\
+            join(Items, Items.id == OrderedItems.item).\
+            group_by(Items.name, Items.category, OrderedItems.item).\
             order_by(db.desc('popularity')).all()
 
         # Prepare the response data with item_id and popularity
-            response_data = [{'item_id': item_id, 'popularity': popularity} for item_id, popularity in items_popularity]
-
-            return jsonify({'status': HTTPStatus.OK, 'popularity_list': response_data})
+            response_data = [{'item_id': item_id, 'category': category, 'name': name, 'popularity': popularity} for name, category, item_id, popularity in items_popularity]
+            if category_id:
+                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
+            return jsonify({'status': HTTPStatus.OK, 'list': response_data})
 
 
         if fil == "gross":    
@@ -59,17 +61,21 @@ def all_items_sorted():
             items_popularity = db.session.query(
                 subquery.c.item,
                 subquery.c.popularity,
-                Items.price.label('price')
+                Items.price.label('price'),
+                Items.name.label('name'),
+                Items.category.label('category')
             ).join(Items, Items.id == subquery.c.item).all()
 
 
 
         # Calculate gross income for each item (popularity * price)
-            response_data = [{'item_id': item_id, 'popularity': popularity, 'gross_income': (popularity or 0) * price}
-                                for item_id, popularity, price in items_popularity]
+            response_data = [{'item_id': item_id, 'name': name, 'category': category, 'popularity': popularity, 'gross_income': (popularity or 0) * price}
+                                for item_id, popularity, price, name, category in items_popularity]
+            if category_id:
+                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
             response_data = sorted(response_data, key=lambda x: x['gross_income'], reverse = True)
 
-            return jsonify({'status': HTTPStatus.OK, 'gross_list': response_data})
+            return jsonify({'status': HTTPStatus.OK, 'list': response_data})
 
         if fil == "net":    
             subquery = db.session.query(
@@ -80,17 +86,22 @@ def all_items_sorted():
             items_popularity = db.session.query(
                 subquery.c.item,
                 subquery.c.popularity,
-                Items.net.label('net')
+                Items.net.label('net'),
+                Items.name.label('name'),
+                Items.category.label('category')
             ).join(Items, Items.id == subquery.c.item).all()
 
 
 
         # Calculate net income for each item (popularity * price)
-            response_data = [{'item_id': item_id, 'popularity': popularity, 'net_income': (popularity or 0) * net}
-                    for item_id, popularity, net in items_popularity]
+            response_data = [{'item_id': item_id, 'name': name, 'category': category, 'popularity': popularity, 'net_income': (popularity or 0) * net}
+                    for item_id, popularity, net, name, category in items_popularity]
+            if category_id:
+                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
+
             response_data = sorted(response_data, key=lambda x: x['net_income'], reverse = True)
 
-            return jsonify({'status': HTTPStatus.OK, 'net_list': response_data})
+            return jsonify({'status': HTTPStatus.OK, 'list': response_data})
         
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Filter not found'})
 
@@ -151,11 +162,11 @@ def get_orderlog():
                 for row in order_log
             ]
         total_income = sum(row['item_price'] for row in order_log_list)
-        total = {timespan: total_income}
+        #total = {timespan: total_income}
         
         order_log_list = sorted(order_log_list, key = lambda x: x['order_id'])
 
-        return jsonify({'status': HTTPStatus.OK, 'orderlog': order_log_list, 'gross_income': total})
+        return jsonify({'status': HTTPStatus.OK, 'orderlog': order_log_list, 'gross_income': total_income})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -234,8 +245,6 @@ def get_profit():
                 for row in order_log
             ]
 
-        
-
         if category_id:
             order_log_list = list(filter(lambda item: item.get('item_category') == category_id, order_log_list))
             
@@ -265,7 +274,16 @@ def get_profit():
                 elif fil == 'popularity':
                     per_day[order_date] = item_popularity
                 
-        
+        if timespan != 'all':
+            first_date = start_time
+        else:
+            first_order = Orders.query.order_by(Orders.order_date).first()
+            first_date = first_order.order_date.replace(tzinfo=None)
+        while first_date < end_time:
+            if first_date.strftime('%Y-%m-%d') not in per_day:
+                per_day[first_date.strftime('%Y-%m-%d')] = 0
+            first_date += timedelta(days=1)
+
         sorted_per_day = dict(sorted(per_day.items()))
         days = list(sorted_per_day.keys())
         items = list(sorted_per_day.values())
@@ -348,7 +366,7 @@ def update_restaurant():
     occupied_tables = current_num_tables - num_table
 
 
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated', 'Number of occupied tables that werent deleted': occupied_tables})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated', 'undeletedtables': occupied_tables})
 
 
 @app.route('/manager/items/statistics', methods=['GET'])
@@ -494,7 +512,7 @@ def item_statistics():
     
 
         return jsonify({'popularity': popularity, 'unique_pop': unique_pop, 'net': net, 'gross': gross,\
-                        'production': production, 'per_order': per_order, 'ranking': ranking, 'avg time': average_time_str,\
+                        'production': production, 'per_order': per_order, 'ranking': ranking, 'avgtime': average_time_str,\
                          'days': days, 'popularitybyday': popperday, 'status': HTTPStatus.OK})
 
     except Exception as e:
