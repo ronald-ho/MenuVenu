@@ -35,6 +35,7 @@ import ManagerLogin from "./pages/ManagerLogin";
 import ManagerGraph from './pages/ManagerGraph';
 import OrderLog from './pages/OrderLog';
 import PopularItems from './pages/PopularItems';
+import ItemStatistics from './pages/ItemStatistics';
 
 function App() {
   const [mode, setMode] = React.useState('');
@@ -144,6 +145,12 @@ function App() {
         path: "/popularitems",
         element: <PopularItems />,
         loader: get_categories
+      }, {
+        path: "/itemstatistics/:itemid",
+        element: <ItemStatistics />,
+        loader: async ({params}) => {
+          return get_item(params);
+        }
       }
     ]
   }]);

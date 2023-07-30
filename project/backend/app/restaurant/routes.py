@@ -512,7 +512,7 @@ def item_statistics():
     
 
         return jsonify({'popularity': popularity, 'unique_pop': unique_pop, 'net': net, 'gross': gross,\
-                        'production': production, 'per_order': per_order, 'ranking': ranking, 'avg time': average_time_str,\
+                        'production': production, 'per_order': per_order, 'ranking': ranking, 'avgtime': average_time_str,\
                          'days': days, 'popularitybyday': popperday, 'status': HTTPStatus.OK})
 
     except Exception as e:
