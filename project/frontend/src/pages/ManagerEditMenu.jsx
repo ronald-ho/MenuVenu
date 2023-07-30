@@ -7,7 +7,7 @@ import CategoryListItem from "../components/CategoryListItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { apiCall } from "../helpers/helpers";
 
-function ManagerEditMenu () {
+function ManagerEditMenu ({ setmode }) {
     const [categories, setCategories] = React.useState(useLoaderData());
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
 
@@ -32,6 +32,10 @@ function ManagerEditMenu () {
             setCategories(result2.categories);
         }
     }
+
+    React.useEffect(() => {
+        setmode("manager");
+    }, []);
    
     return (
         <Box sx={{
