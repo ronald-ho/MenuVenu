@@ -1,0 +1,39 @@
+HAS BEEF
+Cheeseburger
+Steak
+Meatballs
+Big Burger
+Appleborger
+
+HAS CHICKEN
+Schnitzel 
+Small Burger
+Nuggets
+
+PRICE
+Big Burger - $15
+Cheeseburger - $12
+Nuggets - $8
+Schnitzel - $18
+Small Burger - $10
+
+CALORIE COUNT
+Big Burger - 1000 calories
+Cheeseburger - 800 calories
+Nuggets - 500 calories
+Schnitzel - 1200 calories
+Small Burger - 900 calories
+
+BUSY/AVAILABLE
+Currently there are 0 tables available
+
+OUR MOST POPULAR DISH
+Cheeseburger
+
+HOW DO I?
+Fitness - You can connect your fitness app through your profile in the top right of the screen
+Assistance - You can request assistance with the 'Assist' button below your order list
+Bill - You can request the bill with the 'Bill' button below your order list
+
+FAMILY GUY
+Here you go: https://www.youtube.com/watch?v=qrhFlCoNun0
