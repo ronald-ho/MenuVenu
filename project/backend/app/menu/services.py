@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 from .models import Items, Categories, Ingredients
 from .. import db
-from ..fitness.services import FitnessService
+from ..fitness.services import NutrientService
 
 
 class ItemService:
@@ -27,10 +27,10 @@ class ItemService:
         else:
             image_path = None
 
-        food_id_list = FitnessService.parse_food_name(item_name)
+        food_id_tuple = NutrientService.parse_food_name(item_name)
 
-        if food_id_list is not None:
-            nutrition_info = FitnessService.get_food_nutrition_info(food_id_list)
+        if food_id_tuple is not None:
+            nutrition_info = NutrientService.get_food_nutrition_info(food_id_tuple)
             if nutrition_info is None:
                 calories = data['calories']
             else:
