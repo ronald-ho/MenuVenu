@@ -9,6 +9,7 @@ function ManagerPopup({ open, setOpen }) {
     const [staffpass, setStaffpass] = React.useState(null);
     const [managerpass, setManagerpass] = React.useState(null);
     const [numtables, setNumtables] = React.useState(null);
+    const [mess, setMess] = React.useState("");
 
     function handleClose() {
         setOpen(false);
@@ -35,6 +36,13 @@ function ManagerPopup({ open, setOpen }) {
         const data = await apiCall("manager/update", "PUT", payload);
         if (data.status === 200) {
             console.log('ey');
+            if (data.undeletedtables !== 0) {
+                setMess(data.undeletedtables + "tables occupied");
+            } else {
+                setMess("Successful update");
+            }
+        } else {
+            setMess(data.message);
         }
     }
 
@@ -62,6 +70,7 @@ function ManagerPopup({ open, setOpen }) {
                 variant="outlined" margin="normal" type="number" value={numtables}
                 onChange={(e) => {setNumtables(e.target.value)}}
                 helperText="Leave empty for no change"/>
+                {mess && <Alert severity={mess === "Successful update" ? "success" : "error"}>{mess}</Alert>}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>

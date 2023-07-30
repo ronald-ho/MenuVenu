@@ -366,7 +366,7 @@ def update_restaurant():
     occupied_tables = current_num_tables - num_table
 
 
-    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated', 'Number of occupied tables that werent deleted': occupied_tables})
+    return jsonify({'status': HTTPStatus.OK, 'message': 'Restaurant updated', 'undeletedtables': occupied_tables})
 
 
 @app.route('/manager/items/statistics', methods=['GET'])
