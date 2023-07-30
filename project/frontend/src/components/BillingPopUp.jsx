@@ -6,10 +6,12 @@ import React from "react";
 function BillingPopUp ({ open, setOpen, tableNo }) {
     const navigate = useNavigate();
     const [bill, setBill] = React.useState(0);
-    const [curpoints, setCurpoints] = React.useState(0);
-    const [pointsearned, setPointsearned] = React.useState(0);
-    const [haspayed, setHaspayed] = React.useState(false);
-    const [finalpayment, setFinalpayment] = React.useState(0);
+    const [currPoints, setCurrPoints] = React.useState(0);
+    const [pointsEarned, setPointsEarned] = React.useState(0);
+    const [hasPaid, setHasPaid] = React.useState(false);
+    const [finalPayment, setFinalPayment] = React.useState(0);
+
+    const [newPoints, setNewPoints] = React.useState(0);
 
     const customerId = localStorage.getItem("mvuser");
 
@@ -24,8 +26,8 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
         if (data.status !== 200) {
             console.log("hey this doesnt work btw");
         } else {
-            setHaspayed(true);
-            setFinalpayment(data.amount);
+            setHasPaid(true);
+            setFinalPayment(data.amount);
         }
     }
 
@@ -45,51 +47,59 @@ function BillingPopUp ({ open, setOpen, tableNo }) {
             if (data.bill) {
                 console.log("Bill amount received");
                 setBill(data.bill);
-                setPointsearned(data.points_earned);
+                setPointsEarned(data.points_earned);
+
+                if (customerId) {
+                    const cust = await apiCall("auth/customer/" + customerId, "GET", {});
+                    setCurrPoints(cust.customer_info.points);
+                    setNewPoints(pointsEarned + currPoints);
+                }
             } 
             else {
                 console.log("Failed to get bill amount");
             }
-            if (customerId) {
-                const cust = await apiCall("auth/customer/" + customerId, "GET", {});
-                setCurpoints(cust.customer_info.points);
-            }
         }
-        // setBill(10);
+        
         getBill();
       }, []); 
 
     return (
         <>
-            {!haspayed ? <Dialog
-                open={open}
-                onClose={handleClose}
-            >
-                <DialogTitle>{"Request Bill"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Your total current bill is ${bill}.</DialogContentText>
-                    {customerId !== null && 
-                        <>
-                            <DialogContentText>You currently have {curpoints} MV points.</DialogContentText>
-                            <DialogContentText>You have earned {pointsearned} MV points.</DialogContentText>
-                            <DialogContentText>Your new balance will be {curpoints+pointsearned} MV points.</DialogContentText>
-                        </>
-                    }
-                    <DialogContentText>You can spend 100 MV points for a 10% discount</DialogContentText>
-                    <DialogContentText>Are you ready to stop dining and pay your bill?</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={async () => await handleConfirm(true)}>Yes</Button>
-                    {customerId !== <Button onClick={async () => await handleConfirm(true)} disabled={curpoints < 100}>Yes, apply the discount</Button>}
-                </DialogActions>
-            </Dialog> : <Dialog open={open} onClose={handleExit}>
-                <DialogTitle>Thank you for your money!</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Please proceed to the counter and pay</DialogContentText>
-                    <DialogContentText variant="h6">{finalpayment}</DialogContentText>
-                </DialogContent>
-            </Dialog>}
+            {!hasPaid ? (
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <DialogTitle>{"Request Bill"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Your total current bill is ${bill}.</DialogContentText>
+                        {customerId && 
+                            <>
+                                <DialogContentText>You currently have {currPoints} MV points.</DialogContentText>
+                                <DialogContentText>You have earned {pointsEarned} MV points.</DialogContentText>
+                                <DialogContentText>Your new balance will be {newPoints} MV points.</DialogContentText>
+                                <DialogContentText>You can spend 100 MV points for a 10% discount</DialogContentText>  
+                            </>
+                        }
+                        <DialogContentText>Are you ready to stop dining and pay your bill?</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} variant="contained" color="error">No</Button>
+                        <Button onClick={async () => await handleConfirm(false)} variant="contained" color="success">Yes, pay bill</Button>
+                        {customerId && <Button onClick={async () => await handleConfirm(true)} disabled={currPoints < 100}>Yes, apply the discount</Button>}
+                    </DialogActions>
+                </Dialog>
+            ) : (
+                <Dialog open={open} onClose={handleExit}>
+                    <DialogTitle>Thank you for dining with us</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Please proceed to the counter and pay ${finalPayment}</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => handleExit()} variant="contained">Finish dining</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
         </>
     )
 }
