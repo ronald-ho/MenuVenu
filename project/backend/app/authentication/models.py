@@ -6,6 +6,8 @@ from .. import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from ..fitness.services import FitnessService
+
 
 @dataclass
 class Customers(UserMixin, db.Model):
@@ -18,6 +20,8 @@ class Customers(UserMixin, db.Model):
     calories_gained = db.Column(db.Integer, nullable=False)
     reset_code = db.Column(db.String(255), nullable=True)
     reset_code_expiry = db.Column(db.DateTime, nullable=True)
+    google_token = db.Column(db.String(255), nullable=True)
+    google_token_expire = db.Column(db.DateTime, nullable=True)
 
     def generate_reset_code(self):
         self.reset_code = random.randint(100000, 999999)
@@ -41,11 +45,14 @@ class Customers(UserMixin, db.Model):
         return check_password_hash(self.password, password)
 
     def to_dict(self):
+        google_connected = self.google_token is not None and self.google_token_expire > datetime.utcnow()
+
         return {
             'customer_id': self.id,
             'email': self.email,
             'full_name': self.full_name,
             'points': self.points,
-            'calories_burnt': self.calories_burnt,
-            'calories_gained': self.calories_gained
+            'calories_burnt': FitnessService.get_expended_calories(self.google_token) if google_connected else 0,
+            'calories_gained': self.calories_gained,
+            'google_connected': google_connected,
         }

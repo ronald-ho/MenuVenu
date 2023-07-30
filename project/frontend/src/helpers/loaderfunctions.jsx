@@ -30,19 +30,12 @@ export const tabsel_load = async () => {
 }
 
 export const get_profile = async () => {
-    /* do api call to get customer details */
-    const petergriffin = {
-        name: "Peter Griffin",
-        email: "petergriffin@pawtucketbrewery.com",
-        points: 1000,
-        mfp: "Unconnected"
-    }
     const response = await apiCall("auth/customer/"+localStorage.getItem("mvuser"), "GET", {});
     if (response.status === 200) {
         console.log(response.customer_info);
         return response.customer_info;
     } else {
-        return petergriffin;
+        return [];
     }
 }
 

@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 
 from .models import Items, Categories, Ingredients
 from .. import db
+from ..fitness.services import NutrientService
 
 
 class ItemService:
@@ -26,13 +27,26 @@ class ItemService:
         else:
             image_path = None
 
+        food_id_tuple = NutrientService.parse_food_name(item_name)
+
+        if food_id_tuple is not None:
+            nutrition_info = NutrientService.get_food_nutrition_info(food_id_tuple)
+            if nutrition_info is None:
+                calories = data['calories']
+            else:
+                calories = nutrition_info['calories']
+        else:
+            calories = data['calories']
+
         new_item = Items(
             name=item_name,
             description=data['description'],
             image=image_path,
             price=data['price'],
+            production=data['production'],
+            net=float(data['price']) - float(data['production']),
             category=data['category_id'],
-            calories=data['calories'],
+            calories=calories,
             points_to_redeem=data['points_to_redeem'],
             points_earned=data['points_earned'],
             position=MenuService.get_next_position(Items)
@@ -41,15 +55,7 @@ class ItemService:
         db.session.add(new_item)
         db.session.commit()
 
-        for ingredient in ingredients:
-            ingredient = ingredient.capitalize()
-            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
-            if not ingredient_entity:
-                ingredient_entity = Ingredients(name=ingredient)
-                db.session.add(ingredient_entity)
-                db.session.commit()
-
-            new_item.ingredients.append(ingredient_entity)
+        IngredientService.insert_ingredients(new_item, ingredients)
 
         db.session.commit()
 
@@ -83,6 +89,9 @@ class ItemService:
         item.calories = data["calories"]
         item.points_to_redeem = data["points_to_redeem"]
         item.points_earned = data["points_earned"]
+
+        item.production=data['production'],
+        item.net=float(data['price']) - float(data['production']),
 
         ingredients = data['ingredients']
         selected_ingredients = []
@@ -211,6 +220,18 @@ class IngredientService:
         ingredients_list = [ingredient.name for ingredient in ingredients]
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Ingredients found', 'ingredients': ingredients_list})
+
+    @staticmethod
+    def insert_ingredients(item, ingredient_list):
+        for ingredient in ingredient_list:
+            ingredient = ingredient.capitalize()
+            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
+            if not ingredient_entity:
+                ingredient_entity = Ingredients(name=ingredient)
+                db.session.add(ingredient_entity)
+                db.session.commit()
+
+            item.ingredients.append(ingredient_entity)
 
 
 class MenuService:
