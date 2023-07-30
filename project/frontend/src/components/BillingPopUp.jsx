@@ -77,7 +77,9 @@ function BillingPopUp ({ open, setOpen, tableNo, bill, currPoints, pointsEarned,
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose} variant="contained" color="error">No</Button>
-                        <Button onClick={() => handleConfirm()} variant="contained" color="success">Yes, pay bill</Button>
+                        <Button onClick={handleConfirm} variant="contained" color="success">
+                            Yes, pay bill {isUseDiscount && <>using discount</>}
+                        </Button>
                     </DialogActions>
                 </Dialog>
             ) : (

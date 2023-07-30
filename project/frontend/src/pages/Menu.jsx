@@ -9,7 +9,7 @@ import TableOrders from "../components/TableOrders";
 function Menu () {
     const categories = useLoaderData();
 
-    const [updatetable, setUpdatetable] = React.useState(0);
+    const [updateTable, setUpdateTable] = React.useState(0);
     const [openBilling, setOpenBilling] = React.useState(false);
     const [showInfo, setShowInfo] = React.useState(null);
     const [showAlert, setShowAlert] = React.useState(null);
@@ -19,8 +19,6 @@ function Menu () {
     const [pointsEarned, setPointsEarned] = React.useState(0);
     const [newPoints, setNewPoints] = React.useState(0);
 
-    // Can get table number from localstorage (saved during table selection) OR
-    // Store users under table number in db and API call with useEffect 
     const table = localStorage.getItem("mvtable"); 
 
     async function handleCallStaff () {
@@ -57,8 +55,6 @@ function Menu () {
             setShowAlert("Cannot request bill, no items in order.");
             setTimeout(() => setShowAlert(null), 5000);
         }
-
-        
     }
 
     return (
@@ -66,9 +62,8 @@ function Menu () {
             <Box sx={{border: "1px solid black", margin: "10px", padding: "10px", textAlign: "center", borderRadius: "10px"}}>
                 {categories.map((category) => <CategoryButton key={category.category_id} category={category}/>)}
             </Box>
-            <Outlet context={setUpdatetable}/>
-            {/*rename to table order thing*/}
-            <TableOrders trigger={updatetable} />
+            <Outlet context={setUpdateTable}/>
+            <TableOrders trigger={updateTable} />
             <Box sx={{ position: 'absolute', bottom: '24px', right: '10px' }}>
                 <Button onClick={handleRequestBill} variant="contained" sx={{ marginRight: '10px', width: '140px' }}>Request Bill</Button>
                 <Button onClick={handleCallStaff} variant="contained" sx={{ width: '140px' }}>Call Staff</Button>
