@@ -5,13 +5,14 @@ from sqlalchemy import text
 
 from .. import db
 from ..authentication.models import Customers
-from ..menu.models import Categories, Items, Ingredients
+from ..menu.models import Categories, Items
 from ..menu.services import MenuService, IngredientService
 from ..orders.models import Orders, OrderedItems, DiningTables
 
 
 def is_table_empty(model):
     return db.session.query(model).count() == 0
+
 
 # Helper functions to generate random data
 def random_menu_item():
@@ -200,7 +201,7 @@ def populate_database():
                 description=item['description'],
                 price=item['price'],
                 production=item['production'],
-                net = item['net'],
+                net=item['net'],
                 category=item['category'],
                 calories=item['calories'],
                 points_to_redeem=item['points_to_redeem'],
@@ -223,7 +224,8 @@ def populate_database():
 
             # Create orders
             table = random_table()
-            order = Orders(table=table.id, order_date=order_date, total_amount=total_amount, points_earned=points_earned)
+            order = Orders(table=table.id, order_date=order_date, total_amount=total_amount,
+                           points_earned=points_earned)
             db.session.add(order)
             db.session.commit()
 
@@ -240,12 +242,12 @@ def populate_database():
                 )
                 db.session.add(ordered_item)
                 total_amount += menu_item.price
-                
+
             order.paid = True
             order.total_amount = total_amount
             db.session.commit()
 
-    # Update the total amount for orders
+        # Update the total amount for orders
         db.session.execute(text("""
             UPDATE orders o
             SET total_amount = COALESCE(

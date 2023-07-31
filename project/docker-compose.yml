@@ -9,6 +9,12 @@ services:
       - ./backend:/app
     depends_on:
       - db
+    environment:
+      MAIL_SERVER: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USE_TLS: true
+      MAIL_USERNAME: 3900w16amog@gmail.com
+      MAIL_PASSWORD: epoekmdhdlqiletx
   frontend:
     build: ./frontend 
     ports:

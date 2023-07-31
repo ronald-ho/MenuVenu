@@ -1,16 +1,15 @@
-import time
 from datetime import datetime, timedelta
 from http import HTTPStatus
 
-import requests
-from flask import jsonify, request
+from flask import jsonify, request, Blueprint
 
-from .services import FitnessService
 from .. import app, db
 from ..authentication.models import Customers
 
+fitness = Blueprint('fitness', __name__)
 
-@app.route('/fitness/token/store', methods=['POST'])
+
+@fitness.route('/token/store', methods=['POST'])
 def store_token():
     data = data_logger(request)
 

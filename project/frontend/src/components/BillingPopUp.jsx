@@ -58,27 +58,33 @@ function BillingPopUp ({ open, setOpen, tableNo, bill, currPoints, pointsEarned,
                     <DialogTitle>{"Request Bill"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>Your total current bill is ${bill.toFixed(2)}.</DialogContentText>
-                        {customerId && 
+                        {bill > 0 ? (
                             <>
-                                <DialogContentText>You currently have {currPoints} MV points.</DialogContentText>
-                                {currPoints >= 100 && 
-                                    <FormControlLabel 
-                                        onChange={(e) => {handleUseDiscount(e.target.checked)}}
-                                        control={<Checkbox />} 
-                                        label="Redeem 100 MV points for a 10% discount?"
-                                    />
+                                {customerId &&
+                                    <>
+                                        <DialogContentText>You currently have {currPoints} MV points.</DialogContentText>
+                                        {currPoints >= 100 &&
+                                            <FormControlLabel
+                                                onChange={(e) => {handleUseDiscount(e.target.checked)}}
+                                                control={<Checkbox />}
+                                                label="Redeem 100 MV points for a 10% discount?"
+                                            />
+                                        }
+                                        {isUseDiscount && <DialogContentText>Your new bill is ${newBill.toFixed(2)}.</DialogContentText>}
+                                        <DialogContentText>You will earn {pointsGained} MV points.</DialogContentText>
+                                        <DialogContentText>Your new balance will be {newBalance} MV points.</DialogContentText>
+                                    </>
                                 }
-                                {isUseDiscount && <DialogContentText>Your new bill is ${newBill.toFixed(2)}.</DialogContentText>} 
-                                <DialogContentText>You will earn {pointsGained} MV points.</DialogContentText>
-                                <DialogContentText>Your new balance will be {newBalance} MV points.</DialogContentText>
+                                <DialogContentText>Are you ready to stop dining and pay your bill?</DialogContentText>
                             </>
-                        }
-                        <DialogContentText>Are you ready to stop dining and pay your bill?</DialogContentText>
+                        ) : (
+                            <DialogContentText>There is nothing to pay at the moment.</DialogContentText>
+                        )}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} variant="contained" color="error">No</Button>
+                        <Button onClick={handleClose} variant="contained" color="error">Order more</Button>
                         <Button onClick={handleConfirm} variant="contained" color="success">
-                            Yes, pay bill {isUseDiscount && <>using discount</>}
+                            {bill > 0 ? (<>Yes, pay bill {isUseDiscount && <>using discount</>}</>) : ("Finish dining")}
                         </Button>
                     </DialogActions>
                 </Dialog>
