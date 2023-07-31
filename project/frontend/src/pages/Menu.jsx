@@ -77,7 +77,8 @@ function Menu () {
                     currPoints={currPoints} 
                     pointsEarned={pointsEarned}
                     newPoints={newPoints}
-                    />} 
+                />
+            } 
             {showInfo && <Alert severity="info" aria-label='infoAlert' sx={{ position: 'fixed', top: '17px', left: '500px', width: '300px' }} >{showInfo}</Alert>}
             {showAlert && <Alert severity="error" aria-label='errorAlert' sx={{ position: 'fixed', top: '17px', left: '500px', width: '300px' }} >{showAlert}</Alert>}
         </div>     
