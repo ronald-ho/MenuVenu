@@ -33,7 +33,7 @@ function OrderItem() {
         <Box sx={{textAlign: "center"}}>
             <div style={{display: "inline-block"}}>
                 <Typography variant="h4">{item_info.name}</Typography>
-                <img src={item_info.image}  style={{maxWidth: "100px", maxHeight: "100px"}}/>
+                <img src={item_info.image} alt={item_info.name} style={{maxWidth: "100px", maxHeight: "100px"}}/>
                 <Typography>${item_info.price}</Typography>
                 {item_info.points_to_redeem && <Typography>{item_info.points_to_redeem} MV points</Typography>}
             </div>
