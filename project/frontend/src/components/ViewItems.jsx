@@ -17,7 +17,7 @@ function ViewItems() {
                 justifyContent: 'center',
                 margin: '10px',
                 overflow: 'auto',
-                width: 70/100, 
+                width: 65/100, 
             }}
         >
             {items.map((item) => <ItemPreview key={item.item_id} item={item} />)}

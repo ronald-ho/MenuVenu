@@ -63,15 +63,17 @@ function Menu () {
                 sx={{
                     backgroundColor: '#ffffff',
                     border: "1px solid #caccce", 
-                    height: '80vh', 
-                    margin: "10px", 
-                    padding: "10px", 
-                    textAlign: "center", 
                     borderRadius: "10px", 
-                    width: 1/10 
+                    height: '82vh', 
+                    margin: "10px 10px 0 10px", 
+                    padding: "2px 10px 10px 10px", 
+                    textAlign: "center", 
+                    width: 15/100 
                 }}
             >
-                {categories.map((category) => <CategoryButton key={category.category_id} category={category}/>)}
+                <Box sx={{ height: '82vh', overflow: 'auto' }}>
+                    {categories.map((category) => <CategoryButton key={category.category_id} category={category}/>)}
+                </Box>
             </Box>
             <Outlet context={setUpdateTable}/>
             <TableOrders trigger={updateTable} />
