@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Chip, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -10,7 +10,7 @@ function ItemPreview({ item }) {
             <Typography>${item.price}</Typography>
             {item.points_to_redeem && <Typography>{item.points_to_redeem} MV Points</Typography>}
             {item.calories && <Typography>{item.calories} Cal</Typography>}
-            {item.points && <Typography>{item.points} MVPoints</Typography>}
+            {item.ingredients.map((i) => ( <Chip label={i} /> ))}
         </Box>
     )
 }
