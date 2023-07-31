@@ -42,7 +42,7 @@ function ChatbotPopup({ open, setOpen }) {
                     <Box>{question}</Box>
                     {answers[index] && <Box>{answers[index]}</Box>}
                 </>)}
-                <TextField label="Enter query" disabled={questions.length != answers.length}/>
+                <TextField label="Enter query" onKeyDown={askQuestion} disabled={questions.length != answers.length}/>
             </DialogContent> : <Typography>Loading robot...</Typography>}
         </Dialog>
     )
