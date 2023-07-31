@@ -107,7 +107,7 @@ class StaffService:
     def login_staff(data):
         password = data['password']
 
-        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+        restaurant = Restaurants.query.first()
 
         # Check if password is correct
         if not Restaurants.check_staff_password(restaurant, password):
@@ -119,7 +119,7 @@ class StaffService:
     def login_kitchen_staff(data):
         password = data['password']
 
-        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+        restaurant = Restaurants.query.first()
 
         # Check if password is correct
         if not Restaurants.check_staff_password(restaurant, password):
@@ -133,7 +133,7 @@ class ManagerService:
     def login_manager(data):
         password = data['password']
 
-        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+        restaurant = Restaurants.query.first()
 
         # Check if password is correct
         if not Restaurants.check_manager_password(restaurant, password):

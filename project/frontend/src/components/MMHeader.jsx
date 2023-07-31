@@ -1,15 +1,16 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
+import { Box, Button, Divider, IconButton, Tooltip, Typography } from '@mui/material';
+import { EditNote, Insights, ReceiptLong, Settings, TrendingUp } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import LogOutButton from './LogOutButton';
 import ProfilePopup from './ProfilePopup';
 import ManagerPopup from './ManagerPopup';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 const StyledHeader = styled.header({
+  backgroundColor: '#7a49a5',
   display: 'flex',
   justifyContent: 'space-between',
-  border: '1px black solid',
   alignItems: 'center'
 });
 
@@ -17,49 +18,64 @@ function MMHeader ({ mode, setmode }) {
   const [profile, setProfile] = React.useState(false);
   const [manager, setManager] = React.useState(false);
 
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
   return (
     <StyledHeader>
-      <Typography sx={{ fontSize: '40px', padding: '10px 20px' }}>MOGGER MEALS</Typography>
+      <Typography sx={{ 
+        color: 'white', 
+        fontFamily: "'Libre Franklin', sans-serif", fontSize: '40px', 
+        fontWeight: '1000', padding: '10px 20px' }}>
+        MOGGER MEALS
+      </Typography>
       <div>
         {mode === 'customer' && <>
           <LogOutButton setmode={setmode}/>
           <Button variant='contained' onClick={() => {setProfile(true)}}>Profile</Button>
           {profile && <ProfilePopup open={profile} setOpen={setProfile}/>}
         </>}
-        {mode === 'manager' && <>
-          <Button variant='contained' onClick={() => {setManager(true)}} sx={{marginRight: "10px"}}>Manager</Button>
+        {mode === 'manager' && 
+        <Box sx={{ display: 'flex' }}>
+          <Tooltip title="Performance Graph">
+            <NavLink to={'/managergraph'} >
+              <IconButton aria-label="Performance Graph">
+                <Insights fontSize="large" sx={{ color: isActive('/managergraph') ? '#F5EBFF' : '' }} />
+              </IconButton>
+            </NavLink>
+          </Tooltip>
+          <Tooltip title="Order Log">
+            <NavLink to={'/orderlog'}>
+              <IconButton aria-label="Order Log">
+                <ReceiptLong fontSize="large" sx={{ color: isActive('/orderlog') ? '#F5EBFF' : '' }} />
+              </IconButton>
+            </NavLink>
+          </Tooltip>
+          <Tooltip title="Item Popularity">
+            <NavLink to={'/popularitems'}>
+              <IconButton aria-label="Item Popularity">
+                  <TrendingUp fontSize="large" sx={{ color: isActive('/popularitems') ? '#F5EBFF' : '' }} />
+              </IconButton>
+            </NavLink>
+          </Tooltip>
+          <Divider orientation="vertical" flexItem />
+          <Tooltip title="Edit Menu">
+            <NavLink to={'/managereditmenu'} >
+              <IconButton aria-label="Edit Menu">
+                <EditNote fontSize="large" sx={{ color: isActive('/managereditmenu') ? '#F5EBFF' : '' }} />
+              </IconButton>
+            </NavLink>
+          </Tooltip>
+          <Tooltip title="Settings">
+            <IconButton aria-label="Settings" onClick={() => {setManager(true)}} >
+              <Settings fontSize="large" />
+            </IconButton>
+          </Tooltip>
           {manager && <ManagerPopup open={manager} setOpen={setManager}/>}
-          <NavLink to={'/managergraph'} style={({ isActive }) => {
-            return {
-              fontWeight: isActive ? "bold" : "",
-              textDecoration: "none",
-              color: "inherit",
-              marginRight: "10px"
-            }
-          }}>
-            Performance Graph
-          </NavLink>
-          <NavLink to={'/orderlog'} style={({ isActive }) => {
-            return {
-              fontWeight: isActive ? "bold" : "",
-              textDecoration: "none",
-              color: "inherit",
-              marginRight: "10px"
-            }
-          }}>
-            Order Log
-          </NavLink>
-          <NavLink to={'/popularitems'} style={({ isActive }) => {
-            return {
-              fontWeight: isActive ? "bold" : "",
-              textDecoration: "none",
-              color: "inherit",
-              marginRight: "10px"
-            }
-          }}>
-            Popular Items
-          </NavLink>
-        </>}
+        </Box>}
       </div>
     </StyledHeader>
   )

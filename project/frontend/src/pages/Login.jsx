@@ -1,5 +1,5 @@
 import React from "react";
-import { redirect, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Alert, Typography, TextField, Button } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import ResetPopup from "../components/ResetPopup";
