@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation } from "react-router-dom";
 import { Alert, Box, Button, Typography } from "@mui/material";
 import { Add } from '@mui/icons-material';
 import AddCategoryPopUp from "../components/AddCategoryPopUp";
@@ -9,6 +9,8 @@ import { apiCall } from "../helpers/helpers";
 import BouncingArrow from "../components/BouncingArrow";
 
 function ManagerEditMenu ({ setmode }) {
+    const location = useLocation();
+  
     const [categories, setCategories] = React.useState(useLoaderData());
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
 
@@ -132,6 +134,15 @@ function ManagerEditMenu ({ setmode }) {
                     MENU ITEMS
                 </Typography>
                 <Outlet />
+                {location.pathname === '/managereditmenu' &&
+                    <Box sx={{ display: 'flex', flex: 1 }}>
+                        <Alert severity="info" aria-label='infoAlert' sx={{ margin: 'auto', textAlign: 'left', width: 3/4 }}>
+                            Click a category in the CATEGORIES column to view, add, update or delete menu items.
+                            You can also edit the name of a category or delete it. 
+                        </Alert> 
+                    </Box>
+                }
+                
             </Box>
             {openAddCategory && <AddCategoryPopUp open={openAddCategory} setOpen={setOpenAddCategory} setCategories={setCategories} />}
         </Box>

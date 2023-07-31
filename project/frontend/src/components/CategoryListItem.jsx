@@ -46,7 +46,6 @@ function CategoryListItem ({ category, setCategories }) {
                     sx={{ 
                         textAlign: "left",
                         padding: "8px 0 8px 10px",
-                        width: "15.5vw",
                         "&:hover": { color: "#551b8c", fontWeight: "bold" },
                     }}
                 >

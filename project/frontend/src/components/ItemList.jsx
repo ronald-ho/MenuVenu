@@ -10,7 +10,6 @@ import { apiCall } from "../helpers/helpers";
 
 function ItemList() {
     const params = useParams();
-    console.log(params);
 
     const [allIngredients, setAllIngredients] = React.useState([]);
     const [items, setItems] = React.useState([]);
