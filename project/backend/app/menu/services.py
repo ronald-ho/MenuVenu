@@ -67,7 +67,7 @@ class ItemService:
 
     @staticmethod
     def update_item_details(data):
-        
+
         item = Items.query.filter_by(id=data["id"]).first()
         if not item:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
@@ -90,8 +90,8 @@ class ItemService:
         item.points_to_redeem = data["points_to_redeem"]
         item.points_earned = data["points_earned"]
 
-        item.production=data['production'],
-        item.net=float(data['price']) - float(data['production']),
+        item.production = data['production'],
+        item.net = float(data['price']) - float(data['production']),
 
         ingredients = data['ingredients']
         selected_ingredients = []

@@ -304,7 +304,6 @@ class NutrientService:
     @staticmethod
     def get_meal_type():
         current_time = datetime.now(pytz.timezone('Australia/Sydney'))
-        app.logger.info(f"Current time: {current_time.hour}")
         if 4 <= current_time.hour < 12:
             return 2
         elif 12 <= current_time.hour < 17:

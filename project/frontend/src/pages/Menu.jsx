@@ -38,7 +38,7 @@ function Menu () {
     async function handleRequestBill() {
         const customerId = localStorage.getItem("mvuser");
         const data = await apiCall("orders/get_bill", "POST", { 'table_number': table });
-        if (data.bill) {
+        if (data.order_count) {
             console.log("Bill amount received");
             setBill(data.bill);
             setPointsEarned(data.points_earned);
