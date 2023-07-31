@@ -18,7 +18,18 @@ function TableOrders({ trigger }) {
     }, [trigger]);
 
     return (
-        <Box sx={{border: "1px solid black", padding: "10px", margin: "5px", overflow: "auto", borderRadius: "10px"}}>
+        <Box 
+            sx={{ 
+                backgroundColor: '#ffffff', 
+                border: "1px solid #caccce", 
+                borderRadius: "10px",
+                height: '75vh',
+                padding: "10px", 
+                margin: "10px", 
+                overflow: "auto", 
+                width: 20/100
+            }}
+        >
             <Typography variant="h3">Table {table}</Typography>
             {orders.length === 0 ? (
                 <Typography>No orders available</Typography>

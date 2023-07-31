@@ -59,12 +59,23 @@ function Menu () {
 
     return (
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <Box sx={{border: "1px solid black", margin: "10px", padding: "10px", textAlign: "center", borderRadius: "10px"}}>
+            <Box 
+                sx={{
+                    backgroundColor: '#ffffff',
+                    border: "1px solid #caccce", 
+                    height: '80vh', 
+                    margin: "10px", 
+                    padding: "10px", 
+                    textAlign: "center", 
+                    borderRadius: "10px", 
+                    width: 1/10 
+                }}
+            >
                 {categories.map((category) => <CategoryButton key={category.category_id} category={category}/>)}
             </Box>
             <Outlet context={setUpdateTable}/>
             <TableOrders trigger={updateTable} />
-            <Box sx={{ position: 'absolute', bottom: '24px', right: '10px' }}>
+            <Box sx={{ position: 'absolute', bottom: '24px', right: '15px' }}>
                 <Button onClick={handleRequestBill} variant="contained" sx={{ marginRight: '10px', width: '140px' }}>Request Bill</Button>
                 <Button onClick={handleCallStaff} variant="contained" sx={{ width: '140px' }}>Call Staff</Button>
             </Box>

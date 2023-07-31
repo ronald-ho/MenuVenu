@@ -1,17 +1,26 @@
-import { Box, Chip, Typography } from "@mui/material";
+import { Box, Card, Chip, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
 function ItemPreview({ item }) {
     return (
-        <Box component={Link} to={"../order/" + item.id} sx={{margin: "5px", border: "1px solid black", borderRadius: "10px", padding: "5px"}}>
-            <Typography variant="h3">{item.name}</Typography>
-            <img src={item.image} alt={item.name} style={{maxWidth: "100px", maxHeight: "100px"}}/>
+        <Card 
+            component={Link} to={"../order/" + item.id} 
+            sx={{ 
+                border: "1px solid #caccce",
+                height: "200px",
+                margin: "5px", 
+                padding: "5px",
+                width: "200px"
+            }}
+        >
+            <Typography>{item.name}</Typography>
+            {item.image && <img src={item.image} alt={item.name} style={{maxWidth: "100px", maxHeight: "100px"}}/>}
             <Typography>${item.price}</Typography>
             {item.points_to_redeem && <Typography>{item.points_to_redeem} MV Points</Typography>}
             {item.calories && <Typography>{item.calories} Cal</Typography>}
             {item.ingredients.map((i) => ( <Chip label={i} /> ))}
-        </Box>
+        </Card>
     )
 }
 
