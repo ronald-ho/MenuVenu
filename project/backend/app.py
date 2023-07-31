@@ -1,23 +1,7 @@
 # Flask and database setup
 from app import app, db
 
-# Authentication routes and models
-from app.authentication import routes
-
-# Orders routes and models
-from app.orders import routes
-
-# Menu routes and models
-from app.menu import routes
-
-# Fitness routes
-from app.fitness import routes
-
-# Restaurant routes and models
-from app.restaurant import routes, populate
-
-# Chatbot routes
-from app.chatbot import routes
+from app.restaurant import populate
 
 from app.restaurant.services import RestaurantService
 from app.orders.services import TableService

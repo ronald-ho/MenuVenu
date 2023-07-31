@@ -10,12 +10,12 @@ from .. import db
 from ..menu.models import Items
 from ..orders.models import OrderedItems, Orders, DiningTables
 
-
 # Popularity Profit Money Per week/month/year etc
 # Popularity Profit Money Per Category
 # Popularity Profit Money Per Ingredient
 
 manager = Blueprint('manager', __name__)
+
 
 def data_logger(request):
     data = request.get_json()
@@ -134,7 +134,7 @@ def get_orderlog():
             OrderedItems.id.label('ordered_item_id'),
             Items.id.label('item_id'),
             Items.name.label('item_name'),
-            case((OrderedItems.redeemed == True, 0), \
+            case((OrderedItems.redeemed == True, 0),
                  else_=Items.price).label('item_price'),
             OrderedItems.redeemed.label('item_redeemed')
         ) \
@@ -174,7 +174,7 @@ def get_orderlog():
 def get_profit():
     timespan = request.args.get('time')
     fil = request.args.get('filter')
-    if (request.args.get('category_id')):
+    if request.args.get('category_id'):
         category_id = int(request.args.get('category_id'))
     end_time = datetime.now()
 
@@ -201,9 +201,9 @@ def get_profit():
             Items.id.label('item_id'),
             Items.name.label('item_name'),
             func.count(OrderedItems.item).label('item_popularity'),
-            case((OrderedItems.redeemed == True, 0), \
+            case((OrderedItems.redeemed == True, 0),
                  else_=Items.price).label('item_price'),
-            case((OrderedItems.redeemed == True, 0 - Items.price), \
+            case((OrderedItems.redeemed == True, 0 - Items.price),
                  else_=Items.net).label('item_net'),
             OrderedItems.redeemed.label('item_redeemed'),
             Items.category.label('category_id'),
@@ -494,9 +494,9 @@ def item_statistics():
         days = list(sorted_per_day.keys())
         popperday = list(sorted_per_day.values())
 
-        return jsonify({'popularity': popularity, 'unique_pop': unique_pop, 'net': net, 'gross': gross, \
+        return jsonify({'popularity': popularity, 'unique_pop': unique_pop, 'net': net, 'gross': gross,
                         'production': production, 'per_order': per_order, 'ranking': ranking,
-                        'avgtime': average_time_str, \
+                        'avgtime': average_time_str,
                         'days': days, 'popularitybyday': popperday, 'status': HTTPStatus.OK})
 
     except Exception as e:

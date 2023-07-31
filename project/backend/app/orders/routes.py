@@ -5,6 +5,7 @@ from .. import app
 
 orders = Blueprint('orders', __name__)
 
+
 @orders.route('/req_assist', methods=['POST'])
 def req_assist():
     data = data_logger(request)
@@ -47,7 +48,6 @@ def select_table():
 
 @orders.route('/get_tables', methods=['GET'])
 def get_tables():
-
     return TableService.get_tables()
 
 
@@ -67,7 +67,6 @@ def kitchen_prepared():
 
 @orders.route('/get_order_list', methods=['GET'])
 def get_order_list():
-
     return OrderService.get_order_list()
 
 
@@ -87,7 +86,6 @@ def waitstaff_served():
 
 @orders.route('/get_serve_list', methods=['GET'])
 def get_serve_list():
-
     return OrderService.get_serve_list()
 
 
