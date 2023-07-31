@@ -5,7 +5,7 @@ from sqlalchemy import text
 
 from .. import db
 from ..authentication.models import Customers
-from ..menu.models import Categories, Items, Ingredients
+from ..menu.models import Categories, Items
 from ..menu.services import MenuService, IngredientService
 from ..orders.models import Orders, OrderedItems, DiningTables
 

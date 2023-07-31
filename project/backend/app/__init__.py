@@ -44,6 +44,14 @@ mail = Mail(app)
 
 from .authentication.routes import auth
 from .menu.routes import menu
+from .orders.routes import orders
+from .fitness.routes import fitness
+from .restaurant.routes import manager
+from .chatbot.routes import chatbot
 
 app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(menu, url_prefix='/menu')
+app.register_blueprint(orders, url_prefix='/orders')
+app.register_blueprint(fitness, url_prefix='/fitness')
+app.register_blueprint(manager, url_prefix='/manager')
+app.register_blueprint(chatbot, url_prefix='/chatbot')
