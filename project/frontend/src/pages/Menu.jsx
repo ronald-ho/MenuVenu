@@ -77,7 +77,7 @@ function Menu () {
             </Box>
             <Outlet context={setUpdateTable}/>
             <TableOrders trigger={updateTable} />
-            <Box sx={{ position: 'absolute', bottom: '24px', right: '15px' }}>
+            <Box sx={{ position: 'absolute', bottom: '24px', right: '10px' }}>
                 <Button onClick={handleRequestBill} variant="contained" sx={{ marginRight: '10px', width: '140px' }}>Request Bill</Button>
                 <Button onClick={handleCallStaff} variant="contained" sx={{ width: '140px' }}>Call Staff</Button>
             </Box>

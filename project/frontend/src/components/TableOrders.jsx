@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from "@mui/material";
+import { Checkbox, FormControlLabel, Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from "@mui/material";
 import React from "react";
 import { apiCall } from "../helpers/helpers";
 
@@ -18,41 +18,73 @@ function TableOrders({ trigger }) {
     }, [trigger]);
 
     return (
-        <Box 
+        <Box
             sx={{ 
-                backgroundColor: '#ffffff', 
-                border: "1px solid #caccce", 
-                borderRadius: "10px",
-                height: '75vh',
-                padding: "10px", 
-                margin: "10px", 
-                overflow: "auto", 
+                display: 'flex',
+                flexDirection: 'column',
+                height: '75vh', 
+                margin: "10px",
                 width: 20/100
             }}
         >
-            <Typography variant="h3">Table {table}</Typography>
-            {orders.length === 0 ? (
-                <Typography>No orders available</Typography>
-            ) : (
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Item</TableCell>
-                            <TableCell>Energy</TableCell>
-                            <TableCell>Cost</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {orders.map((ordered_item) => (
-                            <TableRow key={ordered_item.id}>
-                                <TableCell>{ordered_item.name}</TableCell>
-                                <TableCell>{ordered_item.calories}</TableCell>
-                                <TableCell>{ordered_item.redeemed ? ordered_item.points_to_redeem + " MV Points" : "$" + ordered_item.price}</TableCell>
+            <Box 
+                sx={{ 
+                    backgroundColor: '#ffffff', 
+                    border: "1px solid #caccce", 
+                    borderRadius: "10px",
+                    height: '60vh',
+                    overflow: "auto", 
+                    padding: "10px", 
+                }}
+            >
+                <Typography variant="h3" sx={{ textAlign: 'center' }}>Table {table}</Typography>
+                {orders.length === 0 ? (
+                    <Typography>No items ordered</Typography>
+                ) : (
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Item</TableCell>
+                                <TableCell>Energy (Cal)</TableCell>
+                                <TableCell>Cost ($)</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            )}
+                        </TableHead>
+                        <TableBody>
+                            {orders.map((ordered_item) => (
+                                <TableRow key={ordered_item.id}>
+                                    <TableCell>{ordered_item.name}</TableCell>
+                                    <TableCell>{ordered_item.calories}</TableCell>
+                                    <TableCell>
+                                        {ordered_item.redeemed ? (
+                                            <>
+                                                0.00
+                                                <Typography sx={{ fontSize: '12px' }}>(- {ordered_item.points_to_redeem} MV points)</Typography>  
+                                            </>
+                                        ) : ( 
+                                            ordered_item.price
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
+            </Box>
+            <Box 
+                sx={{ 
+                    backgroundColor: '#ffffff', 
+                    border: "1px solid #caccce", 
+                    borderRadius: "10px",
+                    height: '15vh',
+                    margin: '10px 0 0 0',
+                    padding: "10px", 
+                }}
+            >
+                Total Cost<br/>
+                Calories burned <br/>
+                Calories gained <br/>
+                Net calories
+            </Box>
         </Box>
     )
 }
