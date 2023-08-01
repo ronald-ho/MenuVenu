@@ -14,7 +14,8 @@ function ManagerGraph() {
 
     const [statistics, setStatistics] = React.useState(null);
     const options = {
-        responsive: true
+        responsive: true,
+        cubicInterpolationMode: 'monotone',
     }
 
     const randomnum = () => Math.floor(Math.random() * 235);
