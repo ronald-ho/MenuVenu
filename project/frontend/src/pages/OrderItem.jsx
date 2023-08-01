@@ -12,7 +12,7 @@ function OrderItem() {
     async function sendOrder(points) {
         const body = {
             "name": item_info.name,
-            "table_id": localStorage.getItem("mvtable"),
+            "table_number": localStorage.getItem("mvtable"),
             "redeem": points,
             "customer_id": localStorage.getItem("mvuser")
         }
@@ -36,7 +36,6 @@ function OrderItem() {
                 <img src={item_info.image} alt={item_info.name} style={{maxWidth: "100px", maxHeight: "100px"}}/>
                 <Typography>${item_info.price}</Typography>
                 {item_info.points_to_redeem && <Typography>{item_info.points_to_redeem} MV points</Typography>}
-                {item_info.ingredients.map((i) => ( <Chip label={i} /> ))}
             </div>
             <div style={{display: "inline-block"}}>
                 <Typography>{item_info.description}</Typography>

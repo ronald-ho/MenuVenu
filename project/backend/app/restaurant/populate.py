@@ -52,7 +52,6 @@ def populate_database():
                 full_name=generate_random_full_name(),
                 points=0,
                 calories_burnt=0,
-                calories_gained=0
             )
 
             new_user.set_password('Test1!')
@@ -330,12 +329,13 @@ def populate_database():
         for _ in range(150):
             order_date = random_order_date()
             total_amount = 0.0
+            calories_gained = 0
             points_earned = 0
-
+            
             # Create orders
             table = random_table()
-            order = Orders(table=table.id, order_date=order_date, total_amount=total_amount,
-                           points_earned=points_earned)
+            order = Orders(table=table.id, order_date=order_date, total_amount=total_amount, 
+                           calories_gained=calories_gained, points_earned=points_earned)
             db.session.add(order)
             db.session.commit()
 

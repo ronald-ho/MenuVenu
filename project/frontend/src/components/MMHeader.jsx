@@ -28,10 +28,15 @@ function MMHeader ({ mode, setmode }) {
 
   return (
     <StyledHeader>
-      <Typography sx={{ 
-        color: 'white', 
-        fontFamily: "'Libre Franklin', sans-serif", fontSize: '40px', 
-        fontWeight: '1000', padding: '10px 20px' }}>
+      <Typography 
+        sx={{ 
+          color: 'white', 
+          fontFamily: "'Libre Franklin', sans-serif", 
+          fontSize: '40px', 
+          fontWeight: '1000', 
+          padding: '10px 20px' 
+        }}
+      >
         MOGGER MEALS
       </Typography>
       <div>
