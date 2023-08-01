@@ -45,7 +45,18 @@ class Customers(UserMixin, db.Model):
         return check_password_hash(self.password, password)
 
     def to_dict(self):
-        google_connected = self.google_token is not None and self.google_token_expire > datetime.utcnow()
+
+        if self.google_token is None or self.google_token_expire is None:
+            google_connected = False
+
+        elif self.google_token and self.google_token_expire < datetime.utcnow():
+            self.google_token = None
+            self.google_token_expire = None
+            db.session.commit()
+            google_connected = False
+
+        else:
+            google_connected = True
 
         return {
             'customer_id': self.id,

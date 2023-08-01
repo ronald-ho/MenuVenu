@@ -18,6 +18,7 @@ function Menu () {
     const [currPoints, setCurrPoints] = React.useState(0);
     const [pointsEarned, setPointsEarned] = React.useState(0);
     const [newPoints, setNewPoints] = React.useState(0);
+    const [googleConnected, setGoogleConnected] = React.useState(false);
 
     const table = localStorage.getItem("mvtable"); 
 
@@ -47,6 +48,9 @@ function Menu () {
                 const cust = await apiCall("auth/customer/" + customerId, "GET", {});
                 setCurrPoints(cust.customer_info.points);
                 setNewPoints(data.points_earned + cust.customer_info.points);
+
+                const google_connected = cust.customer_info.google_connected;
+                setGoogleConnected(google_connected);
             }
 
             setOpenBilling(true);
@@ -77,6 +81,7 @@ function Menu () {
                     currPoints={currPoints} 
                     pointsEarned={pointsEarned}
                     newPoints={newPoints}
+                    googleConnected={googleConnected}
                 />
             } 
             {showInfo && <Alert severity="info" aria-label='infoAlert' sx={{ position: 'fixed', top: '17px', left: '500px', width: '300px' }} >{showInfo}</Alert>}

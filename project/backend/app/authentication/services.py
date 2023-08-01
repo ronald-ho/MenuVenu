@@ -63,7 +63,7 @@ class CustomerService:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
         # Delete user
-        db.session.delete_customer()
+        db.session.delete(user)
         db.session.commit()
         return jsonify({'status': HTTPStatus.OK, 'message': 'User deleted'})
 
