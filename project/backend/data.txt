@@ -1,80 +1,79 @@
 OUR RESTAURANT
 Name - MenuVenu
-Phone number - 0422222222
+Phone number - 6969696969
 
 CLASSIC CHEESEBURGER
 Ingredients - Beef, Dairy
 Price - $10.99
 Calories - 11
-
 Points to redeem - 11
 Points earned - 11
+
 MARGHERITA PIZZA
 Ingredients - Dairy
 Price - $12.5
 Calories - 13
-
 Points to redeem - 13
 Points earned - 13
+
 CAESAR SALAD
 Ingredients - Dairy
 Price - $8.95
 Calories - 9
-
 Points to redeem - 9
 Points earned - 9
+
 GRILLED SALMON
 Ingredients - Seafood
 Price - $18.75
 Calories - 19
-
 Points to redeem - 19
 Points earned - 19
+
 MUSHROOM RISOTTO
 Ingredients - Dairy
 Price - $14.25
 Calories - 14
-
 Points to redeem - 14
 Points earned - 14
+
 MANGO TANGO SMOOTHIE
 Ingredients - Nuts, Dairy
 Price - $5.99
 Calories - 6
-
 Points to redeem - 6
 Points earned - 6
+
 BBQ CHICKEN WINGS
 Ingredients - Chicken
 Price - $9.5
 Calories - 10
-
 Points to redeem - 10
 Points earned - 10
+
 TIRAMISU
 Ingredients - Dairy
 Price - $7.5
 Calories - 8
-
 Points to redeem - 8
 Points earned - 8
+
 PESTO PENNE PASTA
 Ingredients - Nuts, Dairy
 Price - $12.95
 Calories - 13
-
 Points to redeem - 13
 Points earned - 13
+
 CAPRESE SALAD
 Ingredients - Dairy
 Price - $8.25
 Calories - 8
-
 Points to redeem - 8
 Points earned - 8
 
 BUSY/AVAILABLE
-There are currently 8 tables available
+There are currently 5 tables available
 
 OUR MOST POPULAR DISH
 Mango Tango Smoothie

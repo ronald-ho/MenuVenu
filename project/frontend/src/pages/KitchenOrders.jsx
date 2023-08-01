@@ -1,10 +1,13 @@
 import React from 'react';
 import { apiCall } from '../helpers/helpers';
 import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { useLoaderData } from 'react-router-dom';
 
 function KitchenOrders() {
     const [orders, setOrders] = React.useState([]);
     const [currDatetime, setCurrDatetime] = React.useState(null);
+    const tables = useLoaderData();
+
 
     const getOrders = async () => {
         const data = await apiCall("orders/get_order_list", "GET", {});
@@ -56,7 +59,7 @@ function KitchenOrders() {
                         return (
                             <TableRow>
                                 <TableCell>{ordered_item.item_name}</TableCell>
-                                <TableCell>{ordered_item.table_number}</TableCell>
+                                <TableCell>{tables.find(obj => { return obj.table_id == ordered_item.table_number})["table_number"]}</TableCell>
                                 <TableCell>{timeSinceOrdered}</TableCell>
                                 <TableCell>
                                     <Button variant='text' onClick={async () => {

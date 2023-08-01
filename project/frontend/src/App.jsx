@@ -134,7 +134,8 @@ function App() {
         ]
       }, {
         path: "/kitchen",
-        element: <KitchenOrders />
+        element: <KitchenOrders />,
+        loader: tabsel_load
       }, {
         path: "/kitchenstafflogin",
         element: <KitchenStaffLogin />
