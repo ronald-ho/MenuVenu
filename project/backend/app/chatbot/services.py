@@ -6,7 +6,7 @@ from langchain.document_loaders import TextLoader
 from langchain.indexes import VectorstoreIndexCreator
 
 from .. import db
-from ..menu.models import Items, Ingredients
+from ..menu.models import Items
 from ..orders.models import DiningTables, OrderedItems
 from ..restaurant.models import Restaurants
 
@@ -14,8 +14,6 @@ from ..restaurant.models import Restaurants
 class ChatbotService:
     @staticmethod
     def chatbot_query(data):
-        os.environ["OPENAI_API_KEY"] = constants.APIKEY
-
         query = data['query']
 
         # converts text file to a format that is processable by the bot
