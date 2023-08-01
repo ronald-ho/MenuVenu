@@ -44,6 +44,7 @@ function KitchenOrders() {
 
     return (
         <Box sx={{border: "1px solid black", borderRadius: "15px", margin: "10px", padding: "10px"}}>
+            <Box sx={{ overflow: "auto", maxHeight: "85vh" }}>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -78,6 +79,7 @@ function KitchenOrders() {
                     })}
                 </TableBody>
             </Table>
+            </Box>
         </Box>
     )
 }
