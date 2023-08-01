@@ -9,8 +9,9 @@ function ChatbotPopup({ open, setOpen }) {
     const [answers, setAnswers] = React.useState([]);
 
     const createChatBot = async () => {
-        const data = apiCall("chatbot/data_update", "PUT", {});
-        if (data.status === 200) {
+        const data = await apiCall("chatbot/data_update", "PUT", {});
+        if (data.status == 200) {
+            console.log("yes");
             setHasLoaded(true);
         }
     }
@@ -39,11 +40,13 @@ function ChatbotPopup({ open, setOpen }) {
             <DialogTitle>Robowaiter 9000</DialogTitle>
             {hasLoaded ? <DialogContent>
                 {questions.map((question, index) => <>
-                    <Box>{question}</Box>
-                    {answers[index] && <Box>{answers[index]}</Box>}
+                    <Box>You: {question}</Box>
+                    {answers[index] && <Box>Bot: {answers[index]}</Box>}
                 </>)}
                 <TextField label="Enter query" onKeyDown={askQuestion} disabled={questions.length != answers.length}/>
             </DialogContent> : <Typography>Loading robot...</Typography>}
         </Dialog>
     )
 }
+
+export default ChatbotPopup;

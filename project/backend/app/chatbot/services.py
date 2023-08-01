@@ -36,7 +36,8 @@ class ChatbotService:
         for ingredient in ingredient_list:
             f.write("HAS " + ingredient.name.upper() + "\n")
 
-            relation_list = item_ingredient.query.filter_by(ingredient_id=ingredient.id).all()
+            #relation_list = item_ingredient.query.filter_by(ingredient_id=ingredient.id).all()
+            relation_list = db.session.query(item_ingredient).filter_by(ingredient_id=ingredient.id).all()
 
             if relation_list:
                 for relation in relation_list:
@@ -77,7 +78,8 @@ class ChatbotService:
         f.write("OUR MOST POPULAR DISH\n")
         popular = db.session.query(OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')). \
             group_by(OrderedItems.item).order_by(db.desc('popularity')).first()
-        f.write(popular.name + "\n")
+        popular_item = Items.query.filter_by(id=popular.item).first()
+        f.write(popular_item.name + "\n")
 
         f.write("\n")
 

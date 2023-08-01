@@ -1,0 +1,72 @@
+HAS BEEF
+Classic Cheeseburger
+
+HAS CHICKEN
+BBQ Chicken Wings
+
+HAS PORK
+None of our dishes contain Pork
+
+HAS LAMB
+None of our dishes contain Lamb
+
+HAS SEAFOOD
+Grilled Salmon
+
+HAS NUTS
+Mango Tango Smoothie
+Pesto Penne Pasta
+
+HAS DAIRY
+Classic Cheeseburger
+Margherita Pizza
+Caesar Salad
+Mushroom Risotto
+Mango Tango Smoothie
+Tiramisu
+Pesto Penne Pasta
+Caprese Salad
+
+HAS SPICY
+None of our dishes contain Spicy
+
+HAS GLUTEN
+None of our dishes contain Gluten
+
+PRICE
+Classic Cheeseburger - $10.99
+Margherita Pizza - $12.5
+Caesar Salad - $8.95
+Grilled Salmon - $18.75
+Mushroom Risotto - $14.25
+Mango Tango Smoothie - $5.99
+BBQ Chicken Wings - $9.5
+Tiramisu - $7.5
+Pesto Penne Pasta - $12.95
+Caprese Salad - $8.25
+
+CALORIE COUNT
+Classic Cheeseburger - 11 calories
+Margherita Pizza - 13 calories
+Caesar Salad - 9 calories
+Grilled Salmon - 19 calories
+Mushroom Risotto - 14 calories
+Mango Tango Smoothie - 6 calories
+BBQ Chicken Wings - 10 calories
+Tiramisu - 8 calories
+Pesto Penne Pasta - 13 calories
+Caprese Salad - 8 calories
+
+BUSY/AVAILABLE
+There are currently 10 tables available
+
+OUR MOST POPULAR DISH
+Mango Tango Smoothie
+
+HOW DO I?
+Fitness - You can connect your fitness app through your profile in the top right of the screen
+Assistance - You can request assistance with the 'Assist' button below your order list
+Bill - You can request the bill with the 'Bill' button below your order list
+
+FAMILY GUY
+Here you go: https://www.youtube.com/watch?v=qrhFlCoNun0
