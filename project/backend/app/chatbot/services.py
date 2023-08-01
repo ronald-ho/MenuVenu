@@ -5,7 +5,6 @@ from flask import jsonify
 from langchain.document_loaders import TextLoader
 from langchain.indexes import VectorstoreIndexCreator
 
-import constants
 from .. import db
 from ..menu.models import Items, Ingredients
 from ..orders.models import DiningTables, OrderedItems
@@ -33,9 +32,10 @@ class ChatbotService:
 
         restaurant = Restaurants.query.first()
 
-        f.write("OUR RESTAURANT")
-        f.write("Name - " + restaurant.name)
-        f.write("Phone number - " + restaurant.phone)
+        f.write("OUR RESTAURANT\n")
+        f.write("Name - " + restaurant.name + "\n")
+        f.write("Phone number - " + restaurant.phone + "\n")
+        f.write("\n")
 
         item_list = Items.query.all()
 
@@ -48,7 +48,9 @@ class ChatbotService:
             f.write("Ingredients - ")
             if item.ingredients:
                 end = len(item.ingredients)
-                index = 0
+
+                index = 1
+
                 for ingredient in item.ingredients:
                     f.write(ingredient.name)
                     if index < end:
@@ -78,7 +80,7 @@ class ChatbotService:
             else:
                 f.write("Points earned - No points earnable\n")
 
-        f.write("\n")
+            f.write("\n")
 
         # Availability of tables
         f.write("BUSY/AVAILABLE\n")
@@ -91,7 +93,8 @@ class ChatbotService:
         f.write("OUR MOST POPULAR DISH\n")
         popular = db.session.query(OrderedItems.item, db.func.count(OrderedItems.item).label('popularity')). \
             group_by(OrderedItems.item).order_by(db.desc('popularity')).first()
-        f.write(popular.name + "\n")
+        popular_item = Items.query.filter_by(id=popular.item).first()
+        f.write(popular_item.name + "\n")
 
         f.write("\n")
 
