@@ -7,7 +7,7 @@ from flask import jsonify
 from werkzeug.utils import secure_filename
 
 from .models import Items, Categories, Ingredients
-from .. import db
+from .. import db, app
 from ..fitness.services import NutrientService
 
 
@@ -49,7 +49,7 @@ class ItemService:
             calories=calories,
             points_to_redeem=data['points_to_redeem'],
             points_earned=data['points_earned'],
-            position=MenuService.get_next_position(Items)
+            position=MenuService.get_next_position(Items, data['category_id'])
         )
 
         db.session.add(new_item)
@@ -242,23 +242,42 @@ class MenuService:
         new_position = data['new_position']
         curr_position = current_entity.position
 
+        current_entity.position = 10000
+        db.session.commit()
+
         if curr_position == new_position:
             return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
 
         elif curr_position > new_position:
-            entities_to_update = entity.query.filter(entity.position < curr_position,
-                                                     entity.position >= new_position).all()
+            if entity_name == "Category":
+                entities_to_update = entity.query.filter(entity.position < curr_position,
+                                                         entity.position >= new_position) \
+                                                        .order_by(entity.position.desc()).all()
+            else:
+                entities_to_update = entity.query.filter(entity.position < curr_position,
+                                                         entity.position >= new_position,
+                                                         entity.category == current_entity.category) \
+                                                        .order_by(entity.position.desc()).all()
             for entity in entities_to_update:
                 entity.position += 1
+                db.session.commit()
 
         else:
-            entities_to_update = entity.query.filter(entity.position > curr_position,
-                                                     entity.position <= new_position).all()
+            if entity_name == "Category":
+                entities_to_update = entity.query.filter(entity.position > curr_position,
+                                                         entity.position <= new_position) \
+                                                        .order_by(entity.position.asc()).all()
+
+            else:
+                entities_to_update = entity.query.filter(entity.position > curr_position,
+                                                         entity.position <= new_position,
+                                                         entity.category == current_entity.category) \
+                                                        .order_by(entity.position.asc()).all()
             for entity in entities_to_update:
                 entity.position -= 1
+                db.session.commit()
 
         current_entity.position = new_position
-
         db.session.commit()
 
         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
@@ -267,7 +286,8 @@ class MenuService:
     def delete_entity(entity, data):
         current_entity, entity_name = MenuService.find_entity(entity, data)
 
-        entities_to_update = entity.query.filter(entity.position > current_entity.position).all()
+        entities_to_update = entity.query.filter(entity.position > current_entity.position,
+                                                 entity.category == current_entity.category).all()
         for entity in entities_to_update:
             entity.position -= 1
 
@@ -277,15 +297,20 @@ class MenuService:
         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} deleted successfully'})
 
     @staticmethod
-    def get_next_position(entity):
-        max_position = db.session.query(db.func.max(entity.position)).scalar()
-        next_position = max_position + 1 if max_position is not None else 1
+    def get_next_position(entity, category_id=None):
+        if category_id is not None:
+            max_position = db.session.query(db.func.max(entity.position)).filter(
+                entity.category == category_id).scalar()
+        else:
+            max_position = db.session.query(db.func.max(entity.position)).scalar()
 
+        next_position = max_position + 1 if max_position is not None else 1
         return next_position
 
     @staticmethod
     def find_entity(entity, data):
         entity_name = entity.__name__
+        app.logger.info(f'Entity name: {entity_name}')
         current_entity = entity
 
         if entity == Items:

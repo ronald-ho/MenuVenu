@@ -5,22 +5,16 @@ from flask import jsonify, request, Blueprint
 from sqlalchemy.sql import func, case
 
 from .models import Restaurants
-from .. import app
 from .. import db
 from ..menu.models import Items
 from ..orders.models import OrderedItems, Orders, DiningTables
+from ..utilities import Helper
 
 # Popularity Profit Money Per week/month/year etc
 # Popularity Profit Money Per Category
 # Popularity Profit Money Per Ingredient
 
 manager = Blueprint('manager', __name__)
-
-
-def data_logger(request):
-    data = request.get_json()
-    app.logger.info(f"Received request from frontend: {data}")
-    return data
 
 
 def add_new_table(table_number):
@@ -294,7 +288,7 @@ def get_profit():
 
 @manager.route('/update', methods=['PUT'])
 def update_restaurant():
-    data = data_logger(request)
+    data = Helper.data_logger(request)
     restaurant_id = data['restaurant_id']
     new_name = data['new_name']
     new_phone = data['new_phone']
