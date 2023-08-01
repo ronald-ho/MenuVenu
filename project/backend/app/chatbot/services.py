@@ -14,8 +14,6 @@ from ..orders.models import DiningTables, OrderedItems
 class ChatbotService:
     @staticmethod
     def chatbot_query(data):
-        os.environ["OPENAI_API_KEY"] = constants.APIKEY
-
         query = data['query']
 
         # converts text file to a format that is processable by the bot
