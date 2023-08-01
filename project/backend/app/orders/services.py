@@ -194,6 +194,10 @@ class OrderService:
                 customer.points -= item.points_to_redeem
             else:
                 return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
+            
+        #add calories to account if customer
+        if customer:
+            customer.calories_gained += item.calories
 
         new_ordered_item = OrderedItems(
             order=order.id,

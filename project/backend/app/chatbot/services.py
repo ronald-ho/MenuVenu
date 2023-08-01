@@ -14,6 +14,8 @@ from ..restaurant.models import Restaurants
 class ChatbotService:
     @staticmethod
     def chatbot_query(data):
+        os.environ["OPENAI_API_KEY"] = constants.APIKEY
+
         query = data['query']
 
         # converts text file to a format that is processable by the bot
@@ -46,7 +48,9 @@ class ChatbotService:
             f.write("Ingredients - ")
             if item.ingredients:
                 end = len(item.ingredients)
+
                 index = 1
+
                 for ingredient in item.ingredients:
                     f.write(ingredient.name)
                     if index < end:
@@ -63,13 +67,20 @@ class ChatbotService:
 
             #Calories
             f.write("Calories - " + str(item.calories) + "\n")
-            f.write("\n")
 
-            f.write("Points to redeem - " + str(item.points_to_redeem) + "\n")
+            #Points to redeem
+            if item.points_to_redeem:
+                f.write("Points to redeem - " + str(item.points_to_redeem) + "\n")
+            else:
+                f.write("Points to redeem - Not redeemable with points\n")
 
             #Points earned
-            f.write("Points earned - " + str(item.points_earned) + "\n")
-        f.write("\n")
+            if item.points_earned:
+                f.write("Points earned - " + str(item.points_earned) + "\n")
+            else:
+                f.write("Points earned - No points earnable\n")
+
+            f.write("\n")
 
         # Availability of tables
         f.write("BUSY/AVAILABLE\n")
