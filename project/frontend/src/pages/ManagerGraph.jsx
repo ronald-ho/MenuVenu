@@ -1,9 +1,8 @@
 import React from "react";
-import { Chart } from 'chart.js/auto';
-import { Line } from 'react-chartjs-2';
-import { useLoaderData } from "react-router-dom";
-import { apiCall } from "../helpers/helpers";
-import { Box, MenuItem, TextField, Toolbar, Typography, AppBar } from "@mui/material";
+import {Line} from 'react-chartjs-2';
+import {useLoaderData} from "react-router-dom";
+import {apiCall} from "../helpers/helpers";
+import {Box, MenuItem, TextField, Toolbar, Typography} from "@mui/material";
 
 function ManagerGraph() {
     const categories = useLoaderData();
