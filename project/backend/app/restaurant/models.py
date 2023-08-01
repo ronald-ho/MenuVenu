@@ -21,3 +21,10 @@ class Restaurants(db.Model):
 
     def check_staff_password(self, password):
         return check_password_hash(self.staff_password, password)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'phone': self.phone,
+        }

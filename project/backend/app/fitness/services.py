@@ -80,6 +80,10 @@ class FitnessService:
 
         response = requests.post('https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate',
                                  headers=headers, json=body)
+
+        if response.status_code == 401:
+            return 0
+
         bucket = response.json()['bucket'][0]['dataset'][0]['point']
 
         return 0 if len(bucket) == 0 else round(bucket[0]['value'][0]['fpVal'])

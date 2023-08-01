@@ -62,7 +62,7 @@ class CustomerService:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
         # Delete user
-        db.session.delete_customer()
+        db.session.delete(user)
         db.session.commit()
         return jsonify({'status': HTTPStatus.OK, 'message': 'User deleted'})
 
@@ -92,7 +92,7 @@ class CustomerService:
 
     @staticmethod
     def get_customer_details(customer_id):
-        if not customer_id:
+        if customer_id == "null":
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer ID not provided'})
 
         customer = Customers.query.get(customer_id)

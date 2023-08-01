@@ -19,6 +19,7 @@ function Menu () {
     const [currPoints, setCurrPoints] = React.useState(0);
     const [pointsEarned, setPointsEarned] = React.useState(0);
     const [newPoints, setNewPoints] = React.useState(0);
+    const [googleConnected, setGoogleConnected] = React.useState(false);
     const [caloriesBurned, setCaloriesBurned] = React.useState(0);
 
     const table = localStorage.getItem("mvtable"); 
@@ -60,6 +61,9 @@ function Menu () {
                 const cust = await apiCall("auth/customer/" + customerId, "GET", {});
                 setCurrPoints(cust.customer_info.points);
                 setNewPoints(data.points_earned + cust.customer_info.points);
+
+                const google_connected = cust.customer_info.google_connected;
+                setGoogleConnected(google_connected);
             }
 
             setOpenBilling(true);
@@ -72,16 +76,16 @@ function Menu () {
 
     return (
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <Box 
+            <Box
                 sx={{
                     backgroundColor: '#ffffff',
-                    border: "1px solid #caccce", 
-                    borderRadius: "10px", 
-                    height: '82vh', 
-                    margin: "10px 10px 0 10px", 
-                    padding: "2px 10px 10px 10px", 
-                    textAlign: "center", 
-                    width: 15/100 
+                    border: "1px solid #caccce",
+                    borderRadius: "10px",
+                    height: '82vh',
+                    margin: "10px 10px 0 10px",
+                    padding: "2px 10px 10px 10px",
+                    textAlign: "center",
+                    width: 15/100
                 }}
             >
                 <Box sx={{ height: '82vh', overflow: 'auto' }}>
@@ -89,22 +93,22 @@ function Menu () {
                 </Box>
             </Box>
             <Outlet context={setUpdateTable}/>
-            <Box 
+            <Box
                 sx={{
-                    borderRadius: "10px", 
-                    height: '82vh', 
+                    borderRadius: "10px",
+                    height: '82vh',
                     margin: "10px",
-                    textAlign: "center", 
+                    textAlign: "center",
                     display: 'flex',
                     flexDirection: 'column',
                     width: 20/100
                 }}
             >
                 <TableOrders trigger={updateTable} caloriesBurned={caloriesBurned} />
-                <Box 
-                    sx={{ 
+                <Box
+                    sx={{
                         display: 'flex',
-                        gap: '10px', 
+                        gap: '10px',
                         margin: '10px auto'
                     }
                 }>
@@ -121,6 +125,7 @@ function Menu () {
                     currPoints={currPoints} 
                     pointsEarned={pointsEarned}
                     newPoints={newPoints}
+                    googleConnected={googleConnected}
                 />
             } 
             {showInfo && <Alert severity="info" aria-label='infoAlert' sx={{ position: 'fixed', top: '17px', left: '500px', width: '300px' }} >{showInfo}</Alert>}
