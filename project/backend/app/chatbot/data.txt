@@ -1,28 +1,26 @@
-HAS BEEF
-Cheeseburger
-Steak
-Meatballs
-Big Burger
-Appleborger
+OUR RESTAURANT
+Name - Mogger Meals
+Phone number - 04696969
 
-HAS CHICKEN
-Schnitzel 
-Small Burger
-Nuggets
+CHEESEBURGER
+Ingredients - Beef, Cheese, Lettuce
+Price - $15
+Calories - 1500
 
-PRICE
-Big Burger - $15
-Cheeseburger - $12
-Nuggets - $8
-Schnitzel - $18
-Small Burger - $10
+MEATBALLS
+Ingredients - There are no listed ingredients
+Price - $12
+Calories - 1200
 
-CALORIE COUNT
-Big Burger - 1000 calories
-Cheeseburger - 800 calories
-Nuggets - 500 calories
-Schnitzel - 1200 calories
-Small Burger - 900 calories
+NUGGETS
+Ingredients - Chicken, batter 
+Price - $8
+Calories - 800
+
+STEAK
+Ingredients - Beef, Mushroom
+Price - $20
+Calories - 2000
 
 BUSY/AVAILABLE
 Currently there are 0 tables available
