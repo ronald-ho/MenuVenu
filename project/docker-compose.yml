@@ -15,6 +15,7 @@ services:
       MAIL_USE_TLS: true
       MAIL_USERNAME: 3900w16amog@gmail.com
       MAIL_PASSWORD: epoekmdhdlqiletx
+      OPENAI_API_KEY: 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
   frontend:
     build: ./frontend 
     ports:

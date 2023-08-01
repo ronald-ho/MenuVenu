@@ -6,6 +6,7 @@ import LogOutButton from './LogOutButton';
 import ProfilePopup from './ProfilePopup';
 import ManagerPopup from './ManagerPopup';
 import { NavLink, useLocation } from 'react-router-dom';
+import ChatbotPopup from './ChatbotPopup';
 
 const StyledHeader = styled.header({
   backgroundColor: '#7a49a5',
@@ -17,6 +18,7 @@ const StyledHeader = styled.header({
 function MMHeader ({ mode, setmode }) {
   const [profile, setProfile] = React.useState(false);
   const [manager, setManager] = React.useState(false);
+  const [chatbot, setChatbot] = React.useState(false);
 
   const location = useLocation();
 
@@ -42,6 +44,8 @@ function MMHeader ({ mode, setmode }) {
           <LogOutButton setmode={setmode}/>
           <Button variant='contained' onClick={() => {setProfile(true)}}>Profile</Button>
           {profile && <ProfilePopup open={profile} setOpen={setProfile}/>}
+          <Button variant='contained' onClick={() => {setChatbot(true)}}>Chatbot</Button>
+          <ChatbotPopup open={chatbot} setOpen={setChatbot}/>
         </>}
         {mode === 'manager' && 
         <Box sx={{ display: 'flex' }}>
