@@ -5,7 +5,6 @@ from flask import jsonify
 from langchain.document_loaders import TextLoader
 from langchain.indexes import VectorstoreIndexCreator
 
-import constants
 from .. import db
 from ..menu.models import Items, Ingredients, item_ingredient
 from ..orders.models import DiningTables, OrderedItems
