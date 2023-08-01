@@ -19,6 +19,11 @@ function TableOrders({ trigger, caloriesBurned }) {
             const response = await apiCall("orders/get_ordered_items", "POST", body);
             setOrders(response?.ordered_list ?? []);
         }
+
+        const fetchCaloriesGained = async () => {
+            const response = await apiCall("orders/get_ordered_items", "POST", { "table_number": table });
+            setCaloriesGained(response?.calories_gained ?? 0);
+        }
     
         const fetchCurrBill = async () => {
             const data = await apiCall("orders/get_bill", "POST", { 'table_number': table });
@@ -37,7 +42,7 @@ function TableOrders({ trigger, caloriesBurned }) {
 
         fetchOrderedItems();
         fetchCurrBill();
-        // fetchCaloriesGained();
+        fetchCaloriesGained();
     }, [trigger]);
 
     return (
@@ -115,7 +120,7 @@ function TableOrders({ trigger, caloriesBurned }) {
                         {customer &&
                             <TableRow>
                                 <TableCell sx={{ borderBottom: 0, textAlign: 'right' }}>Net Calories</TableCell>
-                                <TableCell sx={{ borderBottom: 0, textAlign: 'right' }}>{-caloriesBurned + caloriesGained}</TableCell>
+                                <TableCell sx={{ borderBottom: 0, textAlign: 'right' }}>{-parseInt(caloriesBurned) + parseInt(caloriesGained)}</TableCell>
                             </TableRow>
                         }
                     </TableBody>

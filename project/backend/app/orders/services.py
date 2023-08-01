@@ -255,7 +255,7 @@ class OrderService:
             item_dict = item.to_dict()
             item_list.append(item_dict)
 
-        return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})
+        return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list, 'calories_gained': order.calories_gained})
 
     @staticmethod
     def waitstaff_served(data):
