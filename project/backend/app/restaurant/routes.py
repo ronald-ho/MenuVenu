@@ -23,6 +23,15 @@ def add_new_table(table_number):
     db.session.commit()
 
 
+@manager.route('/restaurant', methods=['GET'])
+def get_restaurant():
+    try:
+        restaurant = Restaurants.query.first()
+        return jsonify({'status': HTTPStatus.OK, 'restaurant': restaurant.to_dict()})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 # Route to get all items sorted by popularity
 @manager.route('/items/popularity', methods=['GET'])
 def all_items_sorted():

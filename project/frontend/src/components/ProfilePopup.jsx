@@ -22,19 +22,22 @@ function ProfilePopup({ open, setOpen }) {
 
     return (
         <>
-        {info && <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{info.full_name}</DialogTitle>
-            <DialogContent>
-                <DialogContentText>Email address: {info.email}</DialogContentText>
-                <DialogContentText>MV Points: {info.points}</DialogContentText>
-                <DialogContentText>GoogleFit: {info.google_connected ? 'Connected' : 'Unconnected'}</DialogContentText>
+            {info &&
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>{info.full_name}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Email address: {info.email}</DialogContentText>
+                        <DialogContentText>MV Points: {info.points}</DialogContentText>
+                        <DialogContentText>Calories burned: {info.calories_burnt}</DialogContentText>
+                        <DialogContentText>GoogleFit: {info.google_connected ? 'Connected' : 'Unconnected'}</DialogContentText>
                 {!info.google_connected &&
                   <Button onClick={() => client.requestAccessToken()} variant="contained">
                     <Google sx={{mr: 1, fontSize: 20}} />
                     Connect Google Fit
                   </Button>}
-            </DialogContent>
-        </Dialog>}
+                    </DialogContent>
+                </Dialog>
+            }
         </>
     )
 }

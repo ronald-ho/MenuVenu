@@ -331,7 +331,7 @@ def populate_database():
             order_date = random_order_date()
             total_amount = 0.0
             points_earned = 0
-
+            
             # Create orders
             table = random_table()
             order = Orders(table=table.id, order_date=order_date, total_amount=total_amount,

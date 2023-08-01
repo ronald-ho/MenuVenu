@@ -1,71 +1,52 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControlLabel,
-} from "@mui/material";
+import React from "react";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { apiCall } from "../helpers/helpers";
 
-const BillingPopUp = ({
-  open,
-  setOpen,
-  tableNo,
-  bill,
-  currPoints,
-  pointsEarned,
-  newPoints,
-  google_connected,
-}) => {
-  const navigate = useNavigate();
-  const [hasPaid, setHasPaid] = useState(false);
-  const [finalPayment, setFinalPayment] = useState(0);
-  const [isUseDiscount, setIsUseDiscount] = useState(false);
-  const [newBalance, setNewBalance] = useState(newPoints);
-  const [pointsGained, setPointsGained] = useState(pointsEarned);
-  const [newBill, setNewBill] = useState(0);
+function BillingPopUp ({ open, setOpen, tableNo, bill, currPoints, pointsEarned, newPoints, google_connected}) {
+    const navigate = useNavigate();
+    const [hasPaid, setHasPaid] = React.useState(false);
+    const [finalPayment, setFinalPayment] = React.useState(0);
+    const [isUseDiscount, setIsUseDiscount] = React.useState(false);
+    const [newBalance, setNewBalance] = React.useState(newPoints);
+    const [pointsGained, setPointsGained] = React.useState(pointsEarned);
+    const [newBill, setNewBill] = React.useState(0);
 
-  const customerId = localStorage.getItem("mvuser");
+    const customerId = localStorage.getItem("mvuser");
 
-  async function handleConfirm() {
-    const body = {
-      table_number: tableNo,
-      customer_id: customerId,
-      redeem: isUseDiscount,
-    };
-    const data = await apiCall("orders/pay_bill", "POST", body);
-    if (data.status !== 200) {
-      console.log("hey this doesnt work btw");
-    } else {
-      setHasPaid(true);
-      setFinalPayment(data.amount);
+    async function handleConfirm() {
+        const body = {
+            table_number: tableNo,
+            customer_id: customerId,
+            redeem: isUseDiscount
+        }
+        const data = await apiCall("orders/pay_bill", "POST", body);
+        if (data.status !== 200) {
+            console.log("hey this doesnt work btw");
+        } else {
+            setHasPaid(true);
+            setFinalPayment(data.amount);
+        }
     }
-  }
 
-  function handleUseDiscount(isChecked) {
-    setIsUseDiscount(isChecked);
-    const discountPointsEarned =
-      pointsEarned - Math.floor(bill) + Math.floor(bill * 0.9);
-    const discountPointsBalance = currPoints + discountPointsEarned - 100;
-    setNewBill(isChecked ? bill * 0.9 : bill);
-    setNewBalance(isChecked ? discountPointsBalance : newPoints);
-    setPointsGained(isChecked ? discountPointsEarned : pointsEarned);
-  }
+    function handleUseDiscount (isChecked) {
+        setIsUseDiscount(isChecked);
+        const discountPointsEarned = pointsEarned - Math.floor(bill) + Math.floor(bill * 0.9);
+        const discountPointsBalance = currPoints + discountPointsEarned - 100;
+        setNewBill(isChecked ? bill * 0.9 : bill);
+        setNewBalance(isChecked ? discountPointsBalance : newPoints);
+        setPointsGained(isChecked ? discountPointsEarned : pointsEarned);
+    }
 
-  const handleExit = () => {
-    localStorage.removeItem("mvuser");
-    localStorage.removeItem("mvtable");
-    navigate("/customerselect");
-  };
+    const handleExit = () => {
+        localStorage.removeItem("mvuser");
+        localStorage.removeItem("mvtable");
+        navigate("/customerselect");
+    }
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
   const googleFitPrompt = google_connected ? (
     <DialogContentText>
@@ -142,7 +123,11 @@ const BillingPopUp = ({
           <DialogTitle>Thank you for dining with us</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Please proceed to the counter and pay ${finalPayment.toFixed(2)}
+                {bill > 0 ? (
+                    <>Please proceed to the counter and pay ${finalPayment.toFixed(2)}</>
+                ) : (
+                    <>Have a nice day!</>
+                )}
             </DialogContentText>
           </DialogContent>
           <DialogActions>

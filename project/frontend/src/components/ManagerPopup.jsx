@@ -4,8 +4,8 @@ import { apiCall } from "../helpers/helpers";
 
 
 function ManagerPopup({ open, setOpen }) {
-    const [restname, setRestname] = React.useState("MenuVenu");
-    const [restphone, setRestphone] = React.useState("6969696969")
+    const [restname, setRestname] = React.useState(null);
+    const [restphone, setRestphone] = React.useState(null)
     const [staffpass, setStaffpass] = React.useState(null);
     const [managerpass, setManagerpass] = React.useState(null);
     const [numtables, setNumtables] = React.useState(null);
@@ -21,6 +21,7 @@ function ManagerPopup({ open, setOpen }) {
     }
 
     React.useEffect(() => {
+        fetchRestaurantData();
         getTables();
     }, []);
 
@@ -44,6 +45,21 @@ function ManagerPopup({ open, setOpen }) {
         } else {
             setMess(data.message);
         }
+    }
+
+    async function fetchRestaurantData() {
+        try {
+            const response = await apiCall("/manager/restaurant", "GET");
+            if (response.status === 200 && response.restaurant) {
+                const { name, phone } = response.restaurant;
+                setRestname(name);
+                setRestphone(phone);
+            } else {
+                console.error("Failed to fetch restaurant data");
+            }
+        } catch (error) {
+            console.error("Error while fetching restaurant data:", error);
+      }
     }
 
     return (
