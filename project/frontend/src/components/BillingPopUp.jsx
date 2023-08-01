@@ -92,7 +92,13 @@ function BillingPopUp ({ open, setOpen, tableNo, bill, currPoints, pointsEarned,
                 <Dialog open={open} onClose={handleExit}>
                     <DialogTitle>Thank you for dining with us</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>Please proceed to the counter and pay ${finalPayment.toFixed(2)}</DialogContentText>
+                        <DialogContentText>
+                            {bill > 0 ? (
+                                <>Please proceed to the counter and pay ${finalPayment.toFixed(2)}</>
+                            ) : (
+                                <>Have a nice day!</>
+                            )}
+                        </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleExit} variant="contained">Finish dining</Button>

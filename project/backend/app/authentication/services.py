@@ -23,8 +23,7 @@ class CustomerService:
             email=email,
             full_name=full_name,
             points=0,
-            calories_burnt=0,
-            calories_gained=0
+            calories_burnt=0
         )
 
         new_user.set_password(password)
@@ -93,6 +92,9 @@ class CustomerService:
 
     @staticmethod
     def get_customer_details(customer_id):
+        if not customer_id:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer ID not provided'})
+
         customer = Customers.query.get(customer_id)
 
         if not customer:

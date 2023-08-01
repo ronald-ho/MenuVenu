@@ -5,6 +5,7 @@ import CategoryButton from "../components/CategoryButton";
 import { apiCall } from "../helpers/helpers";
 import BillingPopUp from "../components/BillingPopUp";
 import TableOrders from "../components/TableOrders";
+import { get_profile } from "../helpers/loaderfunctions";
 
 function Menu () {
     const categories = useLoaderData();
@@ -18,8 +19,20 @@ function Menu () {
     const [currPoints, setCurrPoints] = React.useState(0);
     const [pointsEarned, setPointsEarned] = React.useState(0);
     const [newPoints, setNewPoints] = React.useState(0);
+    const [caloriesBurned, setCaloriesBurned] = React.useState(0);
 
     const table = localStorage.getItem("mvtable"); 
+
+    React.useEffect(() => {
+        const getCaloriesBurned = async () => {
+            const user = await get_profile();
+            if (user !== []) {
+                setCaloriesBurned(user.calories_burnt);
+            }
+        }
+
+        getCaloriesBurned();
+    }, []);
 
     async function handleCallStaff () {
         console.log(table);
@@ -59,14 +72,45 @@ function Menu () {
 
     return (
         <div style={{display: "flex", justifyContent: "space-between"}}>
-            <Box sx={{border: "1px solid black", margin: "10px", padding: "10px", textAlign: "center", borderRadius: "10px"}}>
-                {categories.map((category) => <CategoryButton key={category.category_id} category={category}/>)}
+            <Box 
+                sx={{
+                    backgroundColor: '#ffffff',
+                    border: "1px solid #caccce", 
+                    borderRadius: "10px", 
+                    height: '82vh', 
+                    margin: "10px 10px 0 10px", 
+                    padding: "2px 10px 10px 10px", 
+                    textAlign: "center", 
+                    width: 15/100 
+                }}
+            >
+                <Box sx={{ height: '82vh', overflow: 'auto' }}>
+                    {categories.map((category) => <CategoryButton key={category.category_id} category={category}/>)}
+                </Box>
             </Box>
             <Outlet context={setUpdateTable}/>
-            <TableOrders trigger={updateTable} />
-            <Box sx={{ position: 'absolute', bottom: '24px', right: '10px' }}>
-                <Button onClick={handleRequestBill} variant="contained" sx={{ marginRight: '10px', width: '140px' }}>Request Bill</Button>
-                <Button onClick={handleCallStaff} variant="contained" sx={{ width: '140px' }}>Call Staff</Button>
+            <Box 
+                sx={{
+                    borderRadius: "10px", 
+                    height: '82vh', 
+                    margin: "10px",
+                    textAlign: "center", 
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: 20/100
+                }}
+            >
+                <TableOrders trigger={updateTable} caloriesBurned={caloriesBurned} />
+                <Box 
+                    sx={{ 
+                        display: 'flex',
+                        gap: '10px', 
+                        margin: '10px auto'
+                    }
+                }>
+                    <Button onClick={handleRequestBill} variant="contained" sx={{ width: '130px' }}>Request Bill</Button>
+                    <Button onClick={handleCallStaff} variant="contained" sx={{ width: '130px' }}>Call Staff</Button>
+                </Box>
             </Box>
             {openBilling && 
                 <BillingPopUp 

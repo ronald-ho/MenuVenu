@@ -5,6 +5,7 @@ from sqlalchemy import text
 
 from .. import db
 from ..authentication.models import Customers
+from ..authentication.services import CustomerService
 from ..menu.models import Categories, Items
 from ..menu.services import MenuService, IngredientService, ItemService
 from ..orders.models import Orders, OrderedItems, DiningTables
@@ -47,17 +48,16 @@ def populate_database():
     # Create people
     if is_table_empty(Customers):
         for i in range(10):
-            new_user = Customers(
-                email=f"user{i}@gmail.com",
-                full_name=generate_random_full_name(),
-                points=0,
-                calories_burnt=0,
-                calories_gained=0
-            )
+            user_data = {
+                "email": f"user{i}@gmail.com",
+                "full_name": generate_random_full_name(),
+                "password": "Test1!",
+                "points": 0,
+                "calories_burnt": 0,
+                "calories_gained": 0
+            }
 
-            new_user.set_password('Test1!')
-
-            db.session.add(new_user)
+            CustomerService.create_new_customer(user_data)
 
     # Create categories
     if is_table_empty(Categories):
@@ -331,7 +331,7 @@ def populate_database():
             order_date = random_order_date()
             total_amount = 0.0
             points_earned = 0
-
+            
             # Create orders
             table = random_table()
             order = Orders(table=table.id, order_date=order_date, total_amount=total_amount,
