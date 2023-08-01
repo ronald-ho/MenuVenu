@@ -93,6 +93,9 @@ class CustomerService:
 
     @staticmethod
     def get_customer_details(customer_id):
+        if not customer_id:
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer ID not provided'})
+
         customer = Customers.query.get(customer_id)
 
         if not customer:
