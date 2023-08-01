@@ -4,12 +4,14 @@ import AssistReqTableButton from "../components/AssistReqTableButton";
 import ConfirmAssistPopUp from "../components/ConfirmAssistPopUp";
 import { apiCall } from "../helpers/helpers";
 import WaitstaffOrderRow from "../components/WaitstaffOrderRow";
+import { useLoaderData } from "react-router-dom";
 
 function WaitStaff () {
     const [tablesToAssist, setTablesToAssist] = React.useState([]);
     const [orderItemsToServe, setOrderItemsToServe] = React.useState([]);
     const [showConfirmAssist, setShowConfirmAssist] = React.useState(false);
     const [confirmTableAssist, setConfirmTableAssist] = React.useState();
+    const tables = useLoaderData();
 
     React.useEffect(() => {
         const getTablesNeedAssist = async () => {
@@ -82,7 +84,7 @@ function WaitStaff () {
                                 </TableRow>
                             ) : (
                                 orderItemsToServe.map((orderItem) => 
-                                    <WaitstaffOrderRow key={orderItem.ordered_item_id} orderItem={orderItem} setOrderItemsToServe={setOrderItemsToServe}/>
+                                    <WaitstaffOrderRow key={orderItem.ordered_item_id} tables={tables} orderItem={orderItem} setOrderItemsToServe={setOrderItemsToServe}/>
                                 )
                             )}
                         </TableBody>

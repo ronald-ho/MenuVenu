@@ -99,7 +99,8 @@ function App() {
         element: <WaitStaffLogin />
       }, {
         path: "/waitstaff",
-        element: <WaitStaff />
+        element: <WaitStaff />,
+        loader: tabsel_load
       }, {
         path: "/deleteaccount",
         element: <DeleteAccount />,
