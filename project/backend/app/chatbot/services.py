@@ -30,9 +30,10 @@ class ChatbotService:
 
         restaurant = Restaurants.query.first()
 
-        f.write("OUR RESTAURANT")
-        f.write("Name - " + restaurant.name)
-        f.write("Phone number - " + restaurant.phone)
+        f.write("OUR RESTAURANT\n")
+        f.write("Name - " + restaurant.name + "\n")
+        f.write("Phone number - " + restaurant.phone + "\n")
+        f.write("\n")
 
         item_list = Items.query.all()
 
@@ -45,7 +46,7 @@ class ChatbotService:
             f.write("Ingredients - ")
             if item.ingredients:
                 end = len(item.ingredients)
-                index = 0
+                index = 1
                 for ingredient in item.ingredients:
                     f.write(ingredient.name)
                     if index < end:
@@ -62,7 +63,12 @@ class ChatbotService:
 
             #Calories
             f.write("Calories - " + str(item.calories) + "\n")
+            f.write("\n")
 
+            f.write("Points to redeem - " + str(item.points_to_redeem) + "\n")
+
+            #Points earned
+            f.write("Points earned - " + str(item.points_earned) + "\n")
         f.write("\n")
 
         # Availability of tables

@@ -1,64 +1,80 @@
-HAS BEEF
-Classic Cheeseburger
+OUR RESTAURANT
+Name - MenuVenu
+Phone number - 0422222222
 
-HAS CHICKEN
-BBQ Chicken Wings
+CLASSIC CHEESEBURGER
+Ingredients - Beef, Dairy
+Price - $10.99
+Calories - 11
 
-HAS PORK
-None of our dishes contain Pork
+Points to redeem - 11
+Points earned - 11
+MARGHERITA PIZZA
+Ingredients - Dairy
+Price - $12.5
+Calories - 13
 
-HAS LAMB
-None of our dishes contain Lamb
+Points to redeem - 13
+Points earned - 13
+CAESAR SALAD
+Ingredients - Dairy
+Price - $8.95
+Calories - 9
 
-HAS SEAFOOD
-Grilled Salmon
+Points to redeem - 9
+Points earned - 9
+GRILLED SALMON
+Ingredients - Seafood
+Price - $18.75
+Calories - 19
 
-HAS NUTS
-Mango Tango Smoothie
-Pesto Penne Pasta
+Points to redeem - 19
+Points earned - 19
+MUSHROOM RISOTTO
+Ingredients - Dairy
+Price - $14.25
+Calories - 14
 
-HAS DAIRY
-Classic Cheeseburger
-Margherita Pizza
-Caesar Salad
-Mushroom Risotto
-Mango Tango Smoothie
-Tiramisu
-Pesto Penne Pasta
-Caprese Salad
+Points to redeem - 14
+Points earned - 14
+MANGO TANGO SMOOTHIE
+Ingredients - Nuts, Dairy
+Price - $5.99
+Calories - 6
 
-HAS SPICY
-None of our dishes contain Spicy
+Points to redeem - 6
+Points earned - 6
+BBQ CHICKEN WINGS
+Ingredients - Chicken
+Price - $9.5
+Calories - 10
 
-HAS GLUTEN
-None of our dishes contain Gluten
+Points to redeem - 10
+Points earned - 10
+TIRAMISU
+Ingredients - Dairy
+Price - $7.5
+Calories - 8
 
-PRICE
-Classic Cheeseburger - $10.99
-Margherita Pizza - $12.5
-Caesar Salad - $8.95
-Grilled Salmon - $18.75
-Mushroom Risotto - $14.25
-Mango Tango Smoothie - $5.99
-BBQ Chicken Wings - $9.5
-Tiramisu - $7.5
-Pesto Penne Pasta - $12.95
-Caprese Salad - $8.25
+Points to redeem - 8
+Points earned - 8
+PESTO PENNE PASTA
+Ingredients - Nuts, Dairy
+Price - $12.95
+Calories - 13
 
-CALORIE COUNT
-Classic Cheeseburger - 11 calories
-Margherita Pizza - 13 calories
-Caesar Salad - 9 calories
-Grilled Salmon - 19 calories
-Mushroom Risotto - 14 calories
-Mango Tango Smoothie - 6 calories
-BBQ Chicken Wings - 10 calories
-Tiramisu - 8 calories
-Pesto Penne Pasta - 13 calories
-Caprese Salad - 8 calories
+Points to redeem - 13
+Points earned - 13
+CAPRESE SALAD
+Ingredients - Dairy
+Price - $8.25
+Calories - 8
+
+Points to redeem - 8
+Points earned - 8
 
 BUSY/AVAILABLE
-There are currently 10 tables available
+There are currently 8 tables available
 
 OUR MOST POPULAR DISH
 Mango Tango Smoothie

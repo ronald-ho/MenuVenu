@@ -7,6 +7,7 @@ function ChatbotPopup({ open, setOpen }) {
     const [hasLoaded, setHasLoaded] = React.useState(false);
     const [questions, setQuestions] = React.useState([]);
     const [answers, setAnswers] = React.useState([]);
+    const bottomscroll = React.useRef(null);
 
     const createChatBot = async () => {
         const data = await apiCall("chatbot/data_update", "PUT", {});
@@ -24,7 +25,9 @@ function ChatbotPopup({ open, setOpen }) {
             if (response.status === 200) {
                 setAnswers(oldArray => [...oldArray, response.message]);
             }
+            e.target.value = ""
         }
+        
     }
 
     function handleClose() {
@@ -33,17 +36,26 @@ function ChatbotPopup({ open, setOpen }) {
 
     React.useEffect(() => {
         createChatBot();
-    }, []);
+    }, [open]);
+
+    React.useEffect(() => {
+        if (bottomscroll.current) {
+            bottomscroll.current.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+    }, [answers]);
 
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Robowaiter 9000</DialogTitle>
-            {hasLoaded ? <DialogContent>
+        <Dialog open={open} onClose={handleClose} sx={{'& .MuiDialog-root': {backgroundColor: "#ededed"}}}>
+            <DialogTitle sx={{textAlign: "center"}}>MenuVenuTron</DialogTitle>
+            {hasLoaded ? <DialogContent sx={{minWidth: "500px"}}>
+                <div style={{height: "50vh", overflow: "auto", marginBottom: "15px", display: "flex", flexDirection: "column"}}>
                 {questions.map((question, index) => <>
-                    <Box>You: {question}</Box>
-                    {answers[index] && <Box>Bot: {answers[index]}</Box>}
+                    <Box sx={{margin: "10px", padding: "10px", border: "1px solid black", borderRadius: "10px", maxWidth: "65%", alignSelf: "flex-end", backgroundColor: "#0084FF", color: "white"}}>You: {question}</Box>
+                    {answers[index] && <Box  sx={{margin: "10px", padding: "10px", border: "1px solid black", borderRadius: "10px", alignSelf: "flex-start", maxWidth: "65%"}}>MVTron: {answers[index]}</Box>}
                 </>)}
-                <TextField label="Enter query" onKeyDown={askQuestion} disabled={questions.length != answers.length}/>
+                <div ref={bottomscroll}></div>
+                </div>
+                <TextField fullWidth label="Enter query" onKeyDown={askQuestion} disabled={questions.length != answers.length}/>
             </DialogContent> : <Typography>Loading robot...</Typography>}
         </Dialog>
     )
