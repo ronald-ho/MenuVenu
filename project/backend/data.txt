@@ -1,83 +1,152 @@
 OUR RESTAURANT
 Name - MenuVenu
-Phone number - 0422222222
+Phone number - 6969696969
 
 CLASSIC CHEESEBURGER
 Ingredients - Beef, Dairy
 Price - $10.99
-Calories - 11
-
-Points to redeem - 11
-Points earned - 11
-MARGHERITA PIZZA
-Ingredients - Dairy
-Price - $12.5
-Calories - 13
-
-Points to redeem - 13
-Points earned - 13
-CAESAR SALAD
-Ingredients - Dairy
-Price - $8.95
-Calories - 9
-
-Points to redeem - 9
-Points earned - 9
-GRILLED SALMON
-Ingredients - Seafood
-Price - $18.75
-Calories - 19
-
-Points to redeem - 19
-Points earned - 19
-MUSHROOM RISOTTO
-Ingredients - Dairy
-Price - $14.25
-Calories - 14
-
-Points to redeem - 14
-Points earned - 14
-MANGO TANGO SMOOTHIE
-Ingredients - Nuts, Dairy
-Price - $5.99
-Calories - 6
-
-Points to redeem - 6
-Points earned - 6
-BBQ CHICKEN WINGS
-Ingredients - Chicken
-Price - $9.5
-Calories - 10
-
-Points to redeem - 10
+Calories - 390
+Points to redeem - 54
 Points earned - 10
-TIRAMISU
-Ingredients - Dairy
-Price - $7.5
-Calories - 8
 
-Points to redeem - 8
+GRILLED CHICKEN SALAD
+Ingredients - Chicken
+Price - $8.99
+Calories - 401
+Points to redeem - 44
 Points earned - 8
-PESTO PENNE PASTA
+
+PULLED PORK SANDWICH
+Ingredients - Pork
+Price - $9.49
+Calories - 531
+Points to redeem - 47
+Points earned - 9
+
+LAMB KEBABS
+Ingredients - Lamb
+Price - $12.99
+Calories - 508
+Points to redeem - 64
+Points earned - 12
+
+SEAFOOD PAELLA
+Ingredients - Seafood
+Price - $14.99
+Calories - 436
+Points to redeem - 74
+Points earned - 14
+
+NUTTY GRANOLA PARFAIT
 Ingredients - Nuts, Dairy
-Price - $12.95
-Calories - 13
+Price - $6.99
+Calories - None
+Points to redeem - 34
+Points earned - 6
 
-Points to redeem - 13
-Points earned - 13
-CAPRESE SALAD
+SPICY CHICKEN WINGS
+Ingredients - Chicken, Spicy
+Price - $9.99
+Calories - 389
+Points to redeem - 49
+Points earned - 9
+
+GLUTEN-FREE VEGGIE PIZZA
+Ingredients - Dairy, Gluten
+Price - $11.49
+Calories - None
+Points to redeem - 57
+Points earned - 11
+
+CHOCOLATE BROWNIE SUNDAE
 Ingredients - Dairy
-Price - $8.25
-Calories - 8
+Price - $7.49
+Calories - 1580
+Points to redeem - 37
+Points earned - 7
 
-Points to redeem - 8
+ICED CARAMEL MACCHIATO
+Ingredients - Dairy
+Price - $5.99
+Calories - 390
+Points to redeem - 29
+Points earned - 5
+
+MEDITERRANEAN SALAD
+Ingredients - Dairy
+Price - $8.49
+Calories - 305
+Points to redeem - 42
 Points earned - 8
+
+GARLIC BUTTER SHRIMP
+Ingredients - Seafood, Dairy
+Price - $13.49
+Calories - 242
+Points to redeem - 67
+Points earned - 13
+
+STUFFED MUSHROOMS
+Ingredients - Dairy
+Price - $6.49
+Calories - 201
+Points to redeem - 32
+Points earned - 6
+
+PORK CHOP
+Ingredients - Pork
+Price - $11.99
+Calories - 338
+Points to redeem - 59
+Points earned - 11
+
+LEMON GLAZED DONUT
+Ingredients - Dairy
+Price - $3.99
+Calories - None
+Points to redeem - 19
+Points earned - 3
+
+SPICY TOFU STIR-FRY
+Ingredients - Spicy
+Price - $8.99
+Calories - None
+Points to redeem - 44
+Points earned - 8
+
+GLUTEN-FREE CHOCOLATE CAKE
+Ingredients - Gluten
+Price - $9.99
+Calories - 99
+Points to redeem - 49
+Points earned - 9
+
+CREAMY TOMATO SOUP
+Ingredients - Dairy
+Price - $5.49
+Calories - 242
+Points to redeem - 27
+Points earned - 5
+
+CRUNCHY SNACK MIX
+Ingredients - Nuts, Gluten
+Price - $4.99
+Calories - None
+Points to redeem - 24
+Points earned - 4
+
+GRILLED VEGETABLE SKEWERS
+Ingredients - Dairy
+Price - $7.99
+Calories - 216
+Points to redeem - 39
+Points earned - 7
 
 BUSY/AVAILABLE
-There are currently 8 tables available
+There are currently 11 tables available
 
 OUR MOST POPULAR DISH
-Mango Tango Smoothie
+Lemon glazed donut
 
 HOW DO I?
 Fitness - You can connect your fitness app through your profile in the top right of the screen
