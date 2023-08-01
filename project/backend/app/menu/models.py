@@ -46,6 +46,8 @@ class Items(db.Model):
 
     ingredients = db.relationship('Ingredients', secondary='item_ingredient', back_populates='items')
 
+    __table_args__ = (db.UniqueConstraint('category', 'position', name='unique_category_position'),)
+
     def to_dict(self):
         image_data = None
         if self.image:

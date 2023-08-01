@@ -3,15 +3,16 @@ from http import HTTPStatus
 
 from flask import jsonify, request, Blueprint
 
-from .. import app, db
+from .. import db
 from ..authentication.models import Customers
+from ..utilities import Helper
 
 fitness = Blueprint('fitness', __name__)
 
 
 @fitness.route('/token/store', methods=['POST'])
 def store_token():
-    data = data_logger(request)
+    data = Helper.data_logger(request)
 
     token = data['token']
     customer_id = data['id']
@@ -23,9 +24,3 @@ def store_token():
     db.session.commit()
 
     return jsonify({'status': HTTPStatus.OK, 'message': 'Token stored'})
-
-
-def data_logger(request):
-    data = request.get_json()
-    app.logger.info(f"Received request from frontend: {data}")
-    return data

@@ -9,3 +9,6 @@ flask_login
 pytz
 langchain
 constants
+openai
+chromadb
+tiktoken
