@@ -12,7 +12,7 @@ function OrderItem() {
     async function sendOrder(points) {
         const body = {
             "name": item_info.name,
-            "table_id": localStorage.getItem("mvtable"),
+            "table_number": localStorage.getItem("mvtable"),
             "redeem": points,
             "customer_id": localStorage.getItem("mvuser")
         }

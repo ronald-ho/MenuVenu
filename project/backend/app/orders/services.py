@@ -63,7 +63,7 @@ class TableService:
         if not table:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
 
-        order = Orders.query.filter_by(paid=False).filter_by(table=table.number).first()
+        order = Orders.query.filter_by(paid=False).filter_by(table=table.id).first()
         customer = Customers.query.filter_by(id=customer_id).first()
 
         if not order:
@@ -102,7 +102,7 @@ class TableService:
         if not table:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not exist'})
 
-        order = Orders.query.filter_by(paid=False).filter_by(table=table.number).first()
+        order = Orders.query.filter_by(paid=False).filter_by(table=table.id).first()
 
         ordered_item_list = OrderedItems.query.filter_by(order=order.id)
 
@@ -127,6 +127,7 @@ class TableService:
                 table=table.id,
                 order_date=datetime.now(),
                 total_amount=0,
+                calories_gained=0,
                 points_earned=0,
                 paid=False
             )
@@ -166,12 +167,13 @@ class OrderService:
     @staticmethod
     def order_item(data):
         item_name = data['name']
-        table_id = data['table_id']
+        table_number = data['table_number']
         customer_id = data['customer_id']
         redeem = data['redeem']
 
+        table = DiningTables.query.filter_by(number=table_number).first()
         item = Items.query.filter(func.lower(Items.name) == item_name.lower()).first()
-        order = Orders.query.filter_by(paid=False).filter_by(table=table_id).first()
+        order = Orders.query.filter_by(paid=False).filter_by(table=table.id).first()
         customer = Customers.query.filter_by(id=customer_id).first()
 
         if not item:
@@ -195,9 +197,8 @@ class OrderService:
             else:
                 return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
             
-        #add calories to account if customer
-        if customer:
-            customer.calories_gained += item.calories
+        # add item calories to calories gained total
+        order.calories_gained += item.calories
 
         new_ordered_item = OrderedItems(
             order=order.id,
@@ -234,10 +235,11 @@ class OrderService:
 
     @staticmethod
     def get_ordered_items(data):
-        table_id = data['table']
+        table_number = data['table_number']
 
         # get current order associated with table
-        order = Orders.query.filter_by(paid=False).filter_by(table=table_id).first()
+        table = DiningTables.query.filter_by(number=table_number).first()
+        order = Orders.query.filter_by(paid=False).filter_by(table=table.id).first()
 
         if not order:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Table does not have an order'})
@@ -251,7 +253,6 @@ class OrderService:
         for ordered_item in ordered_item_list:
             item = Items.query.filter_by(id=ordered_item.item).first()
             item_dict = item.to_dict()
-            item_dict['redeemed'] = ordered_item.redeemed
             item_list.append(item_dict)
 
         return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list})

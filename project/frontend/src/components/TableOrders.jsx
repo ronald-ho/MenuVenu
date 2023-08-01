@@ -14,7 +14,7 @@ function TableOrders({ trigger, caloriesBurned }) {
     React.useEffect(() => {
         const fetchOrderedItems = async () => {
             const body = {
-                "table": localStorage.getItem("mvtable")
+                "table_number": localStorage.getItem("mvtable")
             };
             const response = await apiCall("orders/get_ordered_items", "POST", body);
             setOrders(response?.ordered_list ?? []);
@@ -28,16 +28,16 @@ function TableOrders({ trigger, caloriesBurned }) {
             }
         }
 
-        const fetchCaloriesGained = async () => {
-            const user = await get_profile();
-            if (user !== []) {
-                setCaloriesGained(user.calories_gained);
-            }
-        }
+        // const fetchCaloriesGained = async () => {
+        //     const user = await get_profile();
+        //     if (user !== []) {
+        //         setCaloriesGained(user.calories_gained);
+        //     }
+        // }
 
         fetchOrderedItems();
         fetchCurrBill();
-        fetchCaloriesGained();
+        // fetchCaloriesGained();
     }, [trigger]);
 
     return (

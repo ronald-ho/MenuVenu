@@ -16,8 +16,7 @@ class Customers(UserMixin, db.Model):
     full_name = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     points = db.Column(db.Integer, nullable=False)
-    calories_burnt = db.Column(db.Integer, nullable=False)
-    calories_gained = db.Column(db.Integer, nullable=False)
+    calories_burnt = db.Column(db.Integer, nullable=True)
     reset_code = db.Column(db.String(255), nullable=True)
     reset_code_expiry = db.Column(db.DateTime, nullable=True)
     google_token = db.Column(db.String(255), nullable=True)
@@ -53,6 +52,5 @@ class Customers(UserMixin, db.Model):
             'full_name': self.full_name,
             'points': self.points,
             'calories_burnt': FitnessService.get_expended_calories(self.google_token) if google_connected else 0,
-            'calories_gained': self.calories_gained,
             'google_connected': google_connected,
         }

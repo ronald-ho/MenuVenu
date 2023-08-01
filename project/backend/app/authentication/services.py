@@ -23,8 +23,7 @@ class CustomerService:
             email=email,
             full_name=full_name,
             points=0,
-            calories_burnt=0,
-            calories_gained=0
+            calories_burnt=0
         )
 
         new_user.set_password(password)
