@@ -7,13 +7,16 @@ from langchain.indexes import VectorstoreIndexCreator
 
 import constants
 from .. import db
-from ..menu.models import Items, Ingredients, item_ingredient
+from ..menu.models import Items, Ingredients
 from ..orders.models import DiningTables, OrderedItems
+from ..restaurant.models import Restaurants
 
 
 class ChatbotService:
     @staticmethod
     def chatbot_query(data):
+        os.environ["OPENAI_API_KEY"] = constants.APIKEY
+
         query = data['query']
 
         # converts text file to a format that is processable by the bot
@@ -28,39 +31,52 @@ class ChatbotService:
     def data_update():
         f = open('data.txt', 'w')
 
-        # Lists all ingredients and the items that contain them
-        ingredient_list = Ingredients.query.all()
+        restaurant = Restaurants.query.first()
 
-        for ingredient in ingredient_list:
-            f.write("HAS " + ingredient.name.upper() + "\n")
-
-            relation_list = item_ingredient.query.filter_by(ingredient_id=ingredient.id).all()
-
-            if relation_list:
-                for relation in relation_list:
-
-                    item_list = Items.query.filter_by(id=relation.item_id).all()
-
-                    for item in item_list:
-                        f.write(item.name + "\n")
-            else:
-                f.write("None of our dishes contain " + ingredient.name + "\n")
-
-            f.write("\n")
+        f.write("OUR RESTAURANT")
+        f.write("Name - " + restaurant.name)
+        f.write("Phone number - " + restaurant.phone)
 
         item_list = Items.query.all()
 
-        # Price of all items
-        f.write("PRICE\n")
+        # Lits all items with their ingredients, price and calories
         for item in item_list:
-            f.write(item.name + " - $" + str(item.price) + "\n")
 
-        f.write("\n")
+            f.write(item.name.upper() + "\n")
 
-        # Calories of all items
-        f.write("CALORIE COUNT\n")
-        for item in item_list:
-            f.write(item.name + " - " + str(item.calories) + " calories\n")
+            #Ingredients
+            f.write("Ingredients - ")
+            if item.ingredients:
+                end = len(item.ingredients)
+                index = 0
+                for ingredient in item.ingredients:
+                    f.write(ingredient.name)
+                    if index < end:
+                        f.write(", ")
+                    index += 1
+
+                f.write("\n")
+
+            else:
+                f.write("There is no listed ingredients\n")
+
+            #Price
+            f.write("Price - $" + str(item.price) + "\n")
+
+            #Calories
+            f.write("Calories - " + str(item.calories) + "\n")
+
+            #Points to redeem
+            if item.points_to_redeem:
+                f.write("Points to redeem - " + str(item.points_to_redeem) + "\n")
+            else:
+                f.write("Points to redeem - Not redeemable with points\n")
+
+            #Points earned
+            if item.points_earned:
+                f.write("Points earned - " + str(item.points_earned) + "\n")
+            else:
+                f.write("Points earned - No points earnable\n")
 
         f.write("\n")
 
