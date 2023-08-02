@@ -53,5 +53,28 @@ Made docstrings for auth, models.py (awaiting feedback to add more)
 
 Week 8:
 MOG-101 - 105
+  - Manager Stats
+    -Item pop
+    -Order Log
+    -Item stats
+    -Category stats
+    -Category filtering
+    -Item pop filtering
+  - Manager Settings
+    -Add tables
+    -Delete Tables
+      -Fix Bug referring to table_id and table_number foreignkey
+      -Do not delete occupied / unpaid tables
+    -Change name phone number and password
 Implemented autopopulate script for database using random data
 Fixed and added fields in menu such as production cost, net cost
+
+
+Week 9: 
+Automated the autopopulate to occur on start up
+Made the script come up with better menu items no arbitrary names eg. Item 1, Item 2
+Added random users to this script
+Bug-fixes
+Front-end suggestions
+Finished up and added details to my diary
+Contributed to my sections for the report
