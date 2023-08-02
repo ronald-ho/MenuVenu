@@ -6,6 +6,8 @@ import { apiCall } from "../helpers/helpers";
 function OrderItem() {
     const updatevalue = useOutletContext();
     const item_info = useLoaderData();
+
+    const customer = localStorage.getItem("mvuser");
     const [ordercount, setOrdercount] = React.useState(1);
     const [alert, setAlert] = React.useState(false);
 
@@ -73,7 +75,7 @@ function OrderItem() {
                 <Button onClick={() => {setOrdercount(ordercount => ordercount+1)}}>+</Button>
             </div>
             <br />
-            {item_info.points_to_redeem > 0 && <Button onClick={() => {sendOrder(true)}}>Redeem with points</Button>}
+            {customer && item_info.points_to_redeem > 0 && <Button onClick={() => {sendOrder(true)}}>Redeem with points</Button>}
             <Button onClick={() => {sendOrder(false)}}>Add to order</Button>
             {alert && <Alert severity="error">Not enough points</Alert>}
         </Box>

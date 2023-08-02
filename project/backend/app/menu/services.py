@@ -32,7 +32,7 @@ class ItemService:
         if food_id_tuple is not None:
             nutrition_info = NutrientService.get_food_nutrition_info(food_id_tuple)
             if nutrition_info is None:
-                calories = data['calories']
+                    calories = data['calories']
             else:
                 calories = nutrition_info['calories']
         else:
