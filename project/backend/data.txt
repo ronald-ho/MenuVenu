@@ -1,6 +1,6 @@
 OUR RESTAURANT
-Name - MenuVenu
-Phone number - 6969696969
+Name - hello
+Phone number - 12432432432
 
 CLASSIC CHEESEBURGER
 Ingredients - Beef, Dairy
@@ -142,11 +142,25 @@ Calories - 216
 Points to redeem - 39
 Points earned - 7
 
+CHEESELS
+Ingredients - There is no listed ingredients
+Price - $12.0
+Calories - None
+Points to redeem - Not redeemable with points
+Points earned - No points earnable
+
+APPLE
+Ingredients - There is no listed ingredients
+Price - $5.0
+Calories - 125
+Points to redeem - Not redeemable with points
+Points earned - No points earnable
+
 BUSY/AVAILABLE
 There are currently 10 tables available
 
 OUR MOST POPULAR DISH
-Lemon glazed donut
+Chocolate brownie sundae
 
 HOW DO I?
 Fitness - You can connect your fitness app through your profile in the top right of the screen

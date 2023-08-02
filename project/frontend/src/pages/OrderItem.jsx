@@ -30,17 +30,43 @@ function OrderItem() {
     }
 
     return (
-        <Box sx={{textAlign: "center"}}>
-            <div style={{display: "inline-block"}}>
-                <Typography variant="h4">{item_info.name}</Typography>
-                <img src={item_info.image} alt={item_info.name} style={{maxWidth: "100px", maxHeight: "100px"}}/>
-                <Typography>${item_info.price}</Typography>
-                {item_info.points_to_redeem && <Typography>{item_info.points_to_redeem} MV points</Typography>}
-            </div>
-            <div style={{display: "inline-block"}}>
-                <Typography>{item_info.description}</Typography>
-            </div>
-            <br />
+        <Box 
+            sx={{
+                margin: "10px 0 0 0",
+                textAlign: "center",
+                width: '50vw'
+            }}
+        >
+            <Typography variant="h4" sx={{ margin: '0 0 20px 0' }}>{item_info.name}</Typography>
+            <Box sx={{ columnGap: "20px", display: 'flex' }}>
+                <Box sx={{ textAlign: "center", width: 3/8 }}>
+                    <Box sx={{ alignItems: "center", border: "1px solid #caccce", display: "flex", height: "200px", margin: 'auto', width: "200px" }}>
+                        {item_info.image ? (
+                            <img src={item_info.image} alt={item_info.name} style={{maxWidth: "200px", maxHeight: "200px"}}/>
+                        ) : (
+                            <Typography 
+                                sx={{ 
+                                    fontSize: '130px', 
+                                    fontWeight: 700, 
+                                    opacity: '0.1' 
+                                }}
+                            >
+                                MV
+                            </Typography>
+                        )}
+                    </Box>
+                    {item_info.calories && <Typography>{item_info.calories} Cal</Typography>}
+                    {item_info.ingredients.map((i) => ( <Chip label={i} /> ))}
+                </Box>
+                <Box sx={{ width: 5/8 }}>
+                    <Box sx={{ height: "150px", textAlign: "right" }}>
+                        <Typography>Price: ${item_info.price.toFixed(2)}</Typography>
+                        {item_info.points_to_redeem && <Typography>Redeem for: {item_info.points_to_redeem} MV points</Typography>}
+                        {item_info.points_earned && <Typography>Earn extra: {item_info.points_earned} MV points</Typography>}
+                    </Box>
+                    {item_info.description && <Typography sx={{ textAlign: 'left' }}>{item_info.description}</Typography>}
+                </Box>
+            </Box>
             <div style={{display: "flex", justifyContent: "center"}}>
                 <Button disabled={ordercount <= 1} onClick={() => {setOrdercount(ordercount => ordercount-1)}}>-</Button>
                 <Typography>{ordercount}</Typography>
