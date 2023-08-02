@@ -93,12 +93,15 @@ function TableOrders({ trigger, caloriesBurned }) {
             </Box>
             <Box 
                 sx={{ 
+                    alignItems: 'center',
                     backgroundColor: '#ffffff', 
                     border: "1px solid #caccce", 
                     borderRadius: "10px",
+                    display: 'flex',
                     height: '20vh',
                     margin: '10px 0 0 0',
                     padding: '0 10px', 
+                    verticalAlign: 'middle'
                 }}
             >
                 <Table size='small'>
