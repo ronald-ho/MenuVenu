@@ -17,3 +17,9 @@ Started working on Sprint 2. I designed some of the pages for viewing the menu a
 
 Week 7
 I added actual functionality to the pages. The menu can display a list of items from the database and the order page can successfully order an item now. After that I tried improving it by adding the ability to order multiple items at a time and doing some bugfixing
+
+Week 8
+I started working on the frontend for manager statistics. The backend got finished pretty quickly so I was able to test my code as soon as i implemented it. For now I mainly just set up the manager settings popup so that the manager could edit the number of tables, change passwords and change the restaurant name. But some of those features weren't fully complete yet. As for the manager stats, I started off with the profit tracker graph. There were some issues with the values that the backend returned which made the graph difficult to implement as I wanted multiple lines in the graph. So I edited the backend to allow for that.
+
+Week 9
+I finished the remainder of the manager statistics pages. There werent really any troubles with that. In the mean time the manager settings were working now with new routes implemented. After I was done with all the manager stuff,I worked on a popup where the user could access the chat bot. I made it look similar to a messaging app in design. After that I mainly just bugfixed stuff such as the old kitchen or waitstaff pages which werent displaying the correct information anymore.
