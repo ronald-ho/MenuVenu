@@ -73,7 +73,7 @@ function TableOrders({ trigger, caloriesBurned }) {
                                 {orders.map((ordered_item) => (
                                     <TableRow key={ordered_item.id}>
                                         <TableCell>{ordered_item.name}</TableCell>
-                                        <TableCell>{ordered_item.calories}</TableCell>
+                                        <TableCell>{ordered_item.calories ? ordered_item.calories : 0 }</TableCell>
                                         <TableCell>
                                             {ordered_item.redeemed ? (
                                                 <>
