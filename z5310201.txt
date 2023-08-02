@@ -22,9 +22,12 @@ Helped with user stories, such as proposing UI decisions
 Added criteria for the new chatbot feature
 
 Week 4:
-Some more stuff 
---> Manager login
---> User update profile checks
+Implemented Manager login and User profile update checks.
+Tested frontend with dummy values for manager login.
+Added restaurant, dining tables, and order tables.
+Ensured codebase integrated smoothly with the database.
+Started models.py for Manager and Menu.
+Began coding routes.py for Menu
 
 Week 5:
 Finialised iteration 1, worked on backend for manager login
