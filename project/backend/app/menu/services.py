@@ -252,12 +252,12 @@ class MenuService:
             if entity_name == "Category":
                 entities_to_update = entity.query.filter(entity.position < curr_position,
                                                          entity.position >= new_position) \
-                                                        .order_by(entity.position.desc()).all()
+                    .order_by(entity.position.desc()).all()
             else:
                 entities_to_update = entity.query.filter(entity.position < curr_position,
                                                          entity.position >= new_position,
                                                          entity.category == current_entity.category) \
-                                                        .order_by(entity.position.desc()).all()
+                    .order_by(entity.position.desc()).all()
             for entity in entities_to_update:
                 entity.position += 1
                 db.session.commit()
@@ -266,13 +266,13 @@ class MenuService:
             if entity_name == "Category":
                 entities_to_update = entity.query.filter(entity.position > curr_position,
                                                          entity.position <= new_position) \
-                                                        .order_by(entity.position.asc()).all()
+                    .order_by(entity.position.asc()).all()
 
             else:
                 entities_to_update = entity.query.filter(entity.position > curr_position,
                                                          entity.position <= new_position,
                                                          entity.category == current_entity.category) \
-                                                        .order_by(entity.position.asc()).all()
+                    .order_by(entity.position.asc()).all()
             for entity in entities_to_update:
                 entity.position -= 1
                 db.session.commit()
@@ -286,8 +286,12 @@ class MenuService:
     def delete_entity(entity, data):
         current_entity, entity_name = MenuService.find_entity(entity, data)
 
-        entities_to_update = entity.query.filter(entity.position > current_entity.position,
-                                                 entity.category == current_entity.category).all()
+        if entity_name == "Category":
+            entities_to_update = entity.query.filter(entity.position > current_entity.position).all()
+
+        else:
+            entities_to_update = entity.query.filter(entity.position > current_entity.position,
+                                                     entity.category == current_entity.category).all()
         for entity in entities_to_update:
             entity.position -= 1
 
