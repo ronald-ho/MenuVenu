@@ -36,3 +36,8 @@ Week 7
 Week 8
 * After finishing manager edit menu, I finished the waitstaff orders and tables assistance for frontend. There were no issues besides the fact that it was really slow to test because Docker was taking a while to get the project started up, especially the frontend portion.
 * I also helped to fix some small things like making the ingredients show up in manager edit menu and making sure that images were displaying correctly. Unfortunately this was extremely slow to test due to Docker again and even after restarting my computer and Docker it was still slow. As a result I left my work for Ronald to test.
+
+Week 9
+* I focused primarily on improving the general UI of the website, by implementing a colour scheme and applying fonts. Most of my time was spent on styling with manager edit menu, as I was experimenting with the design and structure. 
+* I assisted in implementing the frontend part for the Google Fit connection.
+* I fixed the billing pop up to account for discounts.
