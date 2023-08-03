@@ -34,3 +34,8 @@ Week 8
 Coded discount and reward systems, including debugging and testing.
 Did more research on ways to implement chatbot. Use of APIs, methods of bot training and tokenisation.
 Watching Andrej Karpathy's video "Let's Build GPT" for ideas on how to start and what methods we can use
+
+Week 9
+Did more research on chatbot APIs and decided to use langchain to implement our chatbot as it was relatively simple
+Used TextLoader and VectorstoreIndex functions from langchain to embed and store data in chromadb
+Just did alot of queries and testing of chatbot
