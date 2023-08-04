@@ -3,10 +3,14 @@ import {Alert, Typography, Button, TextField, Box} from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { apiCall } from "../helpers/helpers";
 
-function DeleteAccount() {
+function DeleteAccount({setmode}) {
     const [password, setPassword] = React.useState('');
     const [error, setError] = React.useState(null);
     const navigate = useNavigate();
+
+    React.useEffect(() => {
+        setmode(localStorage.getItem('mvuser') ? 'customer' : '');
+    }, []);
 
     async function acceptdelete () {
         /* deletion stuff here */

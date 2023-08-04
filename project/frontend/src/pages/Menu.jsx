@@ -7,7 +7,7 @@ import BillingPopUp from "../components/BillingPopUp";
 import TableOrders from "../components/TableOrders";
 import { get_profile } from "../helpers/loaderfunctions";
 
-function Menu () {
+function Menu ({ setmode }) {
     const categories = useLoaderData();
 
     const [updateTable, setUpdateTable] = React.useState(0);
@@ -23,6 +23,11 @@ function Menu () {
     const [caloriesBurned, setCaloriesBurned] = React.useState(0);
 
     const table = localStorage.getItem("mvtable"); 
+
+    React.useEffect(() => {
+        setmode(localStorage.getItem('mvuser') ? 'dining' : '');
+    }, []);
+
 
     React.useEffect(() => {
         const getCaloriesBurned = async () => {

@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 import DiningIcon from '@mui/icons-material/Dining';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-function LoggedSelect () {
+function LoggedSelect ( {setmode}) {
+    React.useEffect(() => {
+        setmode(localStorage.getItem('mvuser') ? 'customer' : '');
+    }, []);
+    
     return (
         <Box sx={{ textAlign: 'center', mt: 2 }}>
             <Typography>I want to...</Typography>
