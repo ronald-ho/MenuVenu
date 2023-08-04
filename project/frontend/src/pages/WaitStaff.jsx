@@ -53,7 +53,8 @@ function WaitStaff () {
         <>
             <Box 
                 sx={{
-                    border: "1px solid black", 
+                    backgroundColor: '#ffffff',
+                    border: "1px solid #caccce", 
                     borderRadius: "15px", 
                     height: "80vh", 
                     margin: "10px auto", 
@@ -93,7 +94,8 @@ function WaitStaff () {
             </Box>
             <Box
                 sx={{
-                    border: 1,
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #caccce',
                     borderRadius: "15px 0 0 15px",
                     borderRight: 0,
                     fontSize: '15px',

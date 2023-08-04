@@ -89,7 +89,7 @@ function ManagerEditMenu ({ setmode }) {
                 >          
                     <Typography 
                         sx={{ 
-                            borderBottom: "1px solid black", 
+                            borderBottom: "1px solid #caccce", 
                             color: "#7a49a5", 
                             fontSize: "25px", 
                             fontWeight: 700,
