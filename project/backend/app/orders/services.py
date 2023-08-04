@@ -198,7 +198,8 @@ class OrderService:
                 return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
             
         # add item calories to calories gained total
-        order.calories_gained += item.calories
+        if item.calories:
+            order.calories_gained += item.calories
 
         new_ordered_item = OrderedItems(
             order=order.id,
@@ -253,6 +254,7 @@ class OrderService:
         for ordered_item in ordered_item_list:
             item = Items.query.filter_by(id=ordered_item.item).first()
             item_dict = item.to_dict()
+            item_dict['redeemed'] = ordered_item.redeemed
             item_list.append(item_dict)
 
         return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list, 'calories_gained': order.calories_gained})

@@ -4,9 +4,10 @@ from http import HTTPStatus
 from flask import jsonify
 from langchain.document_loaders import TextLoader
 from langchain.indexes import VectorstoreIndexCreator
+from langchain.chat_models import ChatOpenAI
 
 from .. import db
-from ..menu.models import Items
+from ..menu.models import Items, Ingredients
 from ..orders.models import DiningTables, OrderedItems
 from ..restaurant.models import Restaurants
 
@@ -22,7 +23,7 @@ class ChatbotService:
         # creates an index from the formatted data to generate responses
         index = VectorstoreIndexCreator().from_loaders([loader])
 
-        return jsonify({'status': HTTPStatus.OK, 'message': index.query(query)})
+        return jsonify({'status': HTTPStatus.OK, 'message': index.query(query, llm=ChatOpenAI())})
 
     @staticmethod
     def data_update():
@@ -35,15 +36,15 @@ class ChatbotService:
         f.write("Phone number - " + restaurant.phone + "\n")
         f.write("\n")
 
+        # Lits all items with their ingredients, price and calories
         item_list = Items.query.all()
 
-        # Lits all items with their ingredients, price and calories
         for item in item_list:
 
             f.write(item.name.upper() + "\n")
 
             #Ingredients
-            f.write("Ingredients - ")
+            f.write("Ingredients/Has - ")
             if item.ingredients:
                 end = len(item.ingredients)
 
@@ -79,6 +80,20 @@ class ChatbotService:
                 f.write("Points earned - No points earnable\n")
 
             f.write("\n")
+
+        #List all ingredients
+        ingredient_list = Ingredients.query.all()
+
+        for ingredient in ingredient_list:
+            if ingredient.items:
+                f.write("HAS " + ingredient.name.upper() + "\n")
+                for item in ingredient.items:
+                    f.write(item.name + "\n")
+
+            else:
+                f.write("NO ITEMS HAVE"  + ingredient.name.upper() + "\n")
+
+        f.write("\n")
 
         # Availability of tables
         f.write("BUSY/AVAILABLE\n")
