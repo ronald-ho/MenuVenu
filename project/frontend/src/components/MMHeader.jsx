@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Divider, IconButton, Tooltip, Typography } from '@mui/material';
-import { EditNote, Insights, ReceiptLong, Settings, TrendingUp } from '@mui/icons-material';
+import { AccountCircle, EditNote, Insights, ReceiptLong, Settings, SmartToy, TrendingUp } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import LogOutButton from './LogOutButton';
 import ProfilePopup from './ProfilePopup';
@@ -61,11 +61,25 @@ function MMHeader ({ mode, setmode }) {
             </Typography>
             <div>
                 {mode === 'customer' && <>
+                    <Tooltip title="Chatbot">
+                        <IconButton aria-label="Chatbot" onClick={() => {setChatbot(true)}}>
+                            <SmartToy fontSize="large" />
+                        </IconButton>
+                    </Tooltip>
+                    <ChatbotPopup open={chatbot} setOpen={setChatbot}/>
                     <LogOutButton setmode={setmode}/>
-                    <Button variant='contained' onClick={() => {setProfile(true)}}>Profile</Button>
-                    {profile && <ProfilePopup open={profile} setOpen={setProfile}/>}
+                </>}
+                {mode === 'dining' && <>
                     <Button variant='contained' onClick={() => {setChatbot(true)}}>Chatbot</Button>
                     <ChatbotPopup open={chatbot} setOpen={setChatbot}/>
+                    <Button variant='contained' onClick={() => {setProfile(true)}}>Profile</Button>
+                    <Tooltip title="My Account">
+                        <IconButton aria-label="My Account">
+                            <AccountCircle fontSize="large" />
+                        </IconButton>
+                    </Tooltip>
+                    <ProfilePopup open={profile} setOpen={setProfile}/>
+                    <LogOutButton setmode={setmode}/>
                 </>}
                 {mode === 'manager' &&
                     <Box sx={{ display: 'flex' }}>

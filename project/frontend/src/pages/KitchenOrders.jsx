@@ -1,6 +1,6 @@
 import React from 'react';
 import { apiCall } from '../helpers/helpers';
-import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Box, Button, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { useLoaderData } from 'react-router-dom';
 
 function KitchenOrders() {
@@ -43,7 +43,7 @@ function KitchenOrders() {
     }, []);
 
     return (
-        <Box sx={{border: "1px solid black", borderRadius: "15px", margin: "10px", padding: "10px"}}>
+        <Box sx={{ backgroundColor: '#ffffff', border: "1px solid #caccce", borderRadius: "15px", margin: "10px", padding: "10px", height: '80vh'}}>
             <Box sx={{ overflow: "auto", maxHeight: "85vh" }}>
             <Table>
                 <TableHead>
@@ -55,28 +55,41 @@ function KitchenOrders() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {orders.map((ordered_item) => {
-                        const timeSinceOrdered = calculateTimeSinceOrdered(ordered_item.order_time);
-                        return (
-                            <TableRow>
-                                <TableCell>{ordered_item.item_name}</TableCell>
-                                <TableCell>{tables.find(obj => { return obj.table_id == ordered_item.table_number})["table_number"]}</TableCell>
-                                <TableCell>{timeSinceOrdered}</TableCell>
-                                <TableCell>
-                                    <Button variant='text' onClick={async () => {
-                                        const body = {
-                                            'ordered_item_id': ordered_item.ordered_item_id
-                                        }
-                                        const data = await apiCall("orders/kitchen/prepared", "POST", body);
-                                        if (data.status !== 200) {
-                                            console.log("OH NO");
-                                        }
-                                        await getOrders();
-                                    }}>YES</Button>
-                                </TableCell>
-                            </TableRow>
-                        )
-                    })}
+                    {orders.length === 0 ? (
+                        <TableRow>
+                            <TableCell sx={{ border: 0 }}></TableCell>
+                            <TableCell sx={{ border: 0, textAlign: 'center'}}>
+                                <Typography sx={{ margin: '0 auto 35px auto' }}>
+                                    Waiting for orders to prepare
+                                </Typography>
+                                <CircularProgress />
+                            </TableCell> 
+                            <TableCell sx={{ border: 0 }}></TableCell>
+                        </TableRow>
+                    ) : (
+                        orders.map((ordered_item) => {
+                            const timeSinceOrdered = calculateTimeSinceOrdered(ordered_item.order_time);
+                            return (
+                                <TableRow>
+                                    <TableCell>{ordered_item.item_name}</TableCell>
+                                    <TableCell>{tables.find(obj => { return obj.table_id == ordered_item.table_number})["table_number"]}</TableCell>
+                                    <TableCell>{timeSinceOrdered}</TableCell>
+                                    <TableCell>
+                                        <Button variant='text' onClick={async () => {
+                                            const body = {
+                                                'ordered_item_id': ordered_item.ordered_item_id
+                                            }
+                                            const data = await apiCall("orders/kitchen/prepared", "POST", body);
+                                            if (data.status !== 200) {
+                                                console.log("OH NO");
+                                            }
+                                            await getOrders();
+                                        }}>YES</Button>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })
+                    )}
                 </TableBody>
             </Table>
             </Box>
