@@ -30,8 +30,10 @@ Retrospective A report was completed that night with all the members dicussing w
 I handed the retro in a day before the deadline
 
 Week 6
+During this week I worked on improving the code for the backend, and I also started working a little bit on frontend as I believed that I could learn a bit more as well
 
 Week 7
+Week 7 was mainly focused on frontend, i was able to work on the frontend graphs and login and by using a lot of mui icons i was able to improve the frontend look.
 
 Week 8
 Second demo went really well, we were able to show case everything that we finished working on. Although there were a few unexpected bugs out of our usecase that occured in the demo. Everything was working incredibly well. 
