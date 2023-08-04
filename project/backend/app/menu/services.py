@@ -25,18 +25,26 @@ class ItemService:
         if data['image'] is not None:
             image_path = ItemService.decode_image(item_name, data['image'])
         else:
-            image_path = None
+            dir_path = os.path.dirname(__file__)
+            image_directory = os.path.join(dir_path, 'images')
+            image_path = os.path.join(image_directory, secure_filename(f"{item_name}.jpeg"))
 
-        food_id_tuple = NutrientService.parse_food_name(item_name)
+            if not os.path.isfile(image_path):
+                image_path = None
+
+        food_id_tuple = None
+
+        if data['calories'] == None:
+            food_id_tuple = NutrientService.parse_food_name(item_name)
+        else:
+            calories = data['calories']
 
         if food_id_tuple is not None:
             nutrition_info = NutrientService.get_food_nutrition_info(food_id_tuple)
             if nutrition_info is None:
-                    calories = data['calories']
+                calories = 0
             else:
                 calories = nutrition_info['calories']
-        else:
-            calories = data['calories']
 
         new_item = Items(
             name=item_name,

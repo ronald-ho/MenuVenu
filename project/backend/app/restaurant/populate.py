@@ -327,7 +327,7 @@ def populate_database():
 
     # Generate orders and ordered items for the past 30 days
     if is_table_empty(Orders):
-        for _ in range(150):
+        for _ in range(200):
             order_date = random_order_date()
             total_amount = 0.0
             points_earned = 0
