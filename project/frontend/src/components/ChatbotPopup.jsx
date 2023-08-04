@@ -50,8 +50,8 @@ function ChatbotPopup({ open, setOpen }) {
             {hasLoaded ? <DialogContent sx={{minWidth: "500px"}}>
                 <div style={{height: "50vh", overflow: "auto", marginBottom: "15px", display: "flex", flexDirection: "column"}}>
                 {questions.map((question, index) => <>
-                    <Box sx={{margin: "10px", padding: "10px", border: "1px solid black", borderRadius: "10px", maxWidth: "65%", alignSelf: "flex-end", backgroundColor: "#0084FF", color: "white"}}>You: {question}</Box>
-                    {answers[index] && <Box  sx={{margin: "10px", padding: "10px", border: "1px solid black", borderRadius: "10px", alignSelf: "flex-start", maxWidth: "65%"}}>MVTron: {answers[index]}</Box>}
+                    <Box sx={{margin: "10px", padding: "10px", border: "1px solid #caccce", borderRadius: "20px 20px 0 20px", maxWidth: "65%", alignSelf: "flex-end", backgroundColor: "#0084FF", color: "white"}}>You: {question}</Box>
+                    {answers[index] && <Box  sx={{margin: "10px", padding: "10px", border: "1px solid #caccce", borderRadius: "20px 20px 20px 0", alignSelf: "flex-start", maxWidth: "65%"}}>MVTron: {answers[index]}</Box>}
                 </>)}
                 <div ref={bottomscroll}></div>
                 </div>
