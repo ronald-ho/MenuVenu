@@ -81,3 +81,7 @@ Bug-fixes
 Front-end suggestions
 Finished up and added details to my diary
 Contributed to my sections for the report
+
+Week 10
+Helped to write the report, especially functionalities and implementation challenges
+Presented final demo, received feedback
