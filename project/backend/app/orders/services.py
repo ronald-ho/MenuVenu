@@ -198,7 +198,8 @@ class OrderService:
                 return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
             
         # add item calories to calories gained total
-        order.calories_gained += item.calories
+        if item.calories:
+            order.calories_gained += item.calories
 
         new_ordered_item = OrderedItems(
             order=order.id,
