@@ -1,19 +1,8 @@
 # Flask and database setup
 from app import app, db
 
-# Authentication routes and models
-from app.authentication import routes
-from app.authentication.models import Customers
+from app.restaurant import populate
 
-# Orders routes and models
-from app.orders import routes
-from app.orders.models import DiningTables, OrderedItems, Orders
-
-# Menu routes and models
-from app.menu import routes
-from app.menu.models import Categories, Ingredients, Items
-
-# Restaurant routes and models
 from app.restaurant.services import RestaurantService
 from app.orders.services import TableService
 from app.menu.services import IngredientService
@@ -25,6 +14,8 @@ if __name__ == '__main__':
         RestaurantService.create_default_restaurant()
         TableService.create_default_tables()
         IngredientService.create_default_ingredients()
+
+        populate.populate_database()
 
         db.session.commit()
         

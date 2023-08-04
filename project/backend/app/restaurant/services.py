@@ -1,6 +1,5 @@
-from .. import db
-
 from .models import Restaurants
+from .. import db
 
 
 class RestaurantService:
@@ -16,3 +15,7 @@ class RestaurantService:
             new_restaurant.set_staff_password('MenuVenu')
 
             db.session.add(new_restaurant)
+
+
+
+

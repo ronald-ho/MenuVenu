@@ -1,9 +1,12 @@
 import React from "react";
-import { Dialog, DialogContent, DialogTitle, DialogContentText } from "@mui/material";
-import { apiCall } from "../helpers/helpers";
+import {Button, Dialog, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {apiCall} from "../helpers/helpers";
+import useGoogleOAuth from "./ConnectGoogle";
+import {Google} from "@mui/icons-material";
 
 function ProfilePopup({ open, setOpen }) {
     const [info, setInfo] = React.useState(null);
+    const { client } = useGoogleOAuth();
 
     React.useEffect(() => {
         const getProfile = async () => {
@@ -19,14 +22,22 @@ function ProfilePopup({ open, setOpen }) {
 
     return (
         <>
-        {info && <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{info.full_name}</DialogTitle>
-            <DialogContent>
-                <DialogContentText>Email address: {info.email}</DialogContentText>
-                <DialogContentText>MV Points: {info.points}</DialogContentText>
-                <DialogContentText>MyFitnessPal: Unconnected</DialogContentText>
-            </DialogContent>
-        </Dialog>}
+            {info &&
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>{info.full_name}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Email address: {info.email}</DialogContentText>
+                        <DialogContentText>MV Points: {info.points}</DialogContentText>
+                        <DialogContentText>Calories burned: {info.calories_burnt}</DialogContentText>
+                        <DialogContentText>GoogleFit: {info.google_connected ? 'Connected' : 'Unconnected'}</DialogContentText>
+                {!info.google_connected &&
+                  <Button onClick={() => client.requestAccessToken()} variant="contained">
+                    <Google sx={{mr: 1, fontSize: 20}} />
+                    Connect Google Fit
+                  </Button>}
+                    </DialogContent>
+                </Dialog>
+            }
         </>
     )
 }

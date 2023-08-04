@@ -36,6 +36,8 @@ class Items(db.Model):
     description = db.Column(db.String(255), nullable=True)
     image = db.Column(db.String(255), nullable=True)
     price = db.Column(db.Float, nullable=False)
+    production = db.Column(db.Float, nullable=False)
+    net = db.Column(db.Float, nullable=True)
     category = db.Column(db.Integer, db.ForeignKey(Categories.id))
     calories = db.Column(db.Integer, nullable=True)
     position = db.Column(db.Integer, unique=False, nullable=False)
@@ -43,6 +45,8 @@ class Items(db.Model):
     points_earned = db.Column(db.Integer, nullable=True)
 
     ingredients = db.relationship('Ingredients', secondary='item_ingredient', back_populates='items')
+
+    __table_args__ = (db.UniqueConstraint('category', 'position', name='unique_category_position'),)
 
     def to_dict(self):
         image_data = None
@@ -60,6 +64,8 @@ class Items(db.Model):
             'description': self.description,
             'image': image_data,
             'price': self.price,
+            'production': self.production,
+            'net': self.net,
             'category_id': self.category,
             'calories': self.calories,
             'position': self.position,

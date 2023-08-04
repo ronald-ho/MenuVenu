@@ -15,23 +15,21 @@ function TableButton ({ table }) {
     }
 
     return (
-        <>
-            <Button variant="contained" size="large"
-                    onClick={handleClick}
-                    disabled={is_occupied}
-                    sx={{
-                        width: '300px',
-                        backgroundColor: is_occupied ? 'red' : 'green',
-                        '&.Mui-disabled': {
-                            backgroundColor: is_occupied ? 'red' : 'green',
-                        },
-                        margin: '10px'
-                    }}
-            >
-                <RestaurantIcon sx={{mr: 1, fontSize: 30}} />
-                <Typography>Table {table.table_number}</Typography>
-            </Button>
-        </>
+        <Button variant="contained" size="large"
+            onClick={handleClick}
+            disabled={is_occupied}
+            sx={{
+                width: '300px',
+                backgroundColor: is_occupied ? 'red' : 'green',
+                '&.Mui-disabled': {
+                    backgroundColor: is_occupied ? 'red' : 'green',
+                },
+                margin: '10px'
+            }}
+        >
+            <RestaurantIcon sx={{mr: 1, fontSize: 30}} />
+            <Typography>Table {table.table_number}</Typography>
+        </Button>
     )
 }
 

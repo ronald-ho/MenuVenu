@@ -1,17 +1,52 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Card, Chip, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
 function ItemPreview({ item }) {
     return (
-        <Box component={Link} to={"../order/" + item.id} sx={{margin: "5px", border: "1px solid black", borderRadius: "10px", padding: "5px"}}>
-            <Typography variant="h3">{item.name}</Typography>
-            <img src={item.image} style={{maxWidth: "100px", maxHeight: "100px"}}/>
-            <Typography>${item.price}</Typography>
-            {item.points_to_redeem && <Typography>{item.points_to_redeem} MV Points</Typography>}
-            {item.calories && <Typography>{item.calories} Cal</Typography>}
-            {item.points && <Typography>{item.points} MVPoints</Typography>}
-        </Box>
+        <Card 
+            component={Link} to={"../order/" + item.id} 
+            sx={{ 
+                border: "1px solid #caccce",
+                display: 'flex',
+                flexDirection: 'column',
+                height: "270px",
+                margin: "5px", 
+                padding: "5px",
+                textDecoration: 'none',
+                width: "270px"
+            }}
+        >
+            <Typography>{item.name}</Typography>
+            <Box sx={{ border: "1px solid #caccce", display: "flex", height: "150px", margin: 'auto', width: "150px" }}>
+                {item.image ? (
+                    <img src={item.image} alt={item.name} style={{maxWidth: "150px", maxHeight: "150px"}}/>
+                ) : (
+                    <Typography 
+                        sx={{ 
+                            fontSize: '100px', 
+                            fontWeight: 700, 
+                            opacity: '0.1' 
+                        }}
+                    >
+                        MV
+                    </Typography>
+                )
+                }
+            </Box>
+            <Typography>
+                ${item.price.toFixed(2)} 
+                {item.points_to_redeem && <> | - {item.points_to_redeem} MVP</>}
+                {item.points_to_redeem && item.points_earned && <> | </>}
+                {item.points_earned && <> + {item.points_earned} MVP</>}
+            </Typography>
+            <Box>
+                {item.calories && <Typography>{item.calories} Cal</Typography>}
+                {item.ingredients.map((i) => ( <Chip label={i} /> ))}
+            </Box>
+            
+         
+        </Card>
     )
 }
 

@@ -1,4 +1,3 @@
-import random
 from http import HTTPStatus
 
 from flask import jsonify
@@ -24,8 +23,7 @@ class CustomerService:
             email=email,
             full_name=full_name,
             points=0,
-            calories_burnt=0,
-            calories_gained=0
+            calories_burnt=0
         )
 
         new_user.set_password(password)
@@ -64,7 +62,7 @@ class CustomerService:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Incorrect password'})
 
         # Delete user
-        db.session.delete_customer()
+        db.session.delete(user)
         db.session.commit()
         return jsonify({'status': HTTPStatus.OK, 'message': 'User deleted'})
 
@@ -94,6 +92,9 @@ class CustomerService:
 
     @staticmethod
     def get_customer_details(customer_id):
+        if customer_id == "null":
+            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer ID not provided'})
+
         customer = Customers.query.get(customer_id)
 
         if not customer:
@@ -107,7 +108,7 @@ class StaffService:
     def login_staff(data):
         password = data['password']
 
-        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+        restaurant = Restaurants.query.first()
 
         # Check if password is correct
         if not Restaurants.check_staff_password(restaurant, password):
@@ -119,7 +120,7 @@ class StaffService:
     def login_kitchen_staff(data):
         password = data['password']
 
-        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+        restaurant = Restaurants.query.first()
 
         # Check if password is correct
         if not Restaurants.check_staff_password(restaurant, password):
@@ -133,7 +134,7 @@ class ManagerService:
     def login_manager(data):
         password = data['password']
 
-        restaurant = Restaurants.query.filter_by(name='MenuVenu').first()
+        restaurant = Restaurants.query.first()
 
         # Check if password is correct
         if not Restaurants.check_manager_password(restaurant, password):

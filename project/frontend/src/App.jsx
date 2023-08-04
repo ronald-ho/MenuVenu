@@ -1,5 +1,6 @@
 import React from 'react';
 import {createBrowserRouter, Outlet, RouterProvider} from 'react-router-dom';
+import { createMuiTheme, ThemeProvider } from '@mui/material/styles';
 import './App.css';
 import MMHeader from './components/MMHeader';
 import MVFooter from './components/MVFooter';
@@ -32,9 +33,19 @@ import ItemList from './components/ItemList';
 import KitchenOrders from './pages/KitchenOrders';
 import KitchenStaffLogin from './pages/KitchenStaffLogin';
 import ManagerLogin from "./pages/ManagerLogin";
+import ManagerGraph from './pages/ManagerGraph';
+import OrderLog from './pages/OrderLog';
+import PopularItems from './pages/PopularItems';
+import ItemStatistics from './pages/ItemStatistics';
 
 function App() {
   const [mode, setMode] = React.useState('');
+
+  const theme = createMuiTheme({
+    typography: {
+      fontFamily: 'Quicksand'
+    }
+  });
 
   function Layout() {
     return (
@@ -54,11 +65,11 @@ function App() {
         element: <Restaurant />
       }, {
         path: "/customerselect",
-        element: <LogRegGuest />,
+        element: <LogRegGuest setmode={setMode}/>,
         loader: redirect_if_logged_in
       }, {
         path: "/tableselect",
-        element: <SelectTable />,
+        element: <SelectTable setmode={setMode} />,
         loader: tabsel_load
       }, {
         path: "/register",
@@ -68,11 +79,11 @@ function App() {
         element: <Login setmode={setMode}/>
       }, {
         path: "/updateaccount",
-        element: <UpdateAccount />,
+        element: <UpdateAccount setmode={setMode}/>,
         loader: get_profile
       }, {
         path: "/loggedselect",
-        element: <LoggedSelect />
+        element: <LoggedSelect setmode={setMode}/>
       }, {
         path: "/changedetails",
         element: <UpdateDetails />,
@@ -88,13 +99,14 @@ function App() {
         element: <WaitStaffLogin />
       }, {
         path: "/waitstaff",
-        element: <WaitStaff />
+        element: <WaitStaff />,
+        loader: tabsel_load
       }, {
         path: "/deleteaccount",
-        element: <DeleteAccount />,
+        element: <DeleteAccount setmode={setMode} />,
       }, {
         path: "/menu",
-        element: <Menu />,
+        element: <Menu setmode={setMode}/>,
         loader: get_categories,
         children: [
           {
@@ -113,7 +125,7 @@ function App() {
         ]
       }, { 
         path: "/managereditmenu",
-        element: <ManagerEditMenu />,
+        element: <ManagerEditMenu setmode={setMode}/>,
         loader: get_categories,
         children: [
           {
@@ -123,19 +135,39 @@ function App() {
         ]
       }, {
         path: "/kitchen",
-        element: <KitchenOrders />
+        element: <KitchenOrders />,
+        loader: tabsel_load
       }, {
         path: "/kitchenstafflogin",
         element: <KitchenStaffLogin />
       }, {
         path: "/managerlogin",
-        element: <ManagerLogin />
+        element: <ManagerLogin/>
+      }, {
+        path: "/managergraph",
+        element: <ManagerGraph />,
+        loader: get_categories
+      }, {
+        path: "/orderlog",
+        element: <OrderLog />
+      }, {
+        path: "/popularitems",
+        element: <PopularItems />,
+        loader: get_categories
+      }, {
+        path: "/itemstatistics/:itemid",
+        element: <ItemStatistics />,
+        loader: async ({params}) => {
+          return get_item(params);
+        }
       }
     ]
   }]);
 
   return (
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider> 
   );
 }
 

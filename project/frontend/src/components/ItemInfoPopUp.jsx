@@ -24,15 +24,20 @@ function ItemInfoPopUp ({ open, setOpen, item }) {
                     }}
                 >
                     <Box sx={{ textAlign: "center", width: 3/8 }}>
-                        <Box sx={{ alignItems: "center", display: "flex", height: "150px", width: "150px" }}>
-                            {item.image && <img src={item.image} alt={item.name} style={{ margin: "auto", maxWidth: "150px", maxHeight: "150px" }} />}
+                        <Box sx={{ alignItems: "center", border: "1px solid #caccce", display: "flex", height: "150px", width: "150px" }}>
+                            {item.image ? (
+                                <img src={item.image} alt={item.name} style={{ margin: "auto", maxWidth: "150px", maxHeight: "150px" }} />
+                            ) : (
+                                <Typography>No image uploaded</Typography>
+                            )}
                         </Box>
                         {item.calories && <Typography>{item.calories} Cal</Typography>}
                         {ingredients.map((i) => ( <Chip label={i} /> ))}
                     </Box>
                     <Box sx={{ width: 5/8 }}>
                         <Box sx={{ height: "150px", textAlign: "right" }}>
-                            <Typography>${item.price.toFixed(2)}</Typography>
+                            <Typography>Price: ${item.price.toFixed(2)}</Typography>
+                            <Typography>Production cost: ${item.production.toFixed(2)}</Typography>
                             {item.points_to_redeem && <Typography>Redeem with {item.points_to_redeem} MV Points</Typography>}
                             {item.points_earned && <Typography>Buy to earn {item.points_earned} MV Points</Typography>}
                         </Box>

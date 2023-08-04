@@ -7,7 +7,8 @@ from flask import jsonify
 from werkzeug.utils import secure_filename
 
 from .models import Items, Categories, Ingredients
-from .. import db
+from .. import db, app
+from ..fitness.services import NutrientService
 
 
 class ItemService:
@@ -24,32 +25,45 @@ class ItemService:
         if data['image'] is not None:
             image_path = ItemService.decode_image(item_name, data['image'])
         else:
-            image_path = None
+            dir_path = os.path.dirname(__file__)
+            image_directory = os.path.join(dir_path, 'images')
+            image_path = os.path.join(image_directory, secure_filename(f"{item_name}.jpeg"))
+
+            if not os.path.isfile(image_path):
+                image_path = None
+
+        food_id_tuple = None
+
+        if data['calories'] == None:
+            food_id_tuple = NutrientService.parse_food_name(item_name)
+        else:
+            calories = data['calories']
+
+        if food_id_tuple is not None:
+            nutrition_info = NutrientService.get_food_nutrition_info(food_id_tuple)
+            if nutrition_info is None:
+                calories = 0
+            else:
+                calories = nutrition_info['calories']
 
         new_item = Items(
             name=item_name,
             description=data['description'],
             image=image_path,
             price=data['price'],
+            production=data['production'],
+            net=float(data['price']) - float(data['production']),
             category=data['category_id'],
-            calories=data['calories'],
+            calories=calories,
             points_to_redeem=data['points_to_redeem'],
             points_earned=data['points_earned'],
-            position=MenuService.get_next_position(Items)
+            position=MenuService.get_next_position(Items, data['category_id'])
         )
 
         db.session.add(new_item)
         db.session.commit()
 
-        for ingredient in ingredients:
-            ingredient = ingredient.capitalize()
-            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
-            if not ingredient_entity:
-                ingredient_entity = Ingredients(name=ingredient)
-                db.session.add(ingredient_entity)
-                db.session.commit()
-
-            new_item.ingredients.append(ingredient_entity)
+        IngredientService.insert_ingredients(new_item, ingredients)
 
         db.session.commit()
 
@@ -61,7 +75,7 @@ class ItemService:
 
     @staticmethod
     def update_item_details(data):
-        
+
         item = Items.query.filter_by(id=data["id"]).first()
         if not item:
             return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Item not found'})
@@ -83,6 +97,9 @@ class ItemService:
         item.calories = data["calories"]
         item.points_to_redeem = data["points_to_redeem"]
         item.points_earned = data["points_earned"]
+
+        item.production = data['production'],
+        item.net = float(data['price']) - float(data['production']),
 
         ingredients = data['ingredients']
         selected_ingredients = []
@@ -212,6 +229,18 @@ class IngredientService:
 
         return jsonify({'status': HTTPStatus.OK, 'message': 'Ingredients found', 'ingredients': ingredients_list})
 
+    @staticmethod
+    def insert_ingredients(item, ingredient_list):
+        for ingredient in ingredient_list:
+            ingredient = ingredient.capitalize()
+            ingredient_entity = Ingredients.query.filter_by(name=ingredient).first()
+            if not ingredient_entity:
+                ingredient_entity = Ingredients(name=ingredient)
+                db.session.add(ingredient_entity)
+                db.session.commit()
+
+            item.ingredients.append(ingredient_entity)
+
 
 class MenuService:
     @staticmethod
@@ -221,23 +250,42 @@ class MenuService:
         new_position = data['new_position']
         curr_position = current_entity.position
 
+        current_entity.position = 10000
+        db.session.commit()
+
         if curr_position == new_position:
             return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
 
         elif curr_position > new_position:
-            entities_to_update = entity.query.filter(entity.position < curr_position,
-                                                     entity.position >= new_position).all()
+            if entity_name == "Category":
+                entities_to_update = entity.query.filter(entity.position < curr_position,
+                                                         entity.position >= new_position) \
+                    .order_by(entity.position.desc()).all()
+            else:
+                entities_to_update = entity.query.filter(entity.position < curr_position,
+                                                         entity.position >= new_position,
+                                                         entity.category == current_entity.category) \
+                    .order_by(entity.position.desc()).all()
             for entity in entities_to_update:
                 entity.position += 1
+                db.session.commit()
 
         else:
-            entities_to_update = entity.query.filter(entity.position > curr_position,
-                                                     entity.position <= new_position).all()
+            if entity_name == "Category":
+                entities_to_update = entity.query.filter(entity.position > curr_position,
+                                                         entity.position <= new_position) \
+                    .order_by(entity.position.asc()).all()
+
+            else:
+                entities_to_update = entity.query.filter(entity.position > curr_position,
+                                                         entity.position <= new_position,
+                                                         entity.category == current_entity.category) \
+                    .order_by(entity.position.asc()).all()
             for entity in entities_to_update:
                 entity.position -= 1
+                db.session.commit()
 
         current_entity.position = new_position
-
         db.session.commit()
 
         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} position updated'})
@@ -246,7 +294,12 @@ class MenuService:
     def delete_entity(entity, data):
         current_entity, entity_name = MenuService.find_entity(entity, data)
 
-        entities_to_update = entity.query.filter(entity.position > current_entity.position).all()
+        if entity_name == "Category":
+            entities_to_update = entity.query.filter(entity.position > current_entity.position).all()
+
+        else:
+            entities_to_update = entity.query.filter(entity.position > current_entity.position,
+                                                     entity.category == current_entity.category).all()
         for entity in entities_to_update:
             entity.position -= 1
 
@@ -256,15 +309,20 @@ class MenuService:
         return jsonify({'status': HTTPStatus.OK, 'message': f'{entity_name} deleted successfully'})
 
     @staticmethod
-    def get_next_position(entity):
-        max_position = db.session.query(db.func.max(entity.position)).scalar()
-        next_position = max_position + 1 if max_position is not None else 1
+    def get_next_position(entity, category_id=None):
+        if category_id is not None:
+            max_position = db.session.query(db.func.max(entity.position)).filter(
+                entity.category == category_id).scalar()
+        else:
+            max_position = db.session.query(db.func.max(entity.position)).scalar()
 
+        next_position = max_position + 1 if max_position is not None else 1
         return next_position
 
     @staticmethod
     def find_entity(entity, data):
         entity_name = entity.__name__
+        app.logger.info(f'Entity name: {entity_name}')
         current_entity = entity
 
         if entity == Items:

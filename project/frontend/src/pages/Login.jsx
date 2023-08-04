@@ -1,5 +1,5 @@
 import React from "react";
-import { redirect, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Alert, Typography, TextField, Button } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 import ResetPopup from "../components/ResetPopup";
@@ -11,6 +11,10 @@ function Login ({setmode}) {
     const [password, setPassword] = React.useState('');
     const [showAlert, setShowAlert] = React.useState('');
     const [showReset, setShowReset] = React.useState(false);
+
+    React.useEffect(() => {
+        setmode('');
+    }, []);
 
     async function handleSubmit (event) {
         event.preventDefault();

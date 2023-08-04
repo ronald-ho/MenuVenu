@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from sqlalchemy.sql import func
 
 from .. import db
-from ..authentication.models import Customers
 from ..menu.models import Items
 
 
@@ -29,6 +28,7 @@ class Orders(db.Model):
     table = db.Column(db.Integer, db.ForeignKey(DiningTables.id))
     order_date = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     total_amount = db.Column(db.Float, nullable=False)
+    calories_gained = db.Column(db.Integer, nullable=True)
     points_earned = db.Column(db.Integer, nullable=False)
     paid = db.Column(db.Boolean, default=False)
 

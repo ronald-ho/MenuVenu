@@ -1,48 +1,129 @@
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Box } from "@mui/material";
 import React from "react";
 import { apiCall } from "../helpers/helpers";
+import { get_profile } from "../helpers/loaderfunctions";
 
-function TableOrders({ trigger }) {
-    const [orders, setOrders] = React.useState([]);
+function TableOrders({ trigger, caloriesBurned }) {
     const table = localStorage.getItem("mvtable");
-    const fetchdata = async () => {
-        const body = {
-            "table": localStorage.getItem("mvtable")
-        };
-        const response = await apiCall("orders/get_ordered_items", "POST", body);
-        setOrders(response?.ordered_list ?? []);
-    }
+    const customer = localStorage.getItem("mvuser");
+
+    const [orders, setOrders] = React.useState([]);
+    const [bill, setBill] = React.useState(0);
+    const [caloriesGained, setCaloriesGained] = React.useState(0);
 
     React.useEffect(() => {
-        fetchdata();
+        const fetchOrderedItems = async () => {
+            const body = {
+                "table_number": localStorage.getItem("mvtable")
+            };
+            const response = await apiCall("orders/get_ordered_items", "POST", body);
+            console.log(response.ordered_list);
+            setOrders(response?.ordered_list ?? []);
+        }
+
+        const fetchCaloriesGained = async () => {
+            const response = await apiCall("orders/get_ordered_items", "POST", { "table_number": table });
+            setCaloriesGained(response?.calories_gained ?? 0);
+        }
+    
+        const fetchCurrBill = async () => {
+            const data = await apiCall("orders/get_bill", "POST", { 'table_number': table });
+            if (data.order_count) {
+                console.log("Bill amount received");
+                setBill(data.bill);
+            }
+        }
+
+        fetchOrderedItems();
+        fetchCurrBill();
+        fetchCaloriesGained();
     }, [trigger]);
 
     return (
-        <Box sx={{border: "1px solid black", padding: "10px", margin: "5px", overflow: "auto", borderRadius: "10px"}}>
-            <Typography variant="h3">Table {table}</Typography>
-            {orders.length === 0 ? (
-                <Typography>No orders available</Typography>
-            ) : (
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Item</TableCell>
-                            <TableCell>Energy</TableCell>
-                            <TableCell>Cost</TableCell>
-                        </TableRow>
-                    </TableHead>
+        <>
+            <Box 
+                sx={{ 
+                    backgroundColor: '#ffffff', 
+                    border: "1px solid #caccce", 
+                    borderRadius: "10px",
+                    height: '60vh',
+                    padding: '0 10px'
+                }}
+            >
+                <Box sx={{ height: '60vh', overflow: 'auto' }}>
+                    <Typography variant="h4" sx={{ margin: "10px 0 0 0", textAlign: 'center' }}>Table {table}</Typography>
+                    {orders.length === 0 ? (
+                        <Typography sx={{ textAlign: 'center' }}>No items ordered</Typography>
+                    ) : (
+                        <Table stickyHeader size='small'>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Item</TableCell>
+                                    <TableCell>Energy (Cal)</TableCell>
+                                    <TableCell>Cost ($)</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {orders.map((ordered_item) => (
+                                    <TableRow key={ordered_item.id}>
+                                        <TableCell>{ordered_item.name}</TableCell>
+                                        <TableCell>{ordered_item.calories ? ordered_item.calories : 'N/A' }</TableCell>
+                                        <TableCell>
+                                            {ordered_item.redeemed ? (
+                                                <>
+                                                    0.00
+                                                    <Typography sx={{ fontSize: '12px' }}>(- {ordered_item.points_to_redeem} MV points)</Typography>  
+                                                </>
+                                            ) : ( 
+                                                ordered_item.price
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    )}
+                </Box>
+            </Box>
+            <Box 
+                sx={{ 
+                    alignItems: 'center',
+                    backgroundColor: '#ffffff', 
+                    border: "1px solid #caccce", 
+                    borderRadius: "10px",
+                    display: 'flex',
+                    height: '20vh',
+                    margin: '10px 0 0 0',
+                    padding: '0 10px', 
+                    verticalAlign: 'middle'
+                }}
+            >
+                <Table size='small'>
                     <TableBody>
-                        {orders.map((ordered_item) => (
-                            <TableRow key={ordered_item.id}>
-                                <TableCell>{ordered_item.name}</TableCell>
-                                <TableCell>{ordered_item.calories}</TableCell>
-                                <TableCell>{ordered_item.redeemed ? ordered_item.points_to_redeem + " MV Points" : "$" + ordered_item.price}</TableCell>
+                        <TableRow>
+                            <TableCell sx={{ textAlign: 'right' }}>Total Cost</TableCell>
+                            <TableCell sx={{ textAlign: 'right' }}>${bill.toFixed(2)}</TableCell>
+                        </TableRow>
+                        {customer &&
+                            <TableRow>
+                                <TableCell sx={{ textAlign: 'right' }}>Calories Burned</TableCell>
+                                <TableCell sx={{ textAlign: 'right' }}>{caloriesBurned}</TableCell>
                             </TableRow>
-                        ))}
+                        }
+                        <TableRow>
+                            <TableCell sx={{ borderBottom: !customer && 0, textAlign: 'right' }}>Calories Gained</TableCell>
+                            <TableCell sx={{ borderBottom: !customer && 0, textAlign: 'right' }}>{caloriesGained}</TableCell>
+                        </TableRow>
+                        {customer &&
+                            <TableRow>
+                                <TableCell sx={{ borderBottom: 0, textAlign: 'right' }}>Net Calories</TableCell>
+                                <TableCell sx={{ borderBottom: 0, textAlign: 'right' }}>{-parseInt(caloriesBurned) + parseInt(caloriesGained)}</TableCell>
+                            </TableRow>
+                        }
                     </TableBody>
                 </Table>
-            )}
-        </Box>
+            </Box>
+        </>
     )
 }
 
