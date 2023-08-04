@@ -28,3 +28,22 @@ Demo during class was excellent, we were able to finish everything on time and g
 In the class our teammates talked about what to do next sprint, and were able to decide on a solid timeline and sprint 2
 Retrospective A report was completed that night with all the members dicussing what went well and what not so good
 I handed the retro in a day before the deadline
+
+Week 6
+
+Week 7
+
+Week 8
+Second demo went really well, we were able to show case everything that we finished working on. Although there were a few unexpected bugs out of our usecase that occured in the demo. Everything was working incredibly well. 
+Retrospective B Report was completed the next day with all members discussing what to improve on as well. 
+I think in sprint 2, the major downfall was unequal work allocation due to different responsibilities, I will work on that.
+
+Week 9
+I worked on mostly integrating the Google Fitness API and Google Nutrient API to the application.
+I also implemented the use of Edamam Food Database API to automatically input calories for food items that manager adds in
+I had to do a lot of research on how the API worked so that took a lot of time. 
+Then I had troubles sending bulk data to nutrient API so a lot of trial and error had to be done
+
+Week 10 
+Final demo went extremely well as well. We were able to showcase everything to the tutor and everything was working as good as possible.
+Final work was the report and it is currently being done.
