@@ -41,3 +41,8 @@ Week 9
 * I focused primarily on improving the general UI of the website, by implementing a colour scheme and applying fonts. Most of my time was spent on styling with manager edit menu, as I was experimenting with the design and structure. 
 * I assisted in implementing the frontend part for the Google Fit connection.
 * I fixed the billing pop up to account for discounts.
+
+Week 10
+* Helped to write the report
+* UI fixes
+* Did the final demo, got feedback
