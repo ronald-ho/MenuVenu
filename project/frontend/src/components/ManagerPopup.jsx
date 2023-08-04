@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@mui/material";
 import { apiCall } from "../helpers/helpers";
 
 
@@ -26,6 +26,21 @@ function ManagerPopup({ open, setOpen }) {
     }, []);
 
     async function sendChanges() {
+        if (restname === "") {
+            setMess("Please enter a valid restaurant name.");
+            return;
+        }
+
+        if (restphone === "") {
+            setMess("Please enter a valid phone number.");
+            return;
+        }
+
+        if (numtables === "" || parseInt(numtables) <= 0) {
+            setMess("Please enter a valid number of dining tables.");
+            return;
+        }
+
         const payload = {
             restaurant_id: 1,
             new_name: restname,
@@ -38,7 +53,8 @@ function ManagerPopup({ open, setOpen }) {
         if (data.status === 200) {
             console.log('ey');
             if (data.undeletedtables !== 0) {
-                setMess(data.undeletedtables + "tables occupied");
+                const messageEnd = data.undeletedtables > 1 ? " tables occupied" : " table occupied";
+                setMess(data.undeletedtables + messageEnd);
             } else {
                 setMess("Successful update");
             }
@@ -63,30 +79,83 @@ function ManagerPopup({ open, setOpen }) {
     }
 
     return (
-        <Dialog open={open} onClose={handleClose} sx={{textAlign: "center"}}>
+        <Dialog 
+            open={open} 
+            onClose={handleClose} 
+            sx={{ 
+                textAlign: 'center', 
+                margin: "auto",
+            }}
+        >
             <DialogTitle>Manager Settings</DialogTitle>
-            <DialogContent>
-                <TextField label="Change restaurant name" 
-                variant="outlined" margin="normal" value={restname}
-                onChange={(e) => {setRestname(e.target.value)}} 
-                helperText="Leave empty for no change"/>
-                <TextField label="Change restaurant phone number" 
-                variant="outlined" margin="normal" value={restphone} 
-                onChange={(e) => {setRestphone(e.target.value)}} 
-                helperText="Leave empty for no change"/>
-                <TextField label="Edit staff password" 
-                variant="outlined" margin="normal" value={staffpass} 
-                onChange={(e) => {setStaffpass(e.target.value)}} 
-                helperText="Leave empty for no change"/>
-                <TextField label="Edit manager password" 
-                variant="outlined" margin="normal" value={managerpass} 
-                onChange={(e) => {setManagerpass(e.target.value)}} 
-                helperText="Leave empty for no change"/>
-                <TextField label="Set number of tables" 
-                variant="outlined" margin="normal" type="number" value={numtables}
-                onChange={(e) => {setNumtables(e.target.value)}}
-                helperText="Leave empty for no change"/>
-                {mess && <Alert severity={mess === "Successful update" ? "success" : "error"}>{mess}</Alert>}
+            <DialogContent sx={{ width: "300px" }}>
+                <Box>
+                    <Typography>Restaurant name</Typography>
+                    <TextField 
+                        variant="outlined" 
+                        margin="normal" 
+                        value={restname}
+                        size="small"
+                        onChange={(e) => {
+                            setMess('');
+                            setRestname(e.target.value);
+                        }} 
+                    />
+                </Box>
+                <Box>
+                    <Typography>Restaurant phone number</Typography>
+                    <TextField
+                        variant="outlined" 
+                        margin="normal" 
+                        value={restphone} 
+                        size="small"
+                        onChange={(e) => {
+                            setMess('');
+                            setRestphone(e.target.value);
+                        }} 
+                    />
+                </Box>
+                <Box>
+                    <Typography>Number of dining tables</Typography>
+                    <TextField
+                        variant="outlined"
+                        margin="normal" 
+                        type="number" 
+                        value={numtables}
+                        size="small"
+                        onChange={(e) => {setNumtables(e.target.value)}}
+                    />
+                </Box>
+                <Box>
+                    <Typography>Staff password</Typography>
+                    <TextField 
+                        variant="outlined" 
+                        margin="normal" 
+                        value={staffpass} 
+                        size="small"
+                        onChange={(e) => {
+                            setMess('');
+                            setStaffpass(e.target.value);
+                        }}
+                        type="password" 
+                        helperText="Leave empty for no change"/>
+                </Box>
+                <Box>
+                    <Typography>Manager password</Typography>
+                    <TextField 
+                        variant="outlined" 
+                        margin="normal" 
+                        value={managerpass} 
+                        size="small"
+                        onChange={(e) => {
+                            setMess('');
+                            setManagerpass(e.target.value);
+                        }}
+                        type="password" 
+                        helperText="Leave empty for no change"
+                    />
+                </Box>
+                {mess && <Alert sx={{ margin: "auto", textAlign: "left", width: 3/4 }} severity={mess === "Successful update" ? "success" : "error"}>{mess}</Alert>}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} variant="contained" color="error">Cancel</Button>
