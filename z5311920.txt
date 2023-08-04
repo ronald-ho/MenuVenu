@@ -23,3 +23,6 @@ I started working on the frontend for manager statistics. The backend got finish
 
 Week 9
 I finished the remainder of the manager statistics pages. There werent really any troubles with that. In the mean time the manager settings were working now with new routes implemented. After I was done with all the manager stuff,I worked on a popup where the user could access the chat bot. I made it look similar to a messaging app in design. After that I mainly just bugfixed stuff such as the old kitchen or waitstaff pages which werent displaying the correct information anymore.
+
+Week 10
+We presented our final demo. I wrote parts of the report, mainly talked about how table selection, ordering from the menu worked and also how kitchen staff can see their orders, along with the manager stats
