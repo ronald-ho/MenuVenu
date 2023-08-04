@@ -17,6 +17,7 @@ function TableOrders({ trigger, caloriesBurned }) {
                 "table_number": localStorage.getItem("mvtable")
             };
             const response = await apiCall("orders/get_ordered_items", "POST", body);
+            console.log(response.ordered_list);
             setOrders(response?.ordered_list ?? []);
         }
 
@@ -32,13 +33,6 @@ function TableOrders({ trigger, caloriesBurned }) {
                 setBill(data.bill);
             }
         }
-
-        // const fetchCaloriesGained = async () => {
-        //     const user = await get_profile();
-        //     if (user !== []) {
-        //         setCaloriesGained(user.calories_gained);
-        //     }
-        // }
 
         fetchOrderedItems();
         fetchCurrBill();
@@ -117,8 +111,8 @@ function TableOrders({ trigger, caloriesBurned }) {
                             </TableRow>
                         }
                         <TableRow>
-                            <TableCell sx={{ textAlign: 'right' }}>Calories Gained</TableCell>
-                            <TableCell sx={{ textAlign: 'right' }}>{caloriesGained}</TableCell>
+                            <TableCell sx={{ borderBottom: !customer && 0, textAlign: 'right' }}>Calories Gained</TableCell>
+                            <TableCell sx={{ borderBottom: !customer && 0, textAlign: 'right' }}>{caloriesGained}</TableCell>
                         </TableRow>
                         {customer &&
                             <TableRow>

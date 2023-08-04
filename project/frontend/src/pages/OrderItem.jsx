@@ -7,7 +7,8 @@ function OrderItem() {
     const updatevalue = useOutletContext();
     const item_info = useLoaderData();
 
-    const customer = localStorage.getItem("mvuser");
+    const customer = localStorage.getItem('mvuser');
+
     const [ordercount, setOrdercount] = React.useState(1);
     const [alert, setAlert] = React.useState(false);
 
@@ -16,7 +17,7 @@ function OrderItem() {
             "name": item_info.name,
             "table_number": localStorage.getItem("mvtable"),
             "redeem": points,
-            "customer_id": localStorage.getItem("mvuser")
+            "customer_id": customer
         }
         let i = 0;
         while (i < ordercount) {

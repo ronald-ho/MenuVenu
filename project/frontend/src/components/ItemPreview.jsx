@@ -36,9 +36,9 @@ function ItemPreview({ item }) {
             </Box>
             <Typography>
                 ${item.price.toFixed(2)} 
-                {item.points_to_redeem && <> | + {item.points_to_redeem} MVP</>}
+                {item.points_to_redeem && <> | - {item.points_to_redeem} MVP</>}
                 {item.points_to_redeem && item.points_earned && <> | </>}
-                {item.points_earned && <>- {item.points_earned} MVP</>}
+                {item.points_earned && <> + {item.points_earned} MVP</>}
             </Typography>
             <Box>
                 {item.calories && <Typography>{item.calories} Cal</Typography>}

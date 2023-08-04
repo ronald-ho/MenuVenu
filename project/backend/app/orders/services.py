@@ -254,6 +254,7 @@ class OrderService:
         for ordered_item in ordered_item_list:
             item = Items.query.filter_by(id=ordered_item.item).first()
             item_dict = item.to_dict()
+            item_dict['redeemed'] = ordered_item.redeemed
             item_list.append(item_dict)
 
         return jsonify({'status': HTTPStatus.OK, 'ordered_list': item_list, 'calories_gained': order.calories_gained})
