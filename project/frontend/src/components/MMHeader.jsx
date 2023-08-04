@@ -70,16 +70,18 @@ function MMHeader ({ mode, setmode }) {
                     <LogOutButton setmode={setmode}/>
                 </>}
                 {mode === 'dining' && <>
-                    <Button variant='contained' onClick={() => {setChatbot(true)}}>Chatbot</Button>
+                    <Tooltip title="Chatbot">
+                        <IconButton aria-label="Chatbot" onClick={() => {setChatbot(true)}}>
+                            <SmartToy fontSize="large" />
+                        </IconButton>
+                    </Tooltip>
                     <ChatbotPopup open={chatbot} setOpen={setChatbot}/>
-                    <Button variant='contained' onClick={() => {setProfile(true)}}>Profile</Button>
                     <Tooltip title="My Account">
-                        <IconButton aria-label="My Account">
+                        <IconButton aria-label="My Account" onClick={() => {setProfile(true)}}>
                             <AccountCircle fontSize="large" />
                         </IconButton>
                     </Tooltip>
                     <ProfilePopup open={profile} setOpen={setProfile}/>
-                    <LogOutButton setmode={setmode}/>
                 </>}
                 {mode === 'manager' &&
                     <Box sx={{ display: 'flex' }}>

@@ -5,9 +5,13 @@ import { Link, useLoaderData } from "react-router-dom";
 import { Delete, Google, Update } from '@mui/icons-material';	
 import { apiCall } from "../helpers/helpers";	
 import { get_profile } from "../helpers/loaderfunctions";	
-function UpdateAccount() {	
+function UpdateAccount({setmode}) {	
     const [details, setDetails] = React.useState(useLoaderData());	
     const [isSignedIn, setIsSignedIn] = React.useState(details.google_connected);
+
+    React.useEffect(() => {
+        setmode(localStorage.getItem('mvuser') ? 'customer' : '');
+    }, []);
 
     const client = google.accounts.oauth2.initTokenClient({	
         client_id: "155679089529-vgjnspusl7a28vt5m4r0jsu2o31rvdhq.apps.googleusercontent.com",	

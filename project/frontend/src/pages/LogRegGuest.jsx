@@ -5,7 +5,13 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import LoginIcon from '@mui/icons-material/Login';
 
-function LogRegGuest () {
+function LogRegGuest ( {setmode} ) {
+
+    React.useEffect(() => {
+        setmode('');
+    }, []);
+
+    
     return (
         <>
         <div style={{textAlign: 'center', marginTop: '60px'}}>

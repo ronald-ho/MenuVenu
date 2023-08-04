@@ -65,11 +65,11 @@ function App() {
         element: <Restaurant />
       }, {
         path: "/customerselect",
-        element: <LogRegGuest />,
+        element: <LogRegGuest setmode={setMode}/>,
         loader: redirect_if_logged_in
       }, {
         path: "/tableselect",
-        element: <SelectTable />,
+        element: <SelectTable setmode={setMode} />,
         loader: tabsel_load
       }, {
         path: "/register",
@@ -79,11 +79,11 @@ function App() {
         element: <Login setmode={setMode}/>
       }, {
         path: "/updateaccount",
-        element: <UpdateAccount />,
+        element: <UpdateAccount setmode={setMode}/>,
         loader: get_profile
       }, {
         path: "/loggedselect",
-        element: <LoggedSelect />
+        element: <LoggedSelect setmode={setMode}/>
       }, {
         path: "/changedetails",
         element: <UpdateDetails />,
@@ -103,10 +103,10 @@ function App() {
         loader: tabsel_load
       }, {
         path: "/deleteaccount",
-        element: <DeleteAccount />,
+        element: <DeleteAccount setmode={setMode} />,
       }, {
         path: "/menu",
-        element: <Menu />,
+        element: <Menu setmode={setMode}/>,
         loader: get_categories,
         children: [
           {
