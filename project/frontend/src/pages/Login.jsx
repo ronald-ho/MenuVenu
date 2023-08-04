@@ -12,6 +12,10 @@ function Login ({setmode}) {
     const [showAlert, setShowAlert] = React.useState('');
     const [showReset, setShowReset] = React.useState(false);
 
+    React.useEffect(() => {
+        setmode('');
+    }, []);
+
     async function handleSubmit (event) {
         event.preventDefault();
         const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
