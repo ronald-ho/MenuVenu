@@ -1,19 +1,21 @@
 # capstone-project-3900w16amog
 capstone-project-3900w16amog created by GitHub Classroom
 
-To start the project, run the following commands in the terminal:
+Prerequisites
+1. Download Docker https://docs.docker.com/engine/install/
+2. Download Google Fit on your personal Mobile Phone
+3. Request to be added to the Google Client Testing user by sending an email to z5313344@ad.unsw.edu.au with your personal google account that is linked to your Google Fit
 
+Commands to run to start the application
+
+Change directory into project
 ```
-docker compose build
-docker compose up
+cd project
 ```
 
-To connect to the local Docker PSQL server:
+Run Docker Compose
 ```
-psql -h localhost -p 5432 -U MenuVenu -d MenuVenu
+docker compose up --build
 ```
-And then enter password when prompted
 
 Frontend Client: http://localhost:3000
-
-Backend Client: http://localhost:5000
