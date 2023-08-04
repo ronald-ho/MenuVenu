@@ -18,7 +18,6 @@ function ManagerEditMenu ({ setmode }) {
     const [openAddCategory, setOpenAddCategory] = React.useState(false);
     const [openAddItem, setOpenAddItem] = React.useState(false);
 
-    const matchCategorySelectedPath = location.pathname.match(/\/profile\/(\d+)/);
     const isCategoryPath = location.pathname.startsWith("/managereditmenu/") && !!params.categoryid;
 
     React.useEffect(() => {
@@ -117,7 +116,6 @@ function ManagerEditMenu ({ setmode }) {
             <Box 
                 sx={{
                     backgroundColor: "white",
-                    
                     display: 'flex', 
                     flex: 1,
                     height: '65vh'
@@ -132,9 +130,9 @@ function ManagerEditMenu ({ setmode }) {
                     }}
                 >          
                     {categories.length === 0 ? (
-                        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column'}}>
-                                <Box sx={{ display: 'flex'}}>
+                        <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', height: 2/3 }}>
+                                <Box sx={{ display: 'flex', flex: 1 }}>
                                     <Alert severity="info" aria-label='infoAlert' sx={{ margin: 'auto', textAlign: 'left', width: 3/4 }}>
                                         To get started with building your menu, click the button below to add your first category.
                                     </Alert> 
@@ -173,7 +171,14 @@ function ManagerEditMenu ({ setmode }) {
                 </Box>  
                 <Box sx={{ display: "flex", flexDirection: "column", width: 2/3 }}>
                     <Outlet />
-                    {location.pathname === '/managereditmenu' &&
+                    {location.pathname === '/managereditmenu' && categories.length === 0 &&
+                        <Box sx={{ display: 'flex', flex: 1 }}>
+                            <Alert severity="info" aria-label='infoAlert' sx={{ margin: 'auto', textAlign: 'left', width: 3/4 }}>
+                                Once you have added a category, you will be able to add items to it here.
+                            </Alert> 
+                        </Box>
+                    }
+                    {location.pathname === '/managereditmenu' && categories.length !== 0 && !isCategoryPath &&
                         <Box sx={{ display: 'flex', flex: 1 }}>
                             <Alert severity="info" aria-label='infoAlert' sx={{ margin: 'auto', textAlign: 'left', width: 3/4 }}>
                                 Click a category in the CATEGORIES column to view, add, update or delete menu items.
