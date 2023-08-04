@@ -39,3 +39,8 @@ Week 9
 Did more research on chatbot APIs and decided to use langchain to implement our chatbot as it was relatively simple
 Used TextLoader and VectorstoreIndex functions from langchain to embed and store data in chromadb
 Just did alot of queries and testing of chatbot
+
+Week 10
+Did some final linting and visual errors
+Presented final demo
+Finished final report
