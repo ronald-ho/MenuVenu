@@ -1,42 +1,47 @@
-import React from "react";
-import {useNavigate} from "react-router-dom";
-import {Alert, Button, TextField, Typography} from "@mui/material";
-import {apiCall} from "../helpers/helpers";
+import { Alert, Button, TextField, Typography } from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { apiCall } from '../helpers/helpers';
 
 function KitchenStaffLogin () {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    // Get waitstaff password from database 
-    const [password, setPassword] = React.useState('');
-    const [showAlert, setShowAlert] = React.useState('');
+  // Get waitstaff password from database
+  const [password, setPassword] = React.useState('');
+  const [showAlert, setShowAlert] = React.useState('');
 
-    async function handleSubmit (event) {
-        event.preventDefault();
-        
-        const body = {
-            password: password
-        };
+  async function handleSubmit (event) {
+    event.preventDefault();
 
-        const data = await apiCall("auth/login/staff/kitchen", "POST", body);
+    const body = {
+      password
+    };
 
-        if (data.message === "Kitchen staff login successful") {
-            navigate("/kitchen");
-        } else {
-            setShowAlert(data.message);
-        }
+    const data = await apiCall('auth/login/staff/kitchen', 'POST', body);
+
+    if (data.message === 'Kitchen staff login successful') {
+      navigate('/kitchen');
+    } else {
+      setShowAlert(data.message);
     }
+  }
 
-    return (
-        <>
-            <form onSubmit={(e) => handleSubmit(e)} style={{textAlign: 'center'}}>
-                <Typography>Kitchen Staff Login</Typography>
-                <TextField sx={{margin: '10px'}} id='login-password' value={password} type="password" label='Password' placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} />
-                <br />
-                <Button variant="contained" type="submit">Submit</Button>
-            </form>
-            {showAlert && <Alert severity="error" aria-label='errorAlert' sx={{ margin: 'auto', width: '300px' }}>{showAlert}</Alert>}
-        </>
-    );
+  return (
+    <>
+      <form onSubmit={(e) => handleSubmit(e)} style={{ textAlign: 'center' }}>
+        <Typography>Kitchen Staff Login</Typography>
+        <TextField sx={{ margin: '10px' }} id='login-password' value={password} type='password' label='Password'
+          placeholder='Enter password' onChange={(e) => setPassword(e.target.value)}/>
+        <br/>
+        <Button variant='contained' type='submit'>Submit</Button>
+      </form>
+      {showAlert && <Alert severity='error' aria-label='errorAlert'
+        sx={{
+          margin: 'auto',
+          width: '300px'
+        }}>{showAlert}</Alert>}
+    </>
+  );
 }
 
 export default KitchenStaffLogin;
