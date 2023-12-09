@@ -1,8 +1,11 @@
 import { Box, MenuItem, TextField, Toolbar, Typography } from '@mui/material';
+import { Chart, registerables } from 'chart.js';
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { useLoaderData } from 'react-router-dom';
 import { apiCall } from '../helpers/helpers';
+
+Chart.register(...registerables);
 
 function ManagerGraph () {
   const categories = useLoaderData();

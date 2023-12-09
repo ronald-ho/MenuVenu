@@ -14,10 +14,12 @@ services:
       MAIL_USERNAME: 3900w16amog@gmail.com
       MAIL_PASSWORD: epoekmdhdlqiletx
       OPENAI_API_KEY: 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
+    volumes:
+      - ./backend:/app
   frontend:
     build: ./frontend
     ports:
-      - "3000:80"
+      - "3000:3000"
     volumes:
       - /app/node_modules
   db:
