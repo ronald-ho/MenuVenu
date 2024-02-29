@@ -1,29 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@900&family=Quicksand:wght@500;700&display=swap');
 
 body {
-  height: 100%;
-  margin: 0;
-  font-family: 'Libre Franklin', sans-serif;
-  font-family: 'Quicksand', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f3f2ef;
+    height: 100%;
+    margin: 0;
+    font-family: 'Quicksand', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f3f2ef;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-  border-radius: 10px;
+    background: #f1f1f1;
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888; 
-  border-radius: 10px;
+    background: #888;
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+    background: #555;
 }

@@ -2,11 +2,9 @@ version: "3.8"
 services:
   backend:
     build: ./backend
-    command: ["/app/wait-for-db.sh", "db:5432", "--", "python", "app.py"]
+    command: [ "/app/wait-for-db.sh", "db:5432", "--", "python", "app.py" ]
     ports:
       - "5000:5000"
-    volumes:
-      - ./backend:/app
     depends_on:
       - db
     environment:
@@ -16,12 +14,13 @@ services:
       MAIL_USERNAME: 3900w16amog@gmail.com
       MAIL_PASSWORD: epoekmdhdlqiletx
       OPENAI_API_KEY: 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
-  frontend:
-    build: ./frontend 
-    ports:
-      - "3000:3000"
     volumes:
-      - ./frontend:/app
+      - ./backend:/app
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    volumes:
       - /app/node_modules
   db:
     image: postgres:15

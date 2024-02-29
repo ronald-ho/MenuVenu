@@ -1,164 +1,164 @@
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import {createBrowserRouter, Outlet, RouterProvider} from 'react-router-dom';
-import { createMuiTheme, ThemeProvider } from '@mui/material/styles';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import './App.css';
+import ItemList from './components/ItemList';
 import MMHeader from './components/MMHeader';
 import MVFooter from './components/MVFooter';
-import Restaurant from './pages/Restaurant';
-import LogRegGuest from './pages/LogRegGuest';
-import Register from './pages/Register';
-import SelectTable from './pages/SelectTable';
-import Login from './pages/Login';
-import {
-  change_details,
-  get_categories,
-  get_item,
-  get_items,
-  get_profile,
-  redirect_if_logged_in,
-  tabsel_load
-} from './helpers/loaderfunctions';
-import UpdateAccount from './pages/UpdateAccount';
-import LoggedSelect from './pages/LoggedSelect';
-import UpdateDetails from './pages/UpdateDetails';
-import StaffSelect from './pages/StaffSelect';
-import WaitStaffLogin from './pages/WaitStaffLogin';
-import WaitStaff from './pages/WaitStaff';
-import DeleteAccount from './pages/DeleteAccount';
 import ViewItems from './components/ViewItems';
-import Menu from './pages/Menu';
-import OrderItem from './pages/OrderItem';
-import ManagerEditMenu from './pages/ManagerEditMenu';
-import ItemList from './components/ItemList';
+import {
+  changeDetails,
+  getCategories,
+  getItem,
+  getItems,
+  getProfile,
+  redirectIfLoggedIn,
+  tabselLoad
+} from './helpers/loaderfunctions';
+import DeleteAccount from './pages/DeleteAccount';
+import ItemStatistics from './pages/ItemStatistics';
 import KitchenOrders from './pages/KitchenOrders';
 import KitchenStaffLogin from './pages/KitchenStaffLogin';
-import ManagerLogin from "./pages/ManagerLogin";
+import LoggedSelect from './pages/LoggedSelect';
+import Login from './pages/Login';
+import LogRegGuest from './pages/LogRegGuest';
+import ManagerEditMenu from './pages/ManagerEditMenu';
 import ManagerGraph from './pages/ManagerGraph';
+import ManagerLogin from './pages/ManagerLogin';
+import Menu from './pages/Menu';
+import OrderItem from './pages/OrderItem';
 import OrderLog from './pages/OrderLog';
 import PopularItems from './pages/PopularItems';
-import ItemStatistics from './pages/ItemStatistics';
+import Register from './pages/Register';
+import Restaurant from './pages/Restaurant';
+import SelectTable from './pages/SelectTable';
+import StaffSelect from './pages/StaffSelect';
+import UpdateAccount from './pages/UpdateAccount';
+import UpdateDetails from './pages/UpdateDetails';
+import WaitStaff from './pages/WaitStaff';
+import WaitStaffLogin from './pages/WaitStaffLogin';
 
-function App() {
+function App () {
   const [mode, setMode] = React.useState('');
 
-  const theme = createMuiTheme({
+  const theme = createTheme({
     typography: {
       fontFamily: 'Quicksand'
     }
   });
 
-  function Layout() {
+  function Layout () {
     return (
       <>
         <MMHeader mode={mode} setmode={setMode}/>
-        <Outlet />
-        <MVFooter />
+        <Outlet/>
+        <MVFooter/>
       </>
     )
   }
 
   const router = createBrowserRouter([{
-    element: <Layout />,
+    element: <Layout/>,
     children: [
       {
-        path: "/",
-        element: <Restaurant />
+        path: '/',
+        element: <Restaurant/>
       }, {
-        path: "/customerselect",
+        path: '/customerselect',
         element: <LogRegGuest setmode={setMode}/>,
-        loader: redirect_if_logged_in
+        loader: redirectIfLoggedIn
       }, {
-        path: "/tableselect",
-        element: <SelectTable setmode={setMode} />,
-        loader: tabsel_load
+        path: '/tableselect',
+        element: <SelectTable setmode={setMode}/>,
+        loader: tabselLoad
       }, {
-        path: "/register",
-        element: <Register />
+        path: '/register',
+        element: <Register/>
       }, {
-        path: "/login",
+        path: '/login',
         element: <Login setmode={setMode}/>
       }, {
-        path: "/updateaccount",
+        path: '/updateaccount',
         element: <UpdateAccount setmode={setMode}/>,
-        loader: get_profile
+        loader: getProfile
       }, {
-        path: "/loggedselect",
+        path: '/loggedselect',
         element: <LoggedSelect setmode={setMode}/>
       }, {
-        path: "/changedetails",
-        element: <UpdateDetails />,
-        loader: get_profile,
+        path: '/changedetails',
+        element: <UpdateDetails/>,
+        loader: getProfile,
         action: async ({ request }) => {
-          return await change_details(request);
+          return await changeDetails(request);
         }
       }, {
-        path: "/staffselect",
-        element: <StaffSelect />
+        path: '/staffselect',
+        element: <StaffSelect/>
       }, {
-        path: "/waitstafflogin",
-        element: <WaitStaffLogin />
+        path: '/waitstafflogin',
+        element: <WaitStaffLogin/>
       }, {
-        path: "/waitstaff",
-        element: <WaitStaff />,
-        loader: tabsel_load
+        path: '/waitstaff',
+        element: <WaitStaff/>,
+        loader: tabselLoad
       }, {
-        path: "/deleteaccount",
-        element: <DeleteAccount setmode={setMode} />,
+        path: '/deleteaccount',
+        element: <DeleteAccount setmode={setMode}/>,
       }, {
-        path: "/menu",
+        path: '/menu',
         element: <Menu setmode={setMode}/>,
-        loader: get_categories,
+        loader: getCategories,
         children: [
           {
-            path: ":categoryid",
-            element: <ViewItems />,
-            loader: async ({params}) => {
-              return get_items(params);
+            path: ':categoryid',
+            element: <ViewItems/>,
+            loader: async ({ params }) => {
+              return getItems(params);
             }
           }, {
-            path: "order/:itemid",
-            element: <OrderItem />,
-            loader: async ({params}) => {
-              return get_item(params);
+            path: 'order/:itemid',
+            element: <OrderItem/>,
+            loader: async ({ params }) => {
+              return getItem(params);
             }
           }
         ]
-      }, { 
-        path: "/managereditmenu",
+      }, {
+        path: '/managereditmenu',
         element: <ManagerEditMenu setmode={setMode}/>,
-        loader: get_categories,
+        loader: getCategories,
         children: [
           {
-            path: ":categoryid",
-            element: <ItemList />,
+            path: ':categoryid',
+            element: <ItemList/>,
           }
         ]
       }, {
-        path: "/kitchen",
-        element: <KitchenOrders />,
-        loader: tabsel_load
+        path: '/kitchen',
+        element: <KitchenOrders/>,
+        loader: tabselLoad
       }, {
-        path: "/kitchenstafflogin",
-        element: <KitchenStaffLogin />
+        path: '/kitchenstafflogin',
+        element: <KitchenStaffLogin/>
       }, {
-        path: "/managerlogin",
+        path: '/managerlogin',
         element: <ManagerLogin/>
       }, {
-        path: "/managergraph",
-        element: <ManagerGraph />,
-        loader: get_categories
+        path: '/managergraph',
+        element: <ManagerGraph/>,
+        loader: getCategories
       }, {
-        path: "/orderlog",
-        element: <OrderLog />
+        path: '/orderlog',
+        element: <OrderLog/>
       }, {
-        path: "/popularitems",
-        element: <PopularItems />,
-        loader: get_categories
+        path: '/popularitems',
+        element: <PopularItems/>,
+        loader: getCategories
       }, {
-        path: "/itemstatistics/:itemid",
-        element: <ItemStatistics />,
-        loader: async ({params}) => {
-          return get_item(params);
+        path: '/itemstatistics/:itemid',
+        element: <ItemStatistics/>,
+        loader: async ({ params }) => {
+          return getItem(params);
         }
       }
     ]
@@ -166,8 +166,8 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider> 
+      <RouterProvider router={router}/>
+    </ThemeProvider>
   );
 }
 

@@ -5,7 +5,8 @@ from flask import jsonify, request, Blueprint
 from sqlalchemy.sql import func, case
 
 from .models import Restaurants
-from .. import db
+from .services import ItemFilter, ItemPopularityService, TimeConversion
+from .. import db, app
 from ..menu.models import Items
 from ..orders.models import OrderedItems, Orders, DiningTables
 from ..utilities import Helper
@@ -35,103 +36,30 @@ def get_restaurant():
 # Route to get all items sorted by popularity
 @manager.route('/items/popularity', methods=['GET'])
 def all_items_sorted():
-    fil = request.args.get('filter')
-    category_id = int(request.args.get('category_id'))
+    filter_type = request.args.get('filter')
+    category_id_str = request.args.get('category_id')
+
+    if not category_id_str or not category_id_str.isdigit():
+        return jsonify({'error': 'Invalid or missing category_id'}), 400
+
+    category_id = int(category_id_str)
+
+    item_filter = ItemFilter(filter_type, category_id, item_popularity_service=ItemPopularityService())
 
     try:
-        # Query the OrderedItems table to get the count of each item and sort by popularity
-        if fil == "popularity":
-
-            items_popularity = db.session.query(Items.name, Items.category, OrderedItems.item,
-                                                db.func.count(OrderedItems.item).label('popularity')). \
-                join(Items, Items.id == OrderedItems.item). \
-                group_by(Items.name, Items.category, OrderedItems.item). \
-                order_by(db.desc('popularity')).all()
-
-            # Prepare the response data with item_id and popularity
-            response_data = [{'item_id': item_id, 'category': category, 'name': name, 'popularity': popularity} for
-                             name, category, item_id, popularity in items_popularity]
-            if category_id:
-                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
-            return jsonify({'status': HTTPStatus.OK, 'list': response_data})
-
-        if fil == "gross":
-            subquery = db.session.query(
-                OrderedItems.item,
-                db.func.count(OrderedItems.item).label('popularity')
-            ).group_by(OrderedItems.item).subquery()
-
-            items_popularity = db.session.query(
-                subquery.c.item,
-                subquery.c.popularity,
-                Items.price.label('price'),
-                Items.name.label('name'),
-                Items.category.label('category')
-            ).join(Items, Items.id == subquery.c.item).all()
-
-            # Calculate gross income for each item (popularity * price)
-            response_data = [{'item_id': item_id, 'name': name, 'category': category, 'popularity': popularity,
-                              'gross_income': (popularity or 0) * price}
-                             for item_id, popularity, price, name, category in items_popularity]
-            if category_id:
-                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
-            response_data = sorted(response_data, key=lambda x: x['gross_income'], reverse=True)
-
-            return jsonify({'status': HTTPStatus.OK, 'list': response_data})
-
-        if fil == "net":
-            subquery = db.session.query(
-                OrderedItems.item,
-                db.func.count(OrderedItems.item).label('popularity')
-            ).group_by(OrderedItems.item).subquery()
-
-            items_popularity = db.session.query(
-                subquery.c.item,
-                subquery.c.popularity,
-                Items.net.label('net'),
-                Items.name.label('name'),
-                Items.category.label('category')
-            ).join(Items, Items.id == subquery.c.item).all()
-
-            # Calculate net income for each item (popularity * price)
-            response_data = [{'item_id': item_id, 'name': name, 'category': category, 'popularity': popularity,
-                              'net_income': (popularity or 0) * net}
-                             for item_id, popularity, net, name, category in items_popularity]
-            if category_id:
-                response_data = list(filter(lambda item: item.get('category') == category_id, response_data))
-
-            response_data = sorted(response_data, key=lambda x: x['net_income'], reverse=True)
-
-            return jsonify({'status': HTTPStatus.OK, 'list': response_data})
-
-        return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Filter not found'})
-
+        return item_filter.filter_items()
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error processing items: {e}")
+        return jsonify({'error': 'Internal server error'}), 500
 
 
 @manager.route('/orderlog', methods=['GET'])
 def get_orderlog():
     timespan = request.args.get('time')
-    total_income = 0
     end_time = datetime.now()
+    start_time = TimeConversion.validate_time_span(timespan)
 
     try:
-
-        if timespan == 'day':
-            start_time = end_time - timedelta(days=1)
-        elif timespan == 'week':
-            start_time = end_time - timedelta(days=7)
-        elif timespan == 'month':
-            start_time = end_time - timedelta(days=30)
-        elif timespan == 'year':
-            start_time = end_time - timedelta(days=365)
-        elif timespan == 'all':
-            start_time = datetime.min
-
-        else:
-            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'invalid range'})
-
         order_log = db.session.query(
             Orders.id.label('order_id'),
             OrderedItems.id.label('ordered_item_id'),
@@ -148,7 +76,12 @@ def get_orderlog():
             Orders.order_date <= end_time,
             Orders.paid == True,
         ) \
-            .group_by(Orders.id, OrderedItems.id, Items.id, Items.name, Items.price, OrderedItems.redeemed) \
+            .group_by(Orders.id,
+                      OrderedItems.id,
+                      Items.id,
+                      Items.name,
+                      Items.price,
+                      OrderedItems.redeemed) \
             .all()
 
         order_log_list = [
@@ -180,24 +113,12 @@ def get_profit():
     if request.args.get('category_id'):
         category_id = int(request.args.get('category_id'))
     end_time = datetime.now()
+    start_time = TimeConversion.validate_time_span(timespan)
 
     if fil not in ['gross', 'net', 'popularity']:
         return jsonify({'status': HTTPStatus.NOT_FOUND, 'message': 'Filter not found'})
 
     try:
-
-        if timespan == 'week':
-            start_time = end_time - timedelta(days=7)
-        elif timespan == 'month':
-            start_time = end_time - timedelta(days=30)
-        elif timespan == 'year':
-            start_time = end_time - timedelta(days=365)
-        elif timespan == 'all':
-            start_time = datetime.min
-
-        else:
-            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'invalid range'})
-
         order_log = db.session.query(
             Orders.id.label('order_id'),
             OrderedItems.id.label('ordered_item_id'),
@@ -369,30 +290,14 @@ def item_statistics():
         return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Item does not exist'})
 
     timespan = request.args.get('time')
-    popularity = 0
-    unique_pop = 0
     net = 0
     gross = 0
-    trends = []
     ranking = 0
-    per_order = 0
-    average_tod = 0
     production = 0
     end_time = datetime.now()
+    start_time = TimeConversion.validate_time_span(timespan)
 
     try:
-        if timespan == 'week':
-            start_time = end_time - timedelta(days=7)
-        elif timespan == 'month':
-            start_time = end_time - timedelta(days=30)
-        elif timespan == 'year':
-            start_time = end_time - timedelta(days=365)
-        elif timespan == 'all':
-            start_time = datetime.min
-
-        else:
-            return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'invalid range'})
-
         popularity = db.session.query(func.count(OrderedItems.item)).filter(OrderedItems.item == item_id).scalar()
         unique_pop = db.session.query(func.count(func.distinct(OrderedItems.order))).filter(
             OrderedItems.item == item_id).scalar()
