@@ -26,7 +26,7 @@ def load_user(customer_id):
 app.logger.setLevel(logging.INFO)
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://MenuVenu:MenuVenu@db:5432/MenuVenu'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL')
 app.config['SQLALCHEMY_POOL_SIZE'] = 20
 app.config['SQLALCHEMY_MAX_OVERFLOW'] = 0
 app.config['SQLALCHEMY_POOL_TIMEOUT'] = 5
