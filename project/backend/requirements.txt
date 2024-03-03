@@ -3,7 +3,7 @@ Flask-SQLAlchemy
 requests
 flask-mail
 SQLAlchemy
-psycopg2
+psycopg2-binary
 flask_cors
 flask_login
 pytz
