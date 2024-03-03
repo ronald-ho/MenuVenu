@@ -1,11 +1,9 @@
 # Flask and database setup
-from app import app, db
-
-from app.restaurant import populate
-
-from app.restaurant.services import RestaurantService
-from app.orders.services import TableService
-from app.menu.services import IngredientService
+from .app import app, db
+from .app.menu.services import IngredientService
+from .app.orders.services import TableService
+from .app.restaurant import populate
+from .app.restaurant.services import RestaurantService
 
 if __name__ == '__main__':
     with app.app_context():
@@ -18,5 +16,5 @@ if __name__ == '__main__':
         populate.populate_database()
 
         db.session.commit()
-        
+
     app.run(host='0.0.0.0', port=5000, debug=True)
