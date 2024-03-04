@@ -1,7 +1,5 @@
 # Flask and database setup
-from flask import current_app as app
-
-from api import db
+from api import app, db
 from api.menu.services import IngredientService
 from api.orders.services import TableService
 from api.restaurant import populate
