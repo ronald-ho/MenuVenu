@@ -6,4 +6,5 @@ flask_cors
 flask_login
 flask_mail
 pytz
-langchain
+langchain-community
+psycopg2-binary
