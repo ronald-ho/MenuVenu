@@ -4,5 +4,6 @@ requests
 SQLAlchemy
 flask_cors
 flask_login
+flask_mail
 pytz
 langchain
