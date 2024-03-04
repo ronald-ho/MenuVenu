@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-from flask import current_app as app
 from flask import jsonify, request, Blueprint
 
 from .services import CustomerService, ResetService, StaffService, ManagerService
@@ -87,6 +86,5 @@ def reset_password():
 
 @auth.route('/customer/<customer_id>', methods=['GET'])
 def find_customer(customer_id):
-    app.logger.info(f"Received find user request: {customer_id}")
 
     return CustomerService.get_customer_details(customer_id)

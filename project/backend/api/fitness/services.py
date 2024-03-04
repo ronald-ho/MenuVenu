@@ -165,8 +165,6 @@ class NutrientService:
 
         response = requests.get('https://api.edamam.com/api/food-database/v2/parser', params=params)
 
-        app.logger.info(f"\nPARSING Food name: {food_name}\n")
-
         food_id_list = []
 
         if len(response.json()['hints']) == 0 and len(response.json()['parsed']) == 0:
@@ -298,11 +296,9 @@ class NutrientService:
             headers=headers, json=body)
 
         if response.status_code == 404:
-            app.logger.info("Erorr adding nutrition data")
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Error adding nutrition data'})
 
         elif response.status_code == 200:
-            app.logger.info(f"Nutrition data inputted")
             return jsonify({'status': HTTPStatus.OK, 'message': 'Food data inputted'})
 
     @staticmethod

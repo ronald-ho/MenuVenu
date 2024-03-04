@@ -38,14 +38,12 @@ def delete_categories():
 
 @menu.route('/items/<category_id>', methods=['GET'])
 def get_items(category_id):
-    app.logger.info(f"category_id: {category_id}")
 
     return CategoryService.get_category_items(category_id)
 
 
 @menu.route('/categories', methods=['GET'])
 def get_categories():
-    app.logger.info("Getting categories from database")
 
     return CategoryService.get_all_categories()
 
@@ -66,7 +64,6 @@ def update_category_position():
 
 @menu.route('/item/details/<item_id>', methods=['GET'])
 def get_item_details(item_id):
-    app.logger.info("Getting item details from database")
 
     return ItemService.get_item_details(item_id)
 
@@ -87,6 +84,5 @@ def update_category_details():
 
 @menu.route('/ingredients', methods=['GET'])
 def get_item_ingredients():
-    app.logger.info("Getting item ingredients from database")
 
     return IngredientService.get_all_ingredients()

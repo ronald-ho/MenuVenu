@@ -323,7 +323,6 @@ class MenuService:
     @staticmethod
     def find_entity(entity, data):
         entity_name = entity.__name__
-        app.logger.info(f'Entity name: {entity_name}')
         current_entity = entity
 
         if entity == Items:
