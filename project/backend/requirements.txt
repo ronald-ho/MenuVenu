@@ -7,3 +7,4 @@ flask_login
 flask_mail
 pytz
 langchain
+psycopg2-binary
