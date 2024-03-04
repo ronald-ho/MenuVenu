@@ -1,6 +1,3 @@
-from flask import current_app as app
-
-
 class Helper:
 
     @staticmethod

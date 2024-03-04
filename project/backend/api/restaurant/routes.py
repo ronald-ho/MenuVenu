@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from http import HTTPStatus
 
-from flask import current_app as app
 from flask import jsonify, request, Blueprint
 from sqlalchemy.sql import func, case
 
@@ -50,8 +49,7 @@ def all_items_sorted():
     try:
         return item_filter.filter_items()
     except Exception as e:
-        app.logger.error(f"Error processing items: {e}")
-        return jsonify({'error': 'Internal server error'}), 500
+        return jsonify({'error': e}), 500
 
 
 @manager.route('/orderlog', methods=['GET'])

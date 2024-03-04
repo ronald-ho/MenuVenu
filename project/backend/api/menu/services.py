@@ -3,7 +3,6 @@ import hashlib
 import os
 from http import HTTPStatus
 
-from flask import current_app as app
 from flask import jsonify
 from werkzeug.utils import secure_filename
 

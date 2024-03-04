@@ -1,4 +1,3 @@
-from flask import current_app as app
 from flask import request, Blueprint
 
 from .models import Items, Categories
