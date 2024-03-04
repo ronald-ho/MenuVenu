@@ -1,4 +1,4 @@
-import config from './config.json';
+const backendURL = process.env.BACKEND_URL;
 
 export async function apiCall (path, method, body) {
   const options = {
@@ -17,6 +17,6 @@ export async function apiCall (path, method, body) {
     options.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
   }
 
-  const response = await fetch(`http://localhost:${config.BACKEND_PORT}/` + path, options);
+  const response = await fetch(backendURL + path, options);
   return await response.json();
 }
