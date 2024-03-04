@@ -26,7 +26,10 @@ def load_user(customer_id):
 application.logger.setLevel(logging.INFO)
 
 # Database configuration
-application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL')
+uri = os.getenv("POSTGRES_URL")
+if uri and uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+application.config['SQLALCHEMY_DATABASE_URI'] = uri
 application.config['SQLALCHEMY_POOL_SIZE'] = 20
 application.config['SQLALCHEMY_MAX_OVERFLOW'] = 0
 application.config['SQLALCHEMY_POOL_TIMEOUT'] = 5
