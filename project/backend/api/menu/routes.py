@@ -1,8 +1,8 @@
+from flask import current_app as app
 from flask import request, Blueprint
 
 from .models import Items, Categories
 from .services import ItemService, CategoryService, MenuService, IngredientService
-from .. import app
 from ..utilities import Helper
 
 menu = Blueprint('menu', __name__)

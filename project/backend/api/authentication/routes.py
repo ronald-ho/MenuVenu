@@ -1,8 +1,8 @@
 from http import HTTPStatus
 
+from flask import current_app as app
 from flask import jsonify, request, Blueprint
 
-from .. import app
 from .services import CustomerService, ResetService, StaffService, ManagerService
 from ..utilities import Helper
 

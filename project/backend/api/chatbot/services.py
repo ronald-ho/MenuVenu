@@ -1,10 +1,9 @@
-import os
 from http import HTTPStatus
 
 from flask import jsonify
+from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import TextLoader
 from langchain.indexes import VectorstoreIndexCreator
-from langchain.chat_models import ChatOpenAI
 
 from .. import db
 from ..menu.models import Items, Ingredients

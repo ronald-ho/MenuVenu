@@ -1,12 +1,14 @@
 # Flask and database setup
-from app import application, db
-from app.menu.services import IngredientService
-from app.orders.services import TableService
-from app.restaurant import populate
-from app.restaurant.services import RestaurantService
+from flask import current_app as app
+
+from api import db
+from api.menu.services import IngredientService
+from api.orders.services import TableService
+from api.restaurant import populate
+from api.restaurant.services import RestaurantService
 
 if __name__ == '__main__':
-    with application.app_context():
+    with app.app_context():
         db.create_all()
 
         RestaurantService.create_default_restaurant()
@@ -17,4 +19,4 @@ if __name__ == '__main__':
 
         db.session.commit()
 
-    application.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

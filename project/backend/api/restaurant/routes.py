@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
 from http import HTTPStatus
 
+from flask import current_app as app
 from flask import jsonify, request, Blueprint
 from sqlalchemy.sql import func, case
 
 from .models import Restaurants
 from .services import ItemFilter, ItemPopularityService, TimeConversion
-from .. import db, app
+from .. import db
 from ..menu.models import Items
 from ..orders.models import OrderedItems, Orders, DiningTables
 from ..utilities import Helper

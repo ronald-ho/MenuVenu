@@ -2,10 +2,10 @@ import random
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-from .. import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from .. import db
 from ..fitness.services import FitnessService
 
 

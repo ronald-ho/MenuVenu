@@ -3,11 +3,12 @@ from http import HTTPStatus
 
 from flask import jsonify
 from sqlalchemy import func
+
 from .models import DiningTables, Orders, OrderedItems
 from .. import db
 from ..authentication.models import Customers
-from ..menu.models import Items
 from ..fitness.services import FitnessService
+from ..menu.models import Items
 
 
 class AssistService:
@@ -182,7 +183,7 @@ class OrderService:
         if not order:
             return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Order does not exist'})
 
-        # add cost of item to order total if customer did not redeem points and add any points earnable  
+        # add cost of item to order total if customer did not redeem points and add any points earnable
         if not redeem:
             order.total_amount += item.price
 
@@ -196,7 +197,7 @@ class OrderService:
                 customer.points -= item.points_to_redeem
             else:
                 return jsonify({'status': HTTPStatus.BAD_REQUEST, 'message': 'Customer does not have enough points'})
-            
+
         # add item calories to calories gained total
         if item.calories:
             order.calories_gained += item.calories

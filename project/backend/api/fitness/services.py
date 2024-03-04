@@ -5,9 +5,9 @@ from http import HTTPStatus
 
 import pytz
 import requests
+from flask import current_app as app
 from flask import jsonify
 
-from .. import app
 from ..menu.models import Items
 from ..orders.models import Orders, OrderedItems
 
